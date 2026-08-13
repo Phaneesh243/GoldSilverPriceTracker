@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import type { PointerEvent } from "react";
+import type { CSSProperties, PointerEvent } from "react";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import {
   Calculator,
@@ -13,10 +13,13 @@ import {
   MapPin,
 } from "lucide-react";
 import ConsentPrompt from "./_components/ConsentPrompt";
+import { MostSearchedMetalPrices, MultiMetalCards, PriceAlertClient, WatchlistClient } from "./_components/MultiMetalCards";
 import SiteHeader from "./_components/SiteHeader";
 import { formatCurrency, getCountry } from "../lib/country-data";
 import { cityRates } from "../lib/market-data";
 import type { LivePricePayload } from "../lib/live-prices";
+import type { MetalPrice } from "../lib/metal-prices";
+import { metals } from "../lib/metals";
 
 const ranges = ["1D", "7D", "1M", "6M", "1Y"];
 const majorCityOrder = ["chennai", "mumbai", "delhi", "kolkata", "bengaluru", "hyderabad", "kerala", "pune", "vadodara", "ahmedabad"];
@@ -292,13 +295,17 @@ function CalculatorPreview({ ratePerGram, countryCode }: { ratePerGram: number; 
 function QuickTools() {
   return (
     <section className="wrap section quick-tools-top">
-      <Heading eyebrow="Explore first" title="Useful tools" copy="Jump directly to the most-used gold, silver, history and calculator pages." />
+      <Heading eyebrow="Explore first" title="Useful tools" copy="Jump directly to metal prices, comparisons, history and calculators." />
       <div className="quick">
         {[
           [Coins, "Gold price today", "24K, 22K and 18K rates", "/gold-price-today"],
           [Coins, "Silver price today", "Gram, 10g and kilogram rates", "/silver-price-today"],
+          [Coins, "Platinum price today", "Live platinum per gram", "/platinum-price-today"],
+          [Coins, "Copper price today", "Industrial metal per kg", "/copper-price-today"],
           [LineChart, "Historical prices", "Filter by city, purity and range", "/historical-prices"],
-          [Calculator, "Calculator", "Estimate final jewellery value", "/calculator"],
+          [LineChart, "Metal comparison", "Gold vs silver vs platinum", "/metal-comparison"],
+          [Calculator, "Return calculator", "Estimate profit or loss", "/investment-return-calculator"],
+          [Calculator, "Jewellery calculator", "Estimate final jewellery value", "/calculator"],
         ].map(([Icon, title, desc, href]) => (
           <Link className="quick-card" href={href as string} key={title as string}>
             <span>
@@ -313,6 +320,54 @@ function QuickTools() {
         ))}
       </div>
     </section>
+  );
+}
+
+function HeroMetalNav({ city, countryCode }: { city: string; countryCode: string }) {
+  const [metalPrices, setMetalPrices] = useState<MetalPrice[]>([]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    fetch(`/api/metals/current?city=${city}&country=${countryCode}`, { signal: controller.signal })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload: { metals?: MetalPrice[] } | null) => setMetalPrices(payload?.metals ?? []))
+      .catch(() => undefined);
+
+    return () => controller.abort();
+  }, [city, countryCode]);
+
+  return (
+    <div className="hero-metal-nav" aria-label="Navigate to metal price pages">
+      {metals.map((metal) => {
+        const price = metalPrices.find((item) => item.key === metal.key);
+        const gold24 = price?.variants?.find((item) => item.label === "24K");
+        const gold22 = price?.variants?.find((item) => item.label === "22K");
+
+        return (
+          <Link className="hero-metal-link" href={metal.route} key={metal.key} style={{ "--metal-color": metal.color } as CSSProperties}>
+            <span>{metal.symbol}</span>
+            <b>{metal.name}</b>
+            <small>{metal.searchLabel}</small>
+            <strong className="hero-metal-price">
+              {metal.key === "gold" ? (
+                <>
+                  <i>24K {gold24 ? formatCurrency(gold24.price, countryCode, 0) : "Loading..."}</i>
+                  <i>22K {gold22 ? formatCurrency(gold22.price, countryCode, 0) : "Loading..."}</i>
+                </>
+              ) : price?.price ? (
+                <>
+                  <i>{formatCurrency(price.price, countryCode, metal.key === "copper" ? 0 : 2)}</i>
+                  <em>{price.unitLabel}</em>
+                </>
+              ) : (
+                <i>Loading...</i>
+              )}
+            </strong>
+          </Link>
+        );
+      })}
+    </div>
   );
 }
 
@@ -681,16 +736,22 @@ function HomeContent() {
         <section className="wrap hero hero-clean" id="dashboard">
           <div className="hero-copy">
             <span className="eyebrow">{country.name} metal rates</span>
-            <h1>Today&apos;s gold and silver prices.</h1>
-            <p>Fast country and city-wise rates, simple charts, news, and practical buying tools.</p>
+            <h1>Today&apos;s metal prices.</h1>
+            <p>Track gold, silver, platinum and copper prices with charts, alerts, comparisons and practical buying tools.</p>
+            <HeroMetalNav city={city.slug} countryCode={countryCode} />
           </div>
         </section>
 
+        <MultiMetalCards city={city.slug} countryCode={countryCode} />
+        <MostSearchedMetalPrices />
+        <WatchlistClient city={city.slug} countryCode={countryCode} />
+
         {priceError ? <div className="wrap inline-error">Live prices are temporarily unavailable. Please refresh again shortly.</div> : null}
         <QuickTools />
-        <GoldPerGramTable gold24={gold24} gold22={gold22} gold18={gold18} silver={silver} countryCode={countryCode} countryName={countryCode === "IN" ? "India" : country.name} currency={country.currency} />
 
         {gold22 ? <CalculatorPreview ratePerGram={gold22.pricePerGram} countryCode={countryCode} /> : null}
+
+        <PriceAlertClient city={city.slug} />
 
         <section className="wrap section" id="historical">
           <Heading eyebrow="Market movement" title="Trends" copy="Goodreturns last 10 daily rates tuned for small screens." />

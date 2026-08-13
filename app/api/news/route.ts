@@ -11,6 +11,7 @@ type NewsItem = {
 };
 
 type NewsImageHint = "gold-bars" | "silver-coins" | "market-chart" | "jewelry" | "city-rates" | "bullion";
+type NewsMetal = "gold" | "silver" | "platinum" | "copper";
 
 function decodeXml(value: string) {
   return value
@@ -83,8 +84,20 @@ export const revalidate = 600;
 const CACHE_HEADERS = { "Cache-Control": "public, s-maxage=600, stale-while-revalidate=1800" };
 
 export async function GET(request: Request) {
-  const country = getCountry(new URL(request.url).searchParams.get("country") || "IN");
-  const query = encodeURIComponent(`gold silver price OR bullion ${country.name}`);
+  const { searchParams } = new URL(request.url);
+  const country = getCountry(searchParams.get("country") || "IN");
+  const metal = searchParams.get("metal") as NewsMetal | null;
+  const metalQuery =
+    metal === "platinum"
+      ? "platinum price OR platinum jewellery OR platinum market"
+      : metal === "copper"
+        ? "copper price OR copper market OR industrial metals"
+        : metal === "silver"
+          ? "silver price OR silver rate OR silver bullion"
+          : metal === "gold"
+            ? "gold price OR gold rate OR bullion"
+            : "gold silver platinum copper price OR bullion";
+  const query = encodeURIComponent(`${metalQuery} ${country.name}`);
   const url = `https://news.google.com/rss/search?q=${query}&hl=en&gl=${country.code}&ceid=${country.code}:en`;
 
   try {
@@ -117,7 +130,14 @@ export async function GET(request: Request) {
           imageHint: imageHintFor(title, cleanSource),
         };
       })
-      .filter((item) => /gold|silver|bullion|precious metal|jewellery/i.test(item.title));
+      .filter((item) => {
+        const text = `${item.title} ${item.source}`;
+        if (metal === "platinum") return /platinum|precious metal|jewellery/i.test(text);
+        if (metal === "copper") return /copper|industrial metal|commodity|base metal/i.test(text);
+        if (metal === "silver") return /silver|bullion|precious metal|jewellery/i.test(text);
+        if (metal === "gold") return /gold|bullion|precious metal|jewellery/i.test(text);
+        return /gold|silver|platinum|copper|bullion|precious metal|jewellery|commodity/i.test(text);
+      });
 
     return NextResponse.json(
       {

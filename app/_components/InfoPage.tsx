@@ -2,9 +2,19 @@ import Link from "next/link";
 import { Suspense } from "react";
 import SiteHeader from "./SiteHeader";
 
-export default function InfoPage({ title, description, children }: { title: string; description: string; children?: React.ReactNode }) {
+export default function InfoPage({
+  title,
+  description,
+  children,
+  pageClassName = "",
+}: {
+  title: string;
+  description: string;
+  children?: React.ReactNode;
+  pageClassName?: string;
+}) {
   return (
-    <main className="info-page">
+    <main className={`info-page ${pageClassName}`.trim()}>
       <Suspense fallback={null}>
         <SiteHeader />
       </Suspense>

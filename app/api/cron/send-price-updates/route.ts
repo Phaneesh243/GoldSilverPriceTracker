@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { sendTargetPriceAlerts } from "../../../../lib/metal-alerts";
 import { sendBigMoveAlerts, sendDigest, type DigestSlot } from "../../../../lib/push-notifications";
 
 export const runtime = "nodejs";
@@ -30,8 +31,13 @@ export async function GET(request: Request) {
 
   if (mode === "alerts" || slot === "alerts") {
     try {
-      const result = await sendBigMoveAlerts();
-      return NextResponse.json({ ok: true, mode: "alerts", ...result });
+      const [movement, targets] = await Promise.allSettled([sendBigMoveAlerts(), sendTargetPriceAlerts()]);
+      return NextResponse.json({
+        ok: movement.status === "fulfilled" || targets.status === "fulfilled",
+        mode: "alerts",
+        movement: movement.status === "fulfilled" ? movement.value : { error: movement.reason instanceof Error ? movement.reason.message : "Movement alerts failed." },
+        targets: targets.status === "fulfilled" ? targets.value : { error: targets.reason instanceof Error ? targets.reason.message : "Target alerts failed." },
+      });
     } catch (error) {
       return NextResponse.json(
         {
