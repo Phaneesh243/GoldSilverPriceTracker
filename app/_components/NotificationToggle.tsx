@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Bell, BellOff } from "lucide-react";
+import { REQUEST_NOTIFICATIONS_EVENT } from "./ConsentPrompt";
 
 const NOTIFICATION_KEY = "gsp-notification-choice-v1";
 const NOTIFICATION_CHANGED_EVENT = "gsp-notifications-changed";
@@ -94,7 +95,9 @@ export default function NotificationToggle({ citySlug = "mumbai" }: { citySlug?:
     }
 
     async function enable() {
-        let publicKey: string | null = null;
+        // Keep the runtime endpoint as the source of truth, with the public build
+        // value as a fallback when a browser has an older cached route response.
+        let publicKey: string | null = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || null;
         try {
             const statusResponse = await fetch("/api/notifications/status", { cache: "no-store" });
             if (statusResponse.ok) {
@@ -187,6 +190,10 @@ export default function NotificationToggle({ citySlug = "mumbai" }: { citySlug?:
 
     async function toggle() {
         if (busy) return;
+        if (!enabled) {
+            window.dispatchEvent(new CustomEvent(REQUEST_NOTIFICATIONS_EVENT));
+            return;
+        }
         setBusy(true);
         try {
             if (enabled) {

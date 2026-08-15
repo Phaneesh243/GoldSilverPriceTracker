@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { Bell, Eye, TrendingDown, TrendingUp } from "lucide-react";
+import { REQUEST_NOTIFICATIONS_EVENT } from "./ConsentPrompt";
 import { formatCurrency } from "../../lib/country-data";
 import { metals, mostSearchedMetalLinks, type MetalKey } from "../../lib/metals";
 import type { MetalPrice } from "../../lib/metal-prices";
@@ -212,10 +213,16 @@ export function PriceAlertClient({ city = "mumbai" }: { city?: string }) {
         setMessage("This browser does not support service workers.");
         return;
       }
-      const registration = await navigator.serviceWorker.ready;
+      const registration = await navigator.serviceWorker.getRegistration();
+      if (!registration) {
+        setMessage("Allow notifications to save this price alert.");
+        window.dispatchEvent(new CustomEvent(REQUEST_NOTIFICATIONS_EVENT));
+        return;
+      }
       const subscription = await registration.pushManager.getSubscription();
       if (!subscription) {
-        setMessage("Turn on notifications first, then save a price alert.");
+        setMessage("Allow notifications to save this price alert.");
+        window.dispatchEvent(new CustomEvent(REQUEST_NOTIFICATIONS_EVENT));
         return;
       }
 

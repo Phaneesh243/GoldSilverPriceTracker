@@ -6,6 +6,7 @@ import { Bell, Cookie, X } from "lucide-react";
 const CONSENT_KEY = "gsp-consent-v1";
 const NOTIFICATION_KEY = "gsp-notification-choice-v1";
 const NOTIFICATION_CHANGED_EVENT = "gsp-notifications-changed";
+export const REQUEST_NOTIFICATIONS_EVENT = "gsp-request-notifications";
 
 function urlBase64ToUint8Array(value: string) {
   const padding = "=".repeat((4 - (value.length % 4)) % 4);
@@ -35,7 +36,9 @@ async function registerPushSubscription() {
     return { ok: false, message: "Push notifications are not supported in this browser." };
   }
 
-  let publicKey: string | null = null;
+  // Keep the runtime endpoint as the source of truth, with the public build
+  // value as a fallback when a browser has an older cached route response.
+  let publicKey: string | null = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || null;
   try {
     const statusResponse = await fetch("/api/notifications/status", { cache: "no-store" });
     if (statusResponse.ok) {
@@ -98,13 +101,18 @@ export default function ConsentPrompt() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (window.localStorage.getItem(CONSENT_KEY)) {
-      return;
+    function showNotificationPrompt() {
+      setMessage("");
+      setVisible(true);
     }
 
-    const timer = window.setTimeout(() => setVisible(true), 5000);
+    window.addEventListener(REQUEST_NOTIFICATIONS_EVENT, showNotificationPrompt);
+    const timer = window.localStorage.getItem(CONSENT_KEY) ? undefined : window.setTimeout(() => setVisible(true), 5000);
 
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.removeEventListener(REQUEST_NOTIFICATIONS_EVENT, showNotificationPrompt);
+      if (timer) window.clearTimeout(timer);
+    };
   }, []);
 
   async function acceptCookies() {
