@@ -8,3 +8,20 @@
 - Environments: .env.local
 ✓ Ready in 13.3s
 
+○ Compiling / ...
+ GET / 200 in 45s (next.js: 43s, application-code: 2.7s)
+○ Compiling /api/metals/current ...
+ GET /api/news?country=IN 503 in 15.4s (next.js: 5.3s, application-code: 10.1s)
+ GET /api/prices/city-rates 503 in 16.8s (next.js: 5.8s, application-code: 11.0s)
+ GET /api/prices/history?metal=silver&period=1d&country=IN 200 in 18.1s (next.js: 8.9s, application-code: 9.2s)
+ GET /api/prices/history?metal=gold&period=1d&country=IN 200 in 18.1s (next.js: 8.5s, application-code: 9.6s)
+ GET /api/prices/current?city=mumbai&country=IN&date= 200 in 18.0s (next.js: 4.8s, application-code: 13.3s)
+ GET /api/metals/current?city=mumbai&country=IN 200 in 18.5s (next.js: 7.1s, application-code: 11.4s)
+ GET /api/metals/current?city=mumbai&country=IN 200 in 168ms (next.js: 13ms, application-code: 155ms)
+ GET /api/metals/current?city=mumbai&country=IN 200 in 175ms (next.js: 16ms, application-code: 159ms)
+ GET /api/metals/current?city=mumbai&country=IN 200 in 461ms (next.js: 20ms, application-code: 441ms)
+ GET /api/prices/current?city=mumbai&country=IN&date= 200 in 1356ms (next.js: 480ms, application-code: 876ms)
+ GET /api/metals/current?city=mumbai&country=IN 200 in 15.3s (next.js: 3.6s, application-code: 11.8s)
+ GET /api/prices/current?city=mumbai&country=IN&date= 200 in 15.8s (next.js: 1955ms, application-code: 13.9s)
+ GET /api/metals/current?city=mumbai&country=IN 200 in 146ms (next.js: 15ms, application-code: 131ms)
+ GET /api/prices/current?city=mumbai&country=IN&date= 200 in 236ms (next.js: 20ms, application-code: 216ms)
