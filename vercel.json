@@ -21,7 +21,7 @@
     },
     {
       "path": "/api/cron/big-move",
-      "schedule": "30 3-11 * * 1-5"
+      "schedule": "30 3 * * 1-5"
     }
   ]
 }
