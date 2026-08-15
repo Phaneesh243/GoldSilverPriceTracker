@@ -35,10 +35,19 @@ async function registerPushSubscription() {
     return { ok: false, message: "Push notifications are not supported in this browser." };
   }
 
-  const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+  let publicKey: string | null = null;
+  try {
+    const statusResponse = await fetch("/api/notifications/status", { cache: "no-store" });
+    if (statusResponse.ok) {
+      const status = (await statusResponse.json()) as { vapidPublicKey?: unknown };
+      publicKey = typeof status.vapidPublicKey === "string" ? status.vapidPublicKey : null;
+    }
+  } catch {
+    // Keep the user-facing message below when the status endpoint is unavailable.
+  }
 
   if (!publicKey) {
-    return { ok: false, message: "Notification permission saved. Add VAPID keys to enable server push." };
+    return { ok: false, message: "Notification permission saved. Push notifications are not configured on this server yet." };
   }
 
   await navigator.serviceWorker.register("/sw.js");

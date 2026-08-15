@@ -13,7 +13,8 @@ export async function GET() {
   return NextResponse.json({
     configured: hasRedis && hasPublicKey && hasPrivateKey && hasEmail && notificationsConfigured(),
     redis: hasRedis,
-    vapidPublicKey: hasPublicKey,
+    // The public key is safe to expose to browsers; the private key is never returned.
+    vapidPublicKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || null,
     vapidPrivateKey: hasPrivateKey,
     vapidEmail: hasEmail,
   });

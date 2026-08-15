@@ -94,9 +94,19 @@ export default function NotificationToggle({ citySlug = "mumbai" }: { citySlug?:
     }
 
     async function enable() {
-        const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+        let publicKey: string | null = null;
+        try {
+            const statusResponse = await fetch("/api/notifications/status", { cache: "no-store" });
+            if (statusResponse.ok) {
+                const status = (await statusResponse.json()) as { vapidPublicKey?: unknown };
+                publicKey = typeof status.vapidPublicKey === "string" ? status.vapidPublicKey : null;
+            }
+        } catch {
+            // Keep the user-facing message below when the status endpoint is unavailable.
+        }
+
         if (!publicKey) {
-            showMessage("Missing NEXT_PUBLIC_VAPID_PUBLIC_KEY. Add VAPID keys and restart the Next.js server.");
+            showMessage("Push notifications are not configured on this server yet.");
             return;
         }
 

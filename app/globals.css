@@ -1791,9 +1791,26 @@ html[data-theme="dark"] .chart:hover {
 
   .actions {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto auto;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 40px 40px;
     width: 100%;
     overflow: visible;
+  }
+
+  .actions > .city-select:nth-child(1),
+  .actions > .city-select:nth-child(2),
+  .actions > .date-select {
+    grid-column: span 2;
+    width: 100%;
+  }
+
+  .actions > .notification-toggle,
+  .actions > .icon-btn {
+    width: 40px;
+    justify-self: stretch;
+  }
+
+  .actions > .notification-toggle .icon-btn {
+    width: 40px;
   }
 
   .city-select {
@@ -1879,12 +1896,10 @@ html[data-theme="dark"] .chart:hover {
   }
 
   .actions {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 40px 40px;
   }
 
-  .date-select,
-  .notification-toggle,
-  .icon-btn {
+  .date-select {
     width: 100%;
   }
 
@@ -1892,8 +1907,10 @@ html[data-theme="dark"] .chart:hover {
     height: 40px;
   }
 
-  .notification-toggle .icon-btn {
-    width: 100%;
+  .actions > .notification-toggle,
+  .actions > .icon-btn,
+  .actions > .notification-toggle .icon-btn {
+    width: 40px;
   }
 
   .notification-hint {
