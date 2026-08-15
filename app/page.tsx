@@ -10,7 +10,6 @@ import {
   ChevronRight,
   Coins,
   LineChart,
-  MapPin,
 } from "lucide-react";
 import ConsentPrompt from "./_components/ConsentPrompt";
 import { MostSearchedMetalPrices, MultiMetalCards, PriceAlertClient, WatchlistClient } from "./_components/MultiMetalCards";
@@ -797,20 +796,6 @@ function HomeContent() {
           </div>
         </div>
       </footer>
-      <nav className="mobile-bottom" aria-label="Mobile quick navigation">
-        <Link href="/">
-          <Coins size={17} />
-          Home
-        </Link>
-        <Link href={`/gold-price/${city.slug}`}>
-          <MapPin size={17} />
-          City
-        </Link>
-        <Link href="/calculator">
-          <Calculator size={17} />
-          Calc
-        </Link>
-      </nav>
       <ConsentPrompt />
     </div>
   );

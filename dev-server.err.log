@@ -1,1 +1,210 @@
 ⚠ Port 3000 is in use by an unknown process, using available port 3001 instead.
+⨯ ./app/_components/SiteHeader.tsx:274:211
+Expected '</', got ':'
+  [90m272 |[0m ...
+  [90m273 |[0m ...
+[31m[1m>[0m [90m274 |[0m ...enu === [32m"prices"[0m ? <[33mChevronUp[0m size={[35m18[0m} [35m/> : <ChevronDown size={18} /[0m>}</button>
+  [90m    |[0m                                               [31m[1m^[0m
+  [90m275 |[0m ...
+  [90m276 |[0m ...
+  [90m277 |[0m ...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/_components/SiteHeader.tsx [Client Component Browser]
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/_components/SiteHeader.tsx [Client Component SSR]
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+[browser] ./app/_components/SiteHeader.tsx:274:211
+Expected '</', got ':'
+  272 | ...
+  273 | ...
+> 274 | ...enu === "prices" ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
+      |                                               ^
+  275 | ...
+  276 | ...
+  277 | ...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/_components/SiteHeader.tsx [Client Component Browser]
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/_components/SiteHeader.tsx [Client Component SSR]
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+[browser] ./app/_components/SiteHeader.tsx:274:211
+Expected '</', got ':'
+  272 | ...
+  273 | ...
+> 274 | ...enu === "prices" ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
+      |                                               ^
+  275 | ...
+  276 | ...
+  277 | ...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/_components/SiteHeader.tsx [Client Component Browser]
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/_components/SiteHeader.tsx [Client Component SSR]
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+[browser] ./app/_components/SiteHeader.tsx:274:211
+Expected '</', got ':'
+  272 | ...
+  273 | ...
+> 274 | ...enu === "prices" ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
+      |                                               ^
+  275 | ...
+  276 | ...
+  277 | ...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/_components/SiteHeader.tsx [Client Component Browser]
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/_components/SiteHeader.tsx [Client Component SSR]
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+[browser] ./app/_components/SiteHeader.tsx:274:211
+Expected '</', got ':'
+  272 | ...
+  273 | ...
+> 274 | ...enu === "prices" ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
+      |                                               ^
+  275 | ...
+  276 | ...
+  277 | ...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/_components/SiteHeader.tsx [Client Component Browser]
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/_components/SiteHeader.tsx [Client Component SSR]
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+[browser] ./app/_components/SiteHeader.tsx:274:211
+Expected '</', got ':'
+  272 | ...
+  273 | ...
+> 274 | ...enu === "prices" ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
+      |                                               ^
+  275 | ...
+  276 | ...
+  277 | ...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/_components/SiteHeader.tsx [Client Component Browser]
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/_components/SiteHeader.tsx [Client Component SSR]
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+[browser] ./app/_components/SiteHeader.tsx:274:211
+Expected '</', got ':'
+  272 | ...
+  273 | ...
+> 274 | ...enu === "prices" ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
+      |                                               ^
+  275 | ...
+  276 | ...
+  277 | ...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/_components/SiteHeader.tsx [Client Component Browser]
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/_components/SiteHeader.tsx [Client Component SSR]
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+⨯ ./app/_components/SiteHeader.tsx:274:211
+Expected '</', got ':'
+  [90m272 |[0m ...
+  [90m273 |[0m ...
+[31m[1m>[0m [90m274 |[0m ...enu === [32m"prices"[0m ? <[33mChevronUp[0m size={[35m18[0m} [35m/> : <ChevronDown size={18} /[0m>}</button>
+  [90m    |[0m                                               [31m[1m^[0m
+  [90m275 |[0m ...
+  [90m276 |[0m ...
+  [90m277 |[0m ...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/_components/SiteHeader.tsx [Client Component Browser]
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/_components/SiteHeader.tsx [Client Component SSR]
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+[browser] Uncaught Error: ./app/_components/SiteHeader.tsx:274:211
+Expected '</', got ':'
+  272 | ...
+  273 | ...
+> 274 | ...enu === "prices" ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</button>
+      |                                               ^
+  275 | ...
+  276 | ...
+  277 | ...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/_components/SiteHeader.tsx [Client Component Browser]
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/_components/SiteHeader.tsx [Client Component SSR]
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/_components/SiteHeader.tsx:274:211)
+    at <unknown> (Error: (./app/_components/SiteHeader.tsx:274:211)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
