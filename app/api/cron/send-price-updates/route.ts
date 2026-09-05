@@ -1,27 +1,17 @@
 import { NextResponse } from "next/server";
 import { sendTargetPriceAlerts } from "../../../../lib/metal-alerts";
-import { sendBigMoveAlerts, sendDigest, type DigestSlot } from "../../../../lib/push-notifications";
+import { sendBigMoveAlerts } from "../../../../lib/push-notifications";
+import { isAuthorizedCron } from "../../../../lib/cron-auth";
+import { sendUserAlerts } from "../../../../lib/user-alerts";
+import { withCronLock } from "../../../../lib/cron-lock";
+import { sendMarketDigest, type MarketDigestSlot } from "../../../../lib/market-digest";
 
 export const runtime = "nodejs";
 
-const VALID_SLOTS: DigestSlot[] = ["morning", "midday", "evening"];
-
-function isAuthorized(request: Request) {
-  if (request.headers.get("x-vercel-cron")) {
-    return true;
-  }
-
-  const secret = process.env.CRON_SECRET;
-  if (!secret) {
-    return false;
-  }
-
-  const provided = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
-  return provided === secret;
-}
+const VALID_SLOTS: MarketDigestSlot[] = ["morning", "midday", "close", "evening"];
 
 export async function GET(request: Request) {
-  if (!isAuthorized(request)) {
+  if (!isAuthorizedCron(request)) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
@@ -31,12 +21,19 @@ export async function GET(request: Request) {
 
   if (mode === "alerts" || slot === "alerts") {
     try {
-      const [movement, targets] = await Promise.allSettled([sendBigMoveAlerts(), sendTargetPriceAlerts()]);
+      const startedAt = new Date().toISOString();
+      const job = await withCronLock("user-alerts", async () => Promise.allSettled([sendBigMoveAlerts(), sendTargetPriceAlerts(), sendUserAlerts()]));
+      if (!job.acquired || !job.result) return NextResponse.json({ ok: true, skipped: "already-running", startedAt, endedAt: new Date().toISOString() });
+      const [movement, targets, users] = job.result;
       return NextResponse.json({
         ok: movement.status === "fulfilled" || targets.status === "fulfilled",
         mode: "alerts",
+        startedAt,
+        endedAt: new Date().toISOString(),
+        lock: job.lock,
         movement: movement.status === "fulfilled" ? movement.value : { error: movement.reason instanceof Error ? movement.reason.message : "Movement alerts failed." },
         targets: targets.status === "fulfilled" ? targets.value : { error: targets.reason instanceof Error ? targets.reason.message : "Target alerts failed." },
+        users: users.status === "fulfilled" ? users.value : { error: users.reason instanceof Error ? users.reason.message : "User alerts failed." },
       });
     } catch (error) {
       return NextResponse.json(
@@ -49,15 +46,17 @@ export async function GET(request: Request) {
     }
   }
 
-  const slotParam = (slot || "morning") as DigestSlot;
+  const slotParam = (slot || "morning") as MarketDigestSlot;
 
   if (!VALID_SLOTS.includes(slotParam)) {
     return NextResponse.json({ error: "Invalid slot." }, { status: 400 });
   }
 
   try {
-    const result = await sendDigest(slotParam);
-    return NextResponse.json({ ok: true, ...result });
+    const startedAt = new Date().toISOString();
+    const job = await withCronLock(`market-digest:${slotParam}`, () => sendMarketDigest(slotParam));
+    if (!job.acquired || !job.result) return NextResponse.json({ ok: true, skipped: "already-running", slot: slotParam, startedAt, endedAt: new Date().toISOString() });
+    return NextResponse.json({ ok: true, ...job.result, startedAt, endedAt: new Date().toISOString(), lock: job.lock });
   } catch (error) {
     return NextResponse.json(
       {

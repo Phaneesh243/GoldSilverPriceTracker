@@ -1,10 +1,16 @@
 import type { MetadataRoute } from "next";
 import { cityRates } from "../lib/market-data";
+import { currencyPairs } from "../lib/currencies";
+import { insuranceCategories, insuranceProviders } from "../lib/insurance";
+import { fundCategories, mutualFunds } from "../lib/mutual-funds";
+import { cryptoAssets, cryptoCategories } from "../lib/crypto";
+import { indianStocks } from "../lib/indian-stocks";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = "https://goldsilverprices.in";
+  const base = (process.env.NEXT_PUBLIC_SITE_URL || "https://goldsilverprices.in").replace(/\/$/, "");
   const corePages = [
     "/",
+    "/metals",
     "/gold-price-today",
     "/silver-price-today",
     "/platinum-price-today",
@@ -14,20 +20,110 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/platinum-price-last-10-days",
     "/copper-price-last-10-days",
     "/metal-comparison",
-    "/investment-return-calculator",
+    "/calculators",
+    "/calculators/gold",
+    "/calculators/silver",
+    "/calculators/platinum",
+    "/calculators/copper",
+    "/calculators/gold-jewellery",
+    "/calculators/purity-converter",
+    "/calculators/weight-converter",
+    "/calculators/investment-return",
+    "/calculators/sip",
+    "/calculators/cagr",
+    "/calculators/emi",
+    "/calculators/currency",
+    "/currencies",
+    "/calculators/tax",
+    "/news",
+    "/news/metals",
+    "/news/gold",
+    "/news/silver",
+    "/news/platinum",
+    "/news/copper",
+    "/news/markets",
+    "/news/investing",
+    "/news/analysis",
+    "/news/stocks",
+    "/news/crypto",
+    "/news/funds",
+    "/news/insurance",
+    "/news/bonds",
+    "/bonds",
+    "/bonds/explore",
+    "/bonds/compare",
+    "/bonds/providers",
+    "/bonds/calculators",
+    "/bonds/government-bonds",
+    "/bonds/treasury-bills",
+    "/bonds/corporate-bonds",
+    "/bonds/tax-free-bonds",
+    "/bonds/green-bonds",
+    "/news/currencies",
+    "/insurance",
+    "/insurance/compare",
+    "/insurance/providers",
+    "/insurance/calculators",
+    "/insurance/claims",
+    "/insurance/renewal",
+    "/mutual-funds",
+    "/mutual-funds/explore",
+    "/mutual-funds/compare",
+    "/mutual-funds/providers",
+    "/mutual-funds/calculators",
+    "/mutual-funds/learn",
+    "/mutual-funds/tax",
+    "/crypto",
+    "/crypto/explore",
+    "/crypto/compare",
+    "/crypto/exchanges",
+    "/crypto/calculators",
+    "/crypto/tax",
+    "/crypto/learn",
+    "/crypto/regulation",
+    "/crypto/security",
+    "/crypto/defi",
+    "/crypto/staking",
+    "/crypto/nft",
+    "/crypto/news",
+    "/stocks",
+    "/stocks/explore",
+    "/stocks/screener",
+    "/stocks/compare",
+    "/stocks/nifty-50",
+    "/stocks/top-10",
+    "/stocks/under-10",
+    "/stocks/under-50",
+    "/stocks/under-100",
+    "/stocks/ipo",
+    "/stocks/results",
+    "/stocks/corporate-actions",
+    "/stocks/news",
+    "/stocks/brokers",
+    "/stocks/exchanges",
+    "/stocks/sebi",
+    "/stocks/learn",
+    "/stocks/calculators",
     "/historical-prices",
-    "/calculator",
     "/about",
     "/disclaimer",
     "/privacy",
     "/contact",
   ];
   const cityPages = cityRates.map((city) => `/gold-price/${city.slug}`);
+  const currencyPages = currencyPairs.map((pair) => `/currencies/${pair.slug}`);
+  const insuranceCategoryPages = insuranceCategories.map((category) => category.route);
+  const insuranceProviderPages = insuranceProviders.map((provider) => `/insurance/providers/${provider.slug}`);
+  const fundCategoryPages = fundCategories.map((category) => category.route);
+  const fundPages = mutualFunds.map((fund) => `/mutual-funds/${fund.slug}`);
+  const cryptoCategoryPages = cryptoCategories.map((category) => category.route);
+  const cryptoPages = cryptoAssets.map((asset) => `/crypto/${asset.slug}`);
+  const stockPages = indianStocks.map((stock) => `/stocks/${stock.slug}`);
 
-  return [...corePages, ...cityPages].map((path) => ({
+  const paths = [...new Set([...corePages, ...cityPages, ...currencyPages, ...insuranceCategoryPages, ...insuranceProviderPages, ...fundCategoryPages, ...fundPages, ...cryptoCategoryPages, ...cryptoPages, ...stockPages])];
+  return paths.map((path) => ({
     url: base + path,
-    lastModified: new Date(),
-    changeFrequency: path === "/" || path.startsWith("/gold-price/") ? "hourly" : "weekly",
+    changeFrequency: path === "/" || path.startsWith("/gold-price/") ? "hourly" as const : "weekly" as const,
     priority: path === "/" ? 1 : path.startsWith("/gold-price/") ? 0.85 : 0.7,
   }));
 }

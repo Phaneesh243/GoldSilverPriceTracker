@@ -1,0 +1,637 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Currency Dashboard - GoldSilverPrices</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#1c2b3c",
+                        "on-surface": "#d4e4fa",
+                        "primary-fixed-dim": "#bfc6de",
+                        "error-container": "#93000a",
+                        "outline-variant": "#45464c",
+                        "inverse-primary": "#575e72",
+                        "surface-container": "#122131",
+                        "tertiary": "#bbc7e1",
+                        "on-secondary": "#3d2e00",
+                        "secondary-fixed": "#ffdf91",
+                        "on-tertiary-fixed-variant": "#3b475d",
+                        "secondary": "#efc138",
+                        "tertiary-container": "#061327",
+                        "primary": "#bfc6de",
+                        "on-error": "#690005",
+                        "surface": "#051424",
+                        "inverse-on-surface": "#233143",
+                        "secondary-container": "#c29800",
+                        "error": "#ffb4ab",
+                        "on-primary": "#293043",
+                        "on-background": "#d4e4fa",
+                        "outline": "#909097",
+                        "surface-tint": "#bfc6de",
+                        "tertiary-fixed-dim": "#bbc7e1",
+                        "primary-fixed": "#dbe2fa",
+                        "on-secondary-fixed-variant": "#594400",
+                        "background": "#051424",
+                        "surface-container-low": "#0d1c2d",
+                        "on-tertiary-fixed": "#0f1c2f",
+                        "on-secondary-container": "#433300",
+                        "surface-container-highest": "#273647",
+                        "surface-bright": "#2c3a4c",
+                        "on-secondary-fixed": "#241a00",
+                        "primary-container": "#0b1324",
+                        "inverse-surface": "#d4e4fa",
+                        "surface-dim": "#051424",
+                        "on-tertiary": "#253145",
+                        "on-primary-fixed": "#141b2d",
+                        "on-primary-fixed-variant": "#3f475a",
+                        "surface-container-lowest": "#010f1f",
+                        "surface-variant": "#273647",
+                        "on-tertiary-container": "#727e96",
+                        "on-surface-variant": "#c6c6cd",
+                        "on-primary-container": "#767e93",
+                        "on-error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#efc138",
+                        "tertiary-fixed": "#d7e3fe"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit-xs": "4px",
+                        "unit-sm": "8px",
+                        "gutter": "24px",
+                        "unit-md": "16px",
+                        "margin-mobile": "16px",
+                        "unit-lg": "24px",
+                        "unit-xl": "48px",
+                        "margin-desktop": "40px",
+                        "container-max": "1440px",
+                        "margin-tablet": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface-dim text-on-surface font-body-md min-h-screen selection:bg-secondary/30">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 bg-surface-dim border-b border-surface-variant shadow-none lg:hidden">
+<div class="flex items-center gap-unit-md">
+<span class="material-symbols-outlined text-secondary text-2xl" data-icon="search">search</span>
+</div>
+<div class="font-headline-md text-headline-md font-bold text-secondary-fixed tracking-tight">
+            GoldSilverPrices
+        </div>
+<div class="flex items-center gap-unit-md">
+<span class="material-symbols-outlined text-secondary-fixed-dim hover:text-secondary-fixed-dim transition-colors cursor-pointer active:scale-95 duration-150" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-secondary-fixed-dim hover:text-secondary-fixed-dim transition-colors cursor-pointer active:scale-95 duration-150" data-icon="dark_mode">dark_mode</span>
+<span class="material-symbols-outlined text-secondary-fixed-dim hover:text-secondary-fixed-dim transition-colors cursor-pointer active:scale-95 duration-150" data-icon="location_on">location_on</span>
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-surface-variant object-cover" data-alt="A professional user profile portrait in a premium studio setting, wearing modern business attire, set against a dark navy background with subtle gold rim lighting to match the platform's high-end financial aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLldBsM9fFGwYyhdduciXoAXsYrFRoWbmjgTJgIVk62rw3TNZKJ7MEXQkXvtkSCVJWqWPuAgj3eU27ZgfPKnMoqu0qVSjKAM7L0JdgUzzJAHYLr4e5IWO11mZSD3i_GpUbP2Smfky1dmXpfAUlUz5keFAt0Tv7zl4BoQ1rU_RpUOEXc5Kgds10Ab4-OJyvtkhiDmlxpYglH7ahld51SJii068KI6Jsb9av7myOxTwQJeC9poRSz44J">
+</div>
+</header>
+<!-- SideNavBar -->
+<nav class="hidden lg:flex flex-col fixed left-0 top-0 h-full z-40 bg-surface-container-low border-r border-outline-variant shadow-none w-[280px]">
+<div class="flex items-center gap-unit-md p-unit-lg border-b border-outline-variant/30">
+<img alt="GoldSilverPrices Logo" class="w-10 h-10 rounded-lg object-cover" data-alt="A sleek, modern geometric logo design representing gold and silver commodities, utilizing deep navy blues and metallic gold accents on a dark background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe5K6urcVDjYKpJkNH_LgdCi8uJMP4AbcE9N0ZBhFMCOO3HzgX7oE4-3EhGWykZOpOEosT1cD9Wq8D5wxBpgb8zhvqZz0IAF95Ppl1l9O7G0xX--9XtZGCo666QhqAnmLj55fx_nDddPOjzz9ZT2l4IFKOaBcBLoBDevLDRmLyoGp3kasydQKKxLTpJ-zupgvw2nSacUhl6Eu37njD9g-WdJPuzCgorjpo48Oqskl55rp2oluJCSTD">
+<div>
+<div class="font-headline-md text-headline-md font-bold text-secondary">GoldSilverPrices</div>
+<div class="font-label-md text-label-md text-on-surface-variant">Market Intelligence</div>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto py-unit-md">
+<div class="flex flex-col gap-unit-xs px-unit-sm">
+<!-- Nav Items -->
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined mr-unit-md text-[20px]" data-icon="payments">payments</span>
+<span class="font-label-md text-label-md">Metals</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined mr-unit-md text-[20px]" data-icon="trending_up">trending_up</span>
+<span class="font-label-md text-label-md">Stocks</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined mr-unit-md text-[20px]" data-icon="currency_bitcoin">currency_bitcoin</span>
+<span class="font-label-md text-label-md">Crypto</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined mr-unit-md text-[20px]" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-md text-label-md">Mutual Funds</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined mr-unit-md text-[20px]" data-icon="description">description</span>
+<span class="font-label-md text-label-md">Bonds</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined mr-unit-md text-[20px]" data-icon="security">security</span>
+<span class="font-label-md text-label-md">Insurance</span>
+</a>
+<!-- Active Item: Currencies -->
+<a class="group flex items-center px-4 py-3 cursor-pointer text-secondary-fixed border-l-4 border-secondary bg-surface-variant/50 rounded-r-lg" href="#">
+<span class="material-symbols-outlined mr-unit-md text-[20px]" data-icon="currency_exchange" data-weight="fill" style="font-variation-settings: 'FILL' 1;">currency_exchange</span>
+<span class="font-label-md text-label-md">Currencies</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined mr-unit-md text-[20px]" data-icon="newspaper">newspaper</span>
+<span class="font-label-md text-label-md">News</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined mr-unit-md text-[20px]" data-icon="calculate">calculate</span>
+<span class="font-label-md text-label-md">Calculators</span>
+</a>
+</div>
+</div>
+<div class="p-unit-md border-t border-outline-variant/30 flex flex-col gap-unit-xs">
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined mr-unit-md text-[20px]" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined mr-unit-md text-[20px]" data-icon="help">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="lg:ml-[280px] pt-16 lg:pt-0 min-h-screen pb-24 lg:pb-0 px-margin-mobile md:px-margin-desktop py-unit-lg max-w-[1440px] mx-auto">
+<!-- Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-unit-lg gap-unit-md">
+<div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface mb-unit-xs">Forex Dashboard</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Real-time global currency markets and exchange rates.</p>
+</div>
+<div class="flex gap-unit-sm">
+<button class="bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant rounded-lg px-unit-md py-unit-sm font-label-md text-label-md text-on-surface transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="download">download</span> Report
+                </button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-8 lg:grid-cols-12 gap-gutter mb-gutter">
+<!-- Major Pairs Overview (Spans 8 cols on desktop) -->
+<div class="col-span-1 md:col-span-8 lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- USD/INR Card -->
+<div class="bg-[#111B2F] border border-[#1E293B] rounded-xl p-unit-md hover:bg-[#182438] transition-colors relative overflow-hidden group">
+<div class="flex justify-between items-start mb-unit-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="attach_money">attach_money</span>
+<span class="font-headline-md text-headline-md text-on-surface">USD/INR</span>
+</div>
+<span class="font-label-md text-label-md text-[#4ade80] flex items-center bg-[#4ade80]/10 px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="arrow_upward">arrow_upward</span>
+                            0.12%
+                        </span>
+</div>
+<div class="font-headline-lg text-headline-lg text-secondary mb-1">83.45</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mb-unit-md">Vol: 1.2M • High: 83.50</div>
+<div class="h-16 w-full opacity-60 group-hover:opacity-100 transition-opacity">
+<canvas id="chartUsdInr"></canvas>
+</div>
+</div>
+<!-- EUR/INR Card -->
+<div class="bg-[#111B2F] border border-[#1E293B] rounded-xl p-unit-md hover:bg-[#182438] transition-colors relative overflow-hidden group">
+<div class="flex justify-between items-start mb-unit-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="euro">euro</span>
+<span class="font-headline-md text-headline-md text-on-surface">EUR/INR</span>
+</div>
+<span class="font-label-md text-label-md text-[#f87171] flex items-center bg-[#f87171]/10 px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="arrow_downward">arrow_downward</span>
+                            -0.05%
+                        </span>
+</div>
+<div class="font-headline-lg text-headline-lg text-secondary mb-1">89.12</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mb-unit-md">Vol: 845K • Low: 89.05</div>
+<div class="h-16 w-full opacity-60 group-hover:opacity-100 transition-opacity">
+<canvas id="chartEurInr"></canvas>
+</div>
+</div>
+<!-- GBP/INR Card -->
+<div class="bg-[#111B2F] border border-[#1E293B] rounded-xl p-unit-md hover:bg-[#182438] transition-colors relative overflow-hidden group">
+<div class="flex justify-between items-start mb-unit-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="currency_pound">currency_pound</span>
+<span class="font-headline-md text-headline-md text-on-surface">GBP/INR</span>
+</div>
+<span class="font-label-md text-label-md text-[#4ade80] flex items-center bg-[#4ade80]/10 px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="arrow_upward">arrow_upward</span>
+                            0.28%
+                        </span>
+</div>
+<div class="font-headline-lg text-headline-lg text-secondary mb-1">104.56</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mb-unit-md">Vol: 520K • High: 104.60</div>
+<div class="h-16 w-full opacity-60 group-hover:opacity-100 transition-opacity">
+<canvas id="chartGbpInr"></canvas>
+</div>
+</div>
+<!-- Main Interactive Chart (Spans full width of its container) -->
+<div class="col-span-1 md:col-span-3 bg-[#111B2F] border border-[#1E293B] rounded-xl p-unit-lg h-[400px] flex flex-col relative">
+<div class="flex justify-between items-center mb-unit-md">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">USD/INR Interactive Chart</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Live mid-market rates</p>
+</div>
+<div class="flex gap-2">
+<button class="px-3 py-1 rounded-full text-label-md font-label-md border border-[#1E293B] text-on-surface-variant hover:bg-[#182438]">1H</button>
+<button class="px-3 py-1 rounded-full text-label-md font-label-md border border-secondary text-secondary bg-secondary/10">1D</button>
+<button class="px-3 py-1 rounded-full text-label-md font-label-md border border-[#1E293B] text-on-surface-variant hover:bg-[#182438]">1W</button>
+<button class="px-3 py-1 rounded-full text-label-md font-label-md border border-[#1E293B] text-on-surface-variant hover:bg-[#182438]">1M</button>
+</div>
+</div>
+<div class="flex-1 w-full relative">
+<canvas id="mainChart"></canvas>
+</div>
+</div>
+</div>
+<!-- Side Panel (Spans 4 cols on desktop) -->
+<div class="col-span-1 md:col-span-8 lg:col-span-4 flex flex-col gap-gutter">
+<!-- Currency Converter Tool -->
+<div class="bg-[#111B2F] border border-[#1E293B] rounded-xl p-unit-lg shadow-[0_10px_30px_rgba(0,0,0,0.2)]">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-unit-md flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="swap_horiz">swap_horiz</span>
+                        Currency Converter
+                    </h2>
+<div class="space-y-unit-md">
+<!-- Amount -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-unit-xs">Amount</label>
+<input class="w-full bg-surface border border-[#1E293B] rounded-lg p-unit-sm text-on-surface font-body-md focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-colors" type="number" value="1000">
+</div>
+<div class="flex items-center gap-unit-sm">
+<!-- From -->
+<div class="flex-1">
+<label class="block font-label-md text-label-md text-on-surface-variant mb-unit-xs">From</label>
+<select class="w-full bg-surface border border-[#1E293B] rounded-lg p-unit-sm text-on-surface font-body-md focus:border-secondary outline-none appearance-none">
+<option>USD - US Dollar</option>
+<option>EUR - Euro</option>
+<option>GBP - British Pound</option>
+</select>
+</div>
+<!-- Swap Button -->
+<button class="mt-6 p-2 rounded-full bg-[#182438] hover:bg-surface-variant text-on-surface transition-colors border border-[#1E293B]">
+<span class="material-symbols-outlined" data-icon="sync_alt">sync_alt</span>
+</button>
+<!-- To -->
+<div class="flex-1">
+<label class="block font-label-md text-label-md text-on-surface-variant mb-unit-xs">To</label>
+<select class="w-full bg-surface border border-[#1E293B] rounded-lg p-unit-sm text-on-surface font-body-md focus:border-secondary outline-none appearance-none">
+<option>INR - Indian Rupee</option>
+<option>JPY - Japanese Yen</option>
+<option>AUD - Australian Dollar</option>
+</select>
+</div>
+</div>
+<div class="p-unit-sm bg-[#182438] rounded-lg border border-[#1E293B] mt-unit-md">
+<div class="font-label-md text-label-md text-on-surface-variant mb-1">1000 USD =</div>
+<div class="font-headline-lg text-headline-lg text-secondary">83,450.00 INR</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant text-right">Mid-market rate</div>
+</div>
+</div>
+</div>
+<!-- Forex News Section -->
+<div class="bg-[#111B2F] border border-[#1E293B] rounded-xl p-unit-lg flex-1 overflow-hidden flex flex-col">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-unit-md flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="newspaper">newspaper</span>
+                        Forex News
+                    </h2>
+<div class="flex-1 overflow-y-auto space-y-unit-md pr-2 custom-scrollbar">
+<a class="block group" href="#">
+<div class="flex gap-unit-sm">
+<div class="w-20 h-20 rounded bg-surface-variant flex-shrink-0 overflow-hidden">
+<img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" data-alt="A macro shot of overlapping international currency notes, featuring US Dollars and Euros, illuminated with dramatic, moody lighting to convey financial gravity in a high-end editorial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGCxI7iV3gHgmf0GOvVn60Hrsix9Hva0GZCVYNAKLtsDaLATXsGcdQ8FSDHMYTEaJ7MMNbWPJDoJkYB_FxP17S-tVk7mE1LvRyP5MNupO8TKnI2pygo4F4MNLM_lUdgeEbCuNjI7KQL9zswkMQ5taimE5r8MbBBN75kj9JuoNvmi5yTx8PjQu14CVWV4ebyqtQVwUnl1frog2MHwEEPzLdjNXGF3k10To-O76m_IjHPLt7RdU2kkBA">
+</div>
+<div class="flex flex-col justify-between">
+<h3 class="font-body-md text-body-md text-on-surface group-hover:text-secondary transition-colors line-clamp-2">Fed Holds Rates Steady, Dollar Index Retreats Slightly</h3>
+<div class="font-label-md text-label-md text-on-surface-variant">2 hrs ago • Reuters</div>
+</div>
+</div>
+</a>
+<div class="h-px w-full bg-[#1E293B]"></div>
+<a class="block group" href="#">
+<div class="flex gap-unit-sm">
+<div class="w-20 h-20 rounded bg-surface-variant flex-shrink-0 overflow-hidden">
+<img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" data-alt="A modern trading floor seen through a shallow depth of field, with glowing red and green numbers reflecting on glass surfaces, depicting a fast-paced forex market environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj1OIZoTFea_OoILTyu80_VDMvskq4hO0EDxLIjoI1tRmAaYdbtjcxGT3k1LWYd5bjvDCZTko-Wsth7gSKgYC9oAHFymakt_0jOf84dFPGvYyjdmS8G5tGOuW3_DovzY7XPqfD2LpCwFU-7cVXnrjbLVrlSeWq64B2efZOgbMITcI1aZXkpLYeJ3381TlazQkrgFTp73WhBzKouo0kan97Hx2tpoR-n8GqhmXYI3Z_GUVIRwd0qZ-Z">
+</div>
+<div class="flex flex-col justify-between">
+<h3 class="font-body-md text-body-md text-on-surface group-hover:text-secondary transition-colors line-clamp-2">Rupee Gains Against Dollar on Strong Foreign Inflows</h3>
+<div class="font-label-md text-label-md text-on-surface-variant">4 hrs ago • Bloomberg</div>
+</div>
+</div>
+</a>
+<div class="h-px w-full bg-[#1E293B]"></div>
+<a class="block group" href="#">
+<div class="flex flex-col justify-between">
+<h3 class="font-body-md text-body-md text-on-surface group-hover:text-secondary transition-colors line-clamp-2">Eurozone Inflation Data Surprises Markets, EUR Stabilizes</h3>
+<div class="font-label-md text-label-md text-on-surface-variant mt-1">5 hrs ago • FT</div>
+</div>
+</a>
+</div>
+<button class="w-full mt-unit-md py-unit-sm font-label-md text-label-md text-secondary border border-[#1E293B] hover:bg-[#182438] rounded-lg transition-colors">View All News</button>
+</div>
+</div>
+</div>
+<!-- Historical Rates Table (Spans full width) -->
+<div class="bg-[#111B2F] border border-[#1E293B] rounded-xl overflow-hidden mb-gutter">
+<div class="p-unit-lg border-b border-[#1E293B] flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md text-on-surface">Cross Rates matrix</h2>
+<div class="flex gap-unit-sm">
+<button class="px-3 py-1 rounded bg-[#182438] border border-[#1E293B] text-label-md font-label-md text-on-surface hover:text-secondary transition-colors">Export CSV</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-[#182438]/50 border-b border-[#1E293B] font-label-md text-label-md text-on-surface-variant uppercase">
+<th class="py-unit-md px-unit-lg font-semibold">Pair</th>
+<th class="py-unit-md px-unit-lg text-right font-semibold">Price</th>
+<th class="py-unit-md px-unit-lg text-right font-semibold">Change</th>
+<th class="py-unit-md px-unit-lg text-right font-semibold">Change %</th>
+<th class="py-unit-md px-unit-lg text-right font-semibold">High</th>
+<th class="py-unit-md px-unit-lg text-right font-semibold">Low</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm">
+<!-- Row 1 -->
+<tr class="border-b border-[#1E293B] hover:bg-[#182438] transition-colors group cursor-pointer">
+<td class="py-unit-sm px-unit-lg">
+<div class="flex items-center gap-2">
+<span class="w-6 h-4 bg-surface-variant rounded text-[10px] flex items-center justify-center font-bold text-on-surface">US</span>
+<span class="font-semibold text-on-surface group-hover:text-secondary transition-colors">USD/INR</span>
+</div>
+</td>
+<td class="py-unit-sm px-unit-lg text-right text-on-surface">83.450</td>
+<td class="py-unit-sm px-unit-lg text-right text-[#4ade80]">+0.100</td>
+<td class="py-unit-sm px-unit-lg text-right text-[#4ade80]">+0.12%</td>
+<td class="py-unit-sm px-unit-lg text-right text-on-surface-variant">83.500</td>
+<td class="py-unit-sm px-unit-lg text-right text-on-surface-variant">83.310</td>
+</tr>
+<!-- Row 2 -->
+<tr class="border-b border-[#1E293B] hover:bg-[#182438] transition-colors group cursor-pointer">
+<td class="py-unit-sm px-unit-lg">
+<div class="flex items-center gap-2">
+<span class="w-6 h-4 bg-surface-variant rounded text-[10px] flex items-center justify-center font-bold text-on-surface">EU</span>
+<span class="font-semibold text-on-surface group-hover:text-secondary transition-colors">EUR/USD</span>
+</div>
+</td>
+<td class="py-unit-sm px-unit-lg text-right text-on-surface">1.068</td>
+<td class="py-unit-sm px-unit-lg text-right text-[#f87171]">-0.002</td>
+<td class="py-unit-sm px-unit-lg text-right text-[#f87171]">-0.18%</td>
+<td class="py-unit-sm px-unit-lg text-right text-on-surface-variant">1.071</td>
+<td class="py-unit-sm px-unit-lg text-right text-on-surface-variant">1.065</td>
+</tr>
+<!-- Row 3 -->
+<tr class="border-b border-[#1E293B] hover:bg-[#182438] transition-colors group cursor-pointer">
+<td class="py-unit-sm px-unit-lg">
+<div class="flex items-center gap-2">
+<span class="w-6 h-4 bg-surface-variant rounded text-[10px] flex items-center justify-center font-bold text-on-surface">GB</span>
+<span class="font-semibold text-on-surface group-hover:text-secondary transition-colors">GBP/USD</span>
+</div>
+</td>
+<td class="py-unit-sm px-unit-lg text-right text-on-surface">1.253</td>
+<td class="py-unit-sm px-unit-lg text-right text-[#4ade80]">+0.004</td>
+<td class="py-unit-sm px-unit-lg text-right text-[#4ade80]">+0.32%</td>
+<td class="py-unit-sm px-unit-lg text-right text-on-surface-variant">1.255</td>
+<td class="py-unit-sm px-unit-lg text-right text-on-surface-variant">1.248</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-[#182438] transition-colors group cursor-pointer">
+<td class="py-unit-sm px-unit-lg">
+<div class="flex items-center gap-2">
+<span class="w-6 h-4 bg-surface-variant rounded text-[10px] flex items-center justify-center font-bold text-on-surface">JP</span>
+<span class="font-semibold text-on-surface group-hover:text-secondary transition-colors">USD/JPY</span>
+</div>
+</td>
+<td class="py-unit-sm px-unit-lg text-right text-on-surface">153.20</td>
+<td class="py-unit-sm px-unit-lg text-right text-[#f87171]">-0.150</td>
+<td class="py-unit-sm px-unit-lg text-right text-[#f87171]">-0.09%</td>
+<td class="py-unit-sm px-unit-lg text-right text-on-surface-variant">153.50</td>
+<td class="py-unit-sm px-unit-lg text-right text-on-surface-variant">152.90</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-4 pb-safe bg-surface-container-highest border-t border-outline-variant shadow-[0_-4px_10px_rgba(0,0,0,0.3)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-secondary-fixed-dim bg-secondary-container/20 rounded-xl px-3 py-1 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1 text-[24px]" data-icon="show_chart" data-weight="fill" style="font-variation-settings: 'FILL' 1;">show_chart</span>
+<span class="font-label-md-mobile text-label-md-mobile">Markets</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-surface-variant/30 active:scale-90 transition-transform duration-200 p-2 rounded-xl" href="#">
+<span class="material-symbols-outlined mb-1 text-[24px]" data-icon="newspaper">newspaper</span>
+<span class="font-label-md-mobile text-label-md-mobile">News</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-surface-variant/30 active:scale-90 transition-transform duration-200 p-2 rounded-xl" href="#">
+<span class="material-symbols-outlined mb-1 text-[24px]" data-icon="pie_chart">pie_chart</span>
+<span class="font-label-md-mobile text-label-md-mobile">Portfolio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-surface-variant/30 active:scale-90 transition-transform duration-200 p-2 rounded-xl" href="#">
+<span class="material-symbols-outlined mb-1 text-[24px]" data-icon="notifications">notifications</span>
+<span class="font-label-md-mobile text-label-md-mobile">Alerts</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-surface-variant/30 active:scale-90 transition-transform duration-200 p-2 rounded-xl" href="#">
+<span class="material-symbols-outlined mb-1 text-[24px]" data-icon="menu">menu</span>
+<span class="font-label-md-mobile text-label-md-mobile">Menu</span>
+</a>
+</nav>
+<style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #1E293B;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #45464c;
+        }
+    </style>
+<script>
+        // Chart.js global config for dark theme
+        Chart.defaults.color = '#767e93';
+        Chart.defaults.font.family = 'Inter';
+        
+        const commonSparklineOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: { enabled: false } },
+            scales: { x: { display: false }, y: { display: false } },
+            elements: { point: { radius: 0 } },
+            interaction: { mode: 'index', intersect: false }
+        };
+
+        // USD/INR Sparkline
+        const ctxUsd = document.getElementById('chartUsdInr').getContext('2d');
+        const gradientUsd = ctxUsd.createLinearGradient(0, 0, 0, 64);
+        gradientUsd.addColorStop(0, 'rgba(74, 222, 128, 0.2)'); // Greenish tint for positive
+        gradientUsd.addColorStop(1, 'rgba(74, 222, 128, 0)');
+        
+        new Chart(ctxUsd, {
+            type: 'line',
+            data: {
+                labels: ['1','2','3','4','5','6','7','8','9','10'],
+                datasets: [{
+                    data: [83.3, 83.35, 83.32, 83.4, 83.38, 83.42, 83.45, 83.41, 83.44, 83.45],
+                    borderColor: '#4ade80',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: gradientUsd
+                }]
+            },
+            options: commonSparklineOptions
+        });
+
+        // EUR/INR Sparkline
+        const ctxEur = document.getElementById('chartEurInr').getContext('2d');
+        const gradientEur = ctxEur.createLinearGradient(0, 0, 0, 64);
+        gradientEur.addColorStop(0, 'rgba(248, 113, 113, 0.2)'); // Reddish for negative
+        gradientEur.addColorStop(1, 'rgba(248, 113, 113, 0)');
+
+        new Chart(ctxEur, {
+            type: 'line',
+            data: {
+                labels: ['1','2','3','4','5','6','7','8','9','10'],
+                datasets: [{
+                    data: [89.2, 89.15, 89.18, 89.1, 89.05, 89.08, 89.12, 89.15, 89.1, 89.12],
+                    borderColor: '#f87171',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: gradientEur
+                }]
+            },
+            options: commonSparklineOptions
+        });
+
+        // GBP/INR Sparkline
+        const ctxGbp = document.getElementById('chartGbpInr').getContext('2d');
+        const gradientGbp = ctxGbp.createLinearGradient(0, 0, 0, 64);
+        gradientGbp.addColorStop(0, 'rgba(74, 222, 128, 0.2)');
+        gradientGbp.addColorStop(1, 'rgba(74, 222, 128, 0)');
+
+        new Chart(ctxGbp, {
+            type: 'line',
+            data: {
+                labels: ['1','2','3','4','5','6','7','8','9','10'],
+                datasets: [{
+                    data: [104.2, 104.3, 104.25, 104.4, 104.35, 104.5, 104.45, 104.6, 104.55, 104.56],
+                    borderColor: '#4ade80',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: gradientGbp
+                }]
+            },
+            options: commonSparklineOptions
+        });
+
+        // Main Interactive Chart
+        const ctxMain = document.getElementById('mainChart').getContext('2d');
+        const gradientMain = ctxMain.createLinearGradient(0, 0, 0, 400);
+        gradientMain.addColorStop(0, 'rgba(239, 193, 56, 0.3)'); // Gold secondary color
+        gradientMain.addColorStop(1, 'rgba(239, 193, 56, 0)');
+
+        // Generate some realistic looking dummy data
+        const timeLabels = Array.from({length: 48}, (_, i) => `${Math.floor(i/2).toString().padStart(2, '0')}:${(i%2)*30 === 0 ? '00' : '30'}`);
+        let baseValue = 83.20;
+        const mainData = timeLabels.map(() => {
+            baseValue += (Math.random() - 0.45) * 0.1;
+            return baseValue;
+        });
+
+        new Chart(ctxMain, {
+            type: 'line',
+            data: {
+                labels: timeLabels,
+                datasets: [{
+                    label: 'USD/INR',
+                    data: mainData,
+                    borderColor: '#efc138', // secondary
+                    borderWidth: 2,
+                    tension: 0.1,
+                    fill: true,
+                    backgroundColor: gradientMain,
+                    pointRadius: 0,
+                    pointHoverRadius: 6,
+                    pointHoverBackgroundColor: '#efc138',
+                    pointHoverBorderColor: '#051424',
+                    pointHoverBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#182438',
+                        titleColor: '#d4e4fa',
+                        bodyColor: '#efc138',
+                        borderColor: '#1E293B',
+                        borderWidth: 1,
+                        padding: 12,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return `₹ ${context.parsed.y.toFixed(4)}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: '#1E293B', drawBorder: false },
+                        ticks: { maxTicksLimit: 8, color: '#767e93' }
+                    },
+                    y: {
+                        position: 'right',
+                        grid: { color: '#1E293B', drawBorder: false },
+                        ticks: { 
+                            callback: function(value) { return value.toFixed(2); },
+                            color: '#767e93'
+                        }
+                    }
+                },
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                }
+            }
+        });
+    </script>
+</body></html>

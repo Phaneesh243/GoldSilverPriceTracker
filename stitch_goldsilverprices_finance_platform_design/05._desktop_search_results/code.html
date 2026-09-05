@@ -1,0 +1,450 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>GoldSilverPrices - Search</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error-container": "#93000a",
+                    "secondary": "#efc138",
+                    "on-surface-variant": "#c6c6cd",
+                    "on-secondary-fixed-variant": "#594400",
+                    "on-primary-container": "#767e93",
+                    "surface-tint": "#bfc6de",
+                    "on-primary-fixed-variant": "#3f475a",
+                    "on-secondary": "#3d2e00",
+                    "on-error": "#690005",
+                    "inverse-on-surface": "#233143",
+                    "surface-variant": "#273647",
+                    "secondary-container": "#c29800",
+                    "on-tertiary-fixed": "#0f1c2f",
+                    "on-primary-fixed": "#141b2d",
+                    "outline": "#909097",
+                    "tertiary-container": "#061327",
+                    "on-error-container": "#ffdad6",
+                    "error": "#ffb4ab",
+                    "surface-dim": "#051424",
+                    "surface-container-lowest": "#010f1f",
+                    "surface-container": "#122131",
+                    "on-tertiary-fixed-variant": "#3b475d",
+                    "on-secondary-container": "#433300",
+                    "surface-container-low": "#0d1c2d",
+                    "on-surface": "#d4e4fa",
+                    "surface-bright": "#2c3a4c",
+                    "tertiary-fixed": "#d7e3fe",
+                    "on-tertiary-container": "#727e96",
+                    "primary-fixed": "#dbe2fa",
+                    "surface-container-high": "#1c2b3c",
+                    "on-secondary-fixed": "#241a00",
+                    "background": "#051424",
+                    "on-tertiary": "#253145",
+                    "primary-fixed-dim": "#bfc6de",
+                    "inverse-primary": "#575e72",
+                    "primary-container": "#0b1324",
+                    "tertiary-fixed-dim": "#bbc7e1",
+                    "primary": "#bfc6de",
+                    "surface": "#051424",
+                    "inverse-surface": "#d4e4fa",
+                    "tertiary": "#bbc7e1",
+                    "on-primary": "#293043",
+                    "outline-variant": "#45464c",
+                    "surface-container-highest": "#273647",
+                    "secondary-fixed-dim": "#efc138",
+                    "on-background": "#d4e4fa",
+                    "secondary-fixed": "#ffdf91"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit-lg": "24px",
+                    "gutter": "24px",
+                    "margin-desktop": "40px",
+                    "container-max": "1440px",
+                    "unit-md": "16px",
+                    "margin-tablet": "24px",
+                    "margin-mobile": "16px",
+                    "unit-xl": "48px",
+                    "unit-sm": "8px",
+                    "unit-xs": "4px"
+            },
+            "fontFamily": {
+                    "headline-xl": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "body-md": [
+                            "Inter"
+                    ],
+                    "headline-lg": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "body-sm": [
+                            "Inter"
+                    ],
+                    "body-lg": [
+                            "Inter"
+                    ],
+                    "label-md": [
+                            "Inter"
+                    ],
+                    "headline-lg-mobile": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "headline-md": [
+                            "Plus Jakarta Sans"
+                    ]
+            },
+            "fontSize": {
+                    "headline-xl": [
+                            "40px",
+                            {
+                                    "lineHeight": "48px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-sm": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "label-md": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "28px",
+                            {
+                                    "lineHeight": "36px",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        /* Custom Scrollbar for dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: theme('colors.surface');
+        }
+        ::-webkit-scrollbar-thumb {
+            background: theme('colors.surface-variant');
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: theme('colors.outline-variant');
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col md:flex-row">
+<!-- TopNavBar (Mobile) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 bg-surface dark:bg-surface-dim shadow-sm dark:shadow-none border-b border-outline-variant dark:border-surface-variant md:hidden">
+<div class="flex items-center gap-4 w-full">
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed-dim">search</span>
+<input autofocus="" class="w-full bg-transparent border-none text-on-surface focus:ring-0 font-body-md text-body-md placeholder-on-surface-variant" placeholder="Search markets, symbols, news..." type="text">
+</div>
+<div class="flex items-center gap-4 ml-4 shrink-0">
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed-dim cursor-pointer active:scale-95 duration-150" data-icon="close">close</span>
+</div>
+</header>
+<!-- SideNavBar (Desktop) -->
+<nav class="hidden lg:flex flex-col fixed left-0 top-0 h-full z-40 bg-surface-container dark:bg-surface-container-low border-r border-outline-variant docked left-0 h-full w-[280px]">
+<div class="p-6 border-b border-outline-variant flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-on-secondary font-bold">G</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-secondary">GoldSilverPrices</h1>
+<p class="font-label-md text-label-md text-on-surface-variant">Market Intelligence</p>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto py-4">
+<ul class="space-y-1">
+<!-- Navigation Items. 'Search' isn't a main tab in the JSON, but since this is a search intent page, no nav item is strictly active. Highlighting nothing or adding a dedicated search if we were to modify it. Sticking to rules: active logic based on closest intent. Since none match 'Search', we'll leave them all inactive. -->
+<li class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all">
+<span class="material-symbols-outlined mr-3">payments</span>
+<span class="font-label-md text-label-md">Metals</span>
+</li>
+<li class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all">
+<span class="material-symbols-outlined mr-3">trending_up</span>
+<span class="font-label-md text-label-md">Stocks</span>
+</li>
+<li class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all">
+<span class="material-symbols-outlined mr-3">currency_bitcoin</span>
+<span class="font-label-md text-label-md">Crypto</span>
+</li>
+<li class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all">
+<span class="material-symbols-outlined mr-3">account_balance_wallet</span>
+<span class="font-label-md text-label-md">Mutual Funds</span>
+</li>
+<li class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all">
+<span class="material-symbols-outlined mr-3">description</span>
+<span class="font-label-md text-label-md">Bonds</span>
+</li>
+<li class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all">
+<span class="material-symbols-outlined mr-3">security</span>
+<span class="font-label-md text-label-md">Insurance</span>
+</li>
+<li class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all">
+<span class="material-symbols-outlined mr-3">currency_exchange</span>
+<span class="font-label-md text-label-md">Currencies</span>
+</li>
+<li class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all">
+<span class="material-symbols-outlined mr-3">newspaper</span>
+<span class="font-label-md text-label-md">News</span>
+</li>
+<li class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all">
+<span class="material-symbols-outlined mr-3">calculate</span>
+<span class="font-label-md text-label-md">Calculators</span>
+</li>
+</ul>
+</div>
+<div class="p-4 border-t border-outline-variant space-y-1">
+<li class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</li>
+<li class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all">
+<span class="material-symbols-outlined mr-3">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</li>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 w-full lg:ml-[280px] pt-16 md:pt-0 pb-20 md:pb-0 min-h-screen">
+<!-- Desktop Search Bar & Header Section -->
+<div class="hidden md:block sticky top-0 z-30 bg-surface/90 backdrop-blur-md border-b border-outline-variant px-margin-tablet lg:px-margin-desktop py-6">
+<div class="max-w-[800px] mx-auto">
+<div class="relative flex items-center bg-[#111B2F] border border-[#1E293B] rounded-lg p-2 focus-within:border-secondary focus-within:ring-1 focus-within:ring-secondary transition-all shadow-sm">
+<span class="material-symbols-outlined text-secondary ml-3 text-[28px]">search</span>
+<input autofocus="" class="w-full bg-transparent border-none text-on-surface focus:ring-0 font-body-lg text-body-lg placeholder-on-surface-variant py-3 px-4 outline-none" placeholder="Search markets, symbols, news..." type="text">
+<div class="flex items-center gap-2 mr-2">
+<button aria-label="Voice Search" class="bg-surface-variant hover:bg-surface-bright text-on-surface p-2 rounded-md transition-colors flex items-center justify-center group">
+<span class="material-symbols-outlined text-[20px] group-hover:text-secondary transition-colors">mic</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="px-margin-mobile md:px-margin-tablet lg:px-margin-desktop py-8 max-w-[800px] mx-auto space-y-10">
+<!-- Recent Searches Section -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline-md text-headline-md text-on-surface">Recent Searches</h2>
+<button class="font-label-md text-label-md text-secondary hover:text-secondary-fixed transition-colors">Clear All</button>
+</div>
+<div class="flex flex-wrap gap-2">
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container rounded-full border border-outline-variant hover:border-secondary hover:text-secondary text-on-surface-variant transition-colors group">
+<span class="material-symbols-outlined text-[18px]">history</span>
+<span class="font-body-sm text-body-sm">AAPL Earnings</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container rounded-full border border-outline-variant hover:border-secondary hover:text-secondary text-on-surface-variant transition-colors group">
+<span class="material-symbols-outlined text-[18px]">history</span>
+<span class="font-body-sm text-body-sm">Gold Spot Price</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container rounded-full border border-outline-variant hover:border-secondary hover:text-secondary text-on-surface-variant transition-colors group">
+<span class="material-symbols-outlined text-[18px]">history</span>
+<span class="font-body-sm text-body-sm">Bitcoin ETF</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container rounded-full border border-outline-variant hover:border-secondary hover:text-secondary text-on-surface-variant transition-colors group">
+<span class="material-symbols-outlined text-[18px]">history</span>
+<span class="font-body-sm text-body-sm">Vanguard 500</span>
+</button>
+</div>
+</section>
+<!-- Most Searched Categories (Bento Grid Style) -->
+<section>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-6">Most Searched Categories</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<a class="block bg-surface-container border border-outline-variant rounded-xl p-5 hover:bg-surface-container-high hover:border-secondary transition-all group relative overflow-hidden" href="#">
+<div class="absolute top-0 right-0 w-24 h-24 bg-secondary/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+<div class="w-10 h-10 bg-surface-bright rounded-lg flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors">
+<span class="material-symbols-outlined text-secondary">trending_up</span>
+</div>
+<h3 class="font-body-md text-body-md font-semibold text-on-surface group-hover:text-secondary transition-colors">Stocks</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Equities &amp; Indices</p>
+</a>
+<a class="block bg-surface-container border border-outline-variant rounded-xl p-5 hover:bg-surface-container-high hover:border-secondary transition-all group relative overflow-hidden" href="#">
+<div class="absolute top-0 right-0 w-24 h-24 bg-secondary/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+<div class="w-10 h-10 bg-surface-bright rounded-lg flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors">
+<span class="material-symbols-outlined text-secondary">currency_bitcoin</span>
+</div>
+<h3 class="font-body-md text-body-md font-semibold text-on-surface group-hover:text-secondary transition-colors">Crypto</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Digital Assets</p>
+</a>
+<a class="block bg-surface-container border border-outline-variant rounded-xl p-5 hover:bg-surface-container-high hover:border-secondary transition-all group relative overflow-hidden" href="#">
+<div class="absolute top-0 right-0 w-24 h-24 bg-secondary/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+<div class="w-10 h-10 bg-surface-bright rounded-lg flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors">
+<span class="material-symbols-outlined text-secondary">payments</span>
+</div>
+<h3 class="font-body-md text-body-md font-semibold text-on-surface group-hover:text-secondary transition-colors">Metals</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Commodities</p>
+</a>
+<a class="block bg-surface-container border border-outline-variant rounded-xl p-5 hover:bg-surface-container-high hover:border-secondary transition-all group relative overflow-hidden" href="#">
+<div class="absolute top-0 right-0 w-24 h-24 bg-secondary/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+<div class="w-10 h-10 bg-surface-bright rounded-lg flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors">
+<span class="material-symbols-outlined text-secondary">account_balance_wallet</span>
+</div>
+<h3 class="font-body-md text-body-md font-semibold text-on-surface group-hover:text-secondary transition-colors">Mutual Funds</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Managed Portfolios</p>
+</a>
+</div>
+</section>
+<!-- Categorized Result List Placeholder (Simulated Search State) -->
+<section class="opacity-50 pointer-events-none">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-on-surface-variant">list_alt</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Trending Assets</h2>
+</div>
+<div class="bg-surface-container border border-outline-variant rounded-xl divide-y divide-outline-variant overflow-hidden">
+<!-- Row 1 -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-[#182438] flex items-center justify-center border border-outline-variant">
+<span class="font-label-md text-label-md font-bold text-on-surface">AAPL</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Apple Inc.</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Technology • Stock</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-body-md text-body-md font-semibold text-on-surface">$173.50</p>
+<p class="font-body-sm text-body-sm text-[#4ade80] flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-[16px]">arrow_upward</span>
+                                 1.24%
+                             </p>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-[#182438] flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-secondary">payments</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Gold Spot</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Precious Metal • Commodity</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-body-md text-body-md font-semibold text-secondary">$2,024.10</p>
+<p class="font-body-sm text-body-sm text-[#f87171] flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-[16px]">arrow_downward</span>
+                                 0.45%
+                             </p>
+</div>
+</div>
+<!-- Row 3 -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-[#182438] flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-[#3b82f6]">currency_bitcoin</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Bitcoin</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">BTC • Crypto</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-body-md text-body-md font-semibold text-on-surface">$51,230.00</p>
+<p class="font-body-sm text-body-sm text-[#4ade80] flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-[16px]">arrow_upward</span>
+                                 2.8%
+                             </p>
+</div>
+</div>
+</div>
+<div class="mt-4 text-center">
+<p class="font-body-sm text-body-sm text-on-surface-variant italic">Start typing to see specific results...</p>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-4 pb-safe bg-surface-container-highest dark:bg-surface-container-lowest border-t border-outline-variant rounded-t-xl shadow-[0_-4px_10px_rgba(0,0,0,0.3)]">
+<!-- Search isn't explicitly in the nav, but as a secondary action it might not override standard tabs. Assuming 'Markets' is default fallback or user is in a transactional dead-end. We'll suppress nav styling as per strict rules if it's a dead-end, but a general search might just be a modal overlay in app. Since we must render it per rules if not a strict dead end, we'll leave all inactive. -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:scale-90 transition-transform duration-200 cursor-pointer w-16">
+<span class="material-symbols-outlined mb-1">show_chart</span>
+<span class="font-label-md text-[10px]">Markets</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:scale-90 transition-transform duration-200 cursor-pointer w-16">
+<span class="material-symbols-outlined mb-1">newspaper</span>
+<span class="font-label-md text-[10px]">News</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:scale-90 transition-transform duration-200 cursor-pointer w-16">
+<span class="material-symbols-outlined mb-1">pie_chart</span>
+<span class="font-label-md text-[10px]">Portfolio</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:scale-90 transition-transform duration-200 cursor-pointer w-16">
+<span class="material-symbols-outlined mb-1">notifications</span>
+<span class="font-label-md text-[10px]">Alerts</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:scale-90 transition-transform duration-200 cursor-pointer w-16">
+<span class="material-symbols-outlined mb-1">menu</span>
+<span class="font-label-md text-[10px]">Menu</span>
+</div>
+</nav>
+<script>
+        // Simple script to focus search on load for desktop if needed
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = document.querySelectorAll('input[type="text"]');
+            if(inputs.length > 0 && window.innerWidth > 768) {
+                inputs[1].focus(); // Focus desktop input
+            }
+        });
+    </script>
+</body></html>

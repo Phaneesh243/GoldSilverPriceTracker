@@ -109,7 +109,6 @@ async function getGoldAndSilver(citySlug: string, countryCode: string) {
   const live = await getLiveCityPrices(citySlug, countryCode);
   const gold24 = live.gold.find((item) => item.purity === "24K");
   const gold22 = live.gold.find((item) => item.purity === "22K");
-  const gold18 = live.gold.find((item) => item.purity === "18K");
 
   const gold: MetalPrice = {
     key: "gold",

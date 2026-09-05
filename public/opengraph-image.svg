@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#eef4f8"/>
+  <circle cx="1050" cy="100" r="260" fill="#f2c230" opacity=".18"/>
+  <rect x="80" y="82" width="1040" height="466" rx="32" fill="#0b1324"/>
+  <circle cx="180" cy="180" r="42" fill="#f2c230"/>
+  <text x="250" y="195" font-family="Arial, sans-serif" font-size="52" font-weight="700" fill="#fff">GoldSilverPrices</text>
+  <text x="140" y="310" font-family="Arial, sans-serif" font-size="56" font-weight="700" fill="#f2c230">Market intelligence for India</text>
+  <text x="140" y="385" font-family="Arial, sans-serif" font-size="28" fill="#c5d1df">Metals · stocks · crypto · funds · bonds · insurance · currencies</text>
+  <text x="140" y="470" font-family="Arial, sans-serif" font-size="24" fill="#9fb0c2">Prices and insights with visible sources and update times.</text>
+</svg>

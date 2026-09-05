@@ -1,0 +1,302 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Mobile Currency Dashboard</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet">
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-high": "#1c2b3c",
+                    "on-surface": "#d4e4fa",
+                    "primary-fixed-dim": "#bfc6de",
+                    "error-container": "#93000a",
+                    "outline-variant": "#45464c",
+                    "inverse-primary": "#575e72",
+                    "surface-container": "#122131",
+                    "tertiary": "#bbc7e1",
+                    "on-secondary": "#3d2e00",
+                    "secondary-fixed": "#ffdf91",
+                    "on-tertiary-fixed-variant": "#3b475d",
+                    "secondary": "#efc138",
+                    "tertiary-container": "#061327",
+                    "primary": "#bfc6de",
+                    "on-error": "#690005",
+                    "surface": "#051424",
+                    "inverse-on-surface": "#233143",
+                    "secondary-container": "#c29800",
+                    "error": "#ffb4ab",
+                    "on-primary": "#293043",
+                    "on-background": "#d4e4fa",
+                    "outline": "#909097",
+                    "surface-tint": "#bfc6de",
+                    "tertiary-fixed-dim": "#bbc7e1",
+                    "primary-fixed": "#dbe2fa",
+                    "on-secondary-fixed-variant": "#594400",
+                    "background": "#051424",
+                    "surface-container-low": "#0d1c2d",
+                    "on-tertiary-fixed": "#0f1c2f",
+                    "on-secondary-container": "#433300",
+                    "surface-container-highest": "#273647",
+                    "surface-bright": "#2c3a4c",
+                    "on-secondary-fixed": "#241a00",
+                    "primary-container": "#0b1324",
+                    "inverse-surface": "#d4e4fa",
+                    "surface-dim": "#051424",
+                    "on-tertiary": "#253145",
+                    "on-primary-fixed": "#141b2d",
+                    "on-primary-fixed-variant": "#3f475a",
+                    "surface-container-lowest": "#010f1f",
+                    "surface-variant": "#273647",
+                    "on-tertiary-container": "#727e96",
+                    "on-surface-variant": "#c6c6cd",
+                    "on-primary-container": "#767e93",
+                    "on-error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#efc138",
+                    "tertiary-fixed": "#d7e3fe"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit-xs": "4px",
+                    "unit-sm": "8px",
+                    "gutter": "24px",
+                    "unit-md": "16px",
+                    "margin-mobile": "16px",
+                    "unit-lg": "24px",
+                    "unit-xl": "48px",
+                    "margin-desktop": "40px",
+                    "container-max": "1440px",
+                    "margin-tablet": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { -webkit-tap-highlight-color: transparent; }
+        /* Hide scrollbar for clean mobile look */
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-surface dark:bg-surface-dim text-on-surface antialiased min-h-screen pb-24">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-surface-variant shadow-sm dark:shadow-none">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">currency_exchange</span>
+<span class="font-headline-md text-headline-md font-bold text-secondary dark:text-secondary-fixed">GoldSilverPrices</span>
+</div>
+<div class="flex items-center gap-unit-md text-secondary dark:text-secondary-fixed-dim">
+<span class="material-symbols-outlined cursor-pointer hover:text-secondary dark:hover:text-secondary-fixed-dim transition-colors active:scale-95 duration-150" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-secondary dark:hover:text-secondary-fixed-dim transition-colors active:scale-95 duration-150" data-icon="dark_mode">dark_mode</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-secondary dark:hover:text-secondary-fixed-dim transition-colors active:scale-95 duration-150" data-icon="location_on">location_on</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-20 px-margin-mobile max-w-container-max mx-auto space-y-unit-lg">
+<!-- Header & Alerts Button -->
+<div class="flex justify-between items-end mt-unit-sm">
+<div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Currencies</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Live forex market dashboard</p>
+</div>
+<button class="flex items-center gap-1 bg-surface-container-high hover:bg-surface-variant border border-outline-variant px-3 py-1.5 rounded-full transition-all active:scale-95">
+<span class="material-symbols-outlined text-[18px] text-secondary">notifications_active</span>
+<span class="font-label-md text-label-md text-on-surface">Alerts</span>
+</button>
+</div>
+<!-- Quick Converter Tool -->
+<section class="bg-surface-container rounded-xl p-unit-md border border-outline-variant shadow-md relative overflow-hidden">
+<!-- Decorative bg element -->
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-secondary/10 rounded-full blur-2xl pointer-events-none"></div>
+<h2 class="font-headline-md text-[18px] text-on-surface mb-unit-md flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-secondary">swap_horiz</span>
+                Quick Converter
+            </h2>
+<div class="space-y-unit-sm relative">
+<!-- From Input -->
+<div class="bg-surface-container-high rounded-lg p-3 border border-outline-variant/50 focus-within:border-secondary transition-colors">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-md text-label-md text-on-surface-variant">You Send</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Balance: 12,450.00</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2 cursor-pointer bg-surface rounded-full px-2 py-1 border border-outline-variant">
+<img class="w-5 h-5 rounded-full object-cover" data-alt="A small circular icon showing the flag of the United States of America, highly detailed, well lit, set against a dark navy interface background, creating a high contrast modern look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXGENhTiNZQS_mD0iEt1cQl6uBCsoY2nYWlOmqMNofBZzM646z41C29vS9OyzJoQCEq81UsyfwPl-k2zSYDsCGnEtJnbYImqmEWEie4QK8dsOiMCjmrcPolmt5SvOxC1-Os8ohEEXoP5evHFITfcgYdX8Ms-TEpGi5nEfsF6Dx03lF5uJaDJAAIJQ1Z3vdVa86apynK7vfjmf3rfZtzpcQ1Lqd7WKECAV057nzE8L8K-FO3fZTDYQV">
+<span class="font-body-md text-body-md font-semibold text-on-surface">USD</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">expand_more</span>
+</div>
+<input class="bg-transparent border-none text-right font-headline-md text-headline-md text-on-surface p-0 focus:ring-0 w-1/2" type="text" value="1,000.00">
+</div>
+</div>
+<!-- Swap Button -->
+<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+<button class="bg-secondary text-on-secondary rounded-full p-1.5 shadow-lg active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[20px]">swap_vert</span>
+</button>
+</div>
+<!-- To Input -->
+<div class="bg-surface-container-high rounded-lg p-3 border border-outline-variant/50 focus-within:border-secondary transition-colors">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-md text-label-md text-on-surface-variant">You Get</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2 cursor-pointer bg-surface rounded-full px-2 py-1 border border-outline-variant">
+<img class="w-5 h-5 rounded-full object-cover" data-alt="A small circular icon showing the flag of the European Union, highly detailed, crisp stars, well lit, set against a dark navy premium UI background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTCmseVQDW6OTd9TLkDJPstB9_FQYJuXN3yu_OTsn8c6LvpmXhm_KtJCsmdlNos46iw1xKUVQ1RyW9NJxMb-JdEa2w1WmQDQDgOgQF9owIVVTPL2bN_WxnkR_ic0APOIb-tSem3vz93kwIoKOl-C8TnwmHL07UB7U8c19hmt6r7TD0CN2f5zPgxwtF5D1L9WjcQrKBVQ0Q_cBMZV0tSf3jK6uEdpy4BWZAorpdxCJPBybOH_-lEh5C">
+<span class="font-body-md text-body-md font-semibold text-on-surface">EUR</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">expand_more</span>
+</div>
+<input class="bg-transparent border-none text-right font-headline-md text-headline-md text-secondary p-0 focus:ring-0 w-1/2" readonly="" type="text" value="924.50">
+</div>
+</div>
+</div>
+<div class="mt-4 flex justify-between items-center">
+<span class="font-label-md text-label-md text-on-surface-variant">1 USD = 0.9245 EUR</span>
+<button class="bg-surface-variant hover:bg-surface-container-highest text-on-surface font-label-md text-label-md px-4 py-2 rounded-lg transition-colors">
+                    Update Rate
+                </button>
+</div>
+</section>
+<!-- Major Pairs List -->
+<section>
+<h3 class="font-headline-md text-[18px] text-on-surface mb-unit-sm">Major Pairs</h3>
+<div class="space-y-2">
+<!-- Pair Row 1 -->
+<div class="bg-surface-container hover:bg-surface-container-high border border-outline-variant rounded-xl p-3 flex items-center justify-between transition-colors active:scale-[0.98]">
+<div class="flex items-center gap-3">
+<div class="relative w-8 h-8">
+<img class="w-full h-full rounded-full object-cover bg-surface-variant" data-alt="A clean, minimalist circular icon depicting the Euro symbol overlaid on the US Dollar symbol, set against a deep navy blue interface background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAa4CAkl4TzpHMI-9RZFjlm9cGqqWjjefBdlkj6NYWi8rFp957fcfxtgCsDHVl_ppwEDitClve_3gGbSWeL2Wmkvvxd2bPM2jq4UHD5pTlDU6G-rrV1zyb6bVv14B8W6uUKpSGWVngXwJirefkY3a0fuL2ma1wyKla2_lkfA2taMFAr4pzDXKn7PSs_yZlStHTLhcjKhaH9B27_ZpVHdnohv3jlmGS7eVOV1e-7t-4zWXep8S-w1kFe">
+</div>
+<div>
+<div class="font-body-md text-body-md font-semibold text-on-surface">EUR/USD</div>
+<div class="font-label-md text-label-md text-on-surface-variant">Euro / US Dollar</div>
+</div>
+</div>
+<!-- Sparkline -->
+<div class="w-16 h-8 hidden sm:block">
+<svg class="w-full h-full" viewBox="0 0 100 30">
+<path d="M0,15 Q10,5 20,15 T40,20 T60,10 T80,25 T100,5" fill="none" stroke="#efc138" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</div>
+<div class="text-right">
+<div class="font-body-md text-body-md text-on-surface">1.0815</div>
+<div class="font-label-md text-label-md text-on-surface flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+                            +0.24%
+                        </div>
+</div>
+</div>
+<!-- Pair Row 2 -->
+<div class="bg-surface-container hover:bg-surface-container-high border border-outline-variant rounded-xl p-3 flex items-center justify-between transition-colors active:scale-[0.98]">
+<div class="flex items-center gap-3">
+<div class="relative w-8 h-8">
+<img class="w-full h-full rounded-full object-cover bg-surface-variant" data-alt="A crisp, modern circular icon showing the British Pound symbol alongside the US Dollar symbol, designed for a premium dark mode financial application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApNe_geKFXCSRgftSthPDa-91Q7s0CBNwsomogMjDPZQEBPYUBlEu8uPZQvQPPEsLVP3Gs_qbukF7yX1pzDKik1tHRo4sfrYpug8Qd2UVmHRbbPncMb6lYE2G04mrro2aLKoj8E304PfmehI2FQ-jGjkWUd3ji0ImYgzs3vi5IVN2d3IN_heiTpTrhcrPi4YxUA1fby_Rh_4YksDMXiLqe9ut8FxGLy41fAFIly_-mJpe2kRNVA11m">
+</div>
+<div>
+<div class="font-body-md text-body-md font-semibold text-on-surface">GBP/USD</div>
+<div class="font-label-md text-label-md text-on-surface-variant">British Pound / USD</div>
+</div>
+</div>
+<!-- Sparkline -->
+<div class="w-16 h-8 hidden sm:block">
+<svg class="w-full h-full" viewBox="0 0 100 30">
+<path d="M0,5 Q15,25 30,10 T60,20 T80,5 T100,25" fill="none" stroke="#ffb4ab" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</div>
+<div class="text-right">
+<div class="font-body-md text-body-md text-on-surface">1.2640</div>
+<div class="font-label-md text-label-md text-error flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_down</span>
+                            -0.12%
+                        </div>
+</div>
+</div>
+<!-- Pair Row 3 -->
+<div class="bg-surface-container hover:bg-surface-container-high border border-outline-variant rounded-xl p-3 flex items-center justify-between transition-colors active:scale-[0.98]">
+<div class="flex items-center gap-3">
+<div class="relative w-8 h-8">
+<img class="w-full h-full rounded-full object-cover bg-surface-variant" data-alt="A stylized circular icon featuring the US Dollar symbol next to the Japanese Yen symbol, high contrast design suitable for a sophisticated dark navy dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNjgY6owSVOXo_jjLb7z1M_WseEMHNANsDVaxWLOwpbZAiBsKSTSQDgiTAbVq2BdccBmtdNd1yqn2wqPTwo1Fi4Xf-j_D6bTQXFuZxxPgFirp0nOEblLdkBpgqsVk8UpnqU0C4loeDXzidaPt7-7WHhkAr7ZN905hDDcUTb3XL9H3JB2_ubm1O1Q18UWAiBeDrGhoIgAxjiS6GKc3HVvtAZZgUS42p2e2jXA9ptX6ys3gRIoOXOA0l">
+</div>
+<div>
+<div class="font-body-md text-body-md font-semibold text-on-surface">USD/JPY</div>
+<div class="font-label-md text-label-md text-on-surface-variant">US Dollar / Yen</div>
+</div>
+</div>
+<!-- Sparkline -->
+<div class="w-16 h-8 hidden sm:block">
+<svg class="w-full h-full" viewBox="0 0 100 30">
+<path d="M0,25 Q20,25 40,15 T70,5 T100,10" fill="none" stroke="#efc138" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</div>
+<div class="text-right">
+<div class="font-body-md text-body-md text-on-surface">150.25</div>
+<div class="font-label-md text-label-md text-on-surface flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+                            +0.45%
+                        </div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-4 pb-safe bg-surface-container-highest dark:bg-surface-container-lowest border-t border-outline-variant shadow-[0_-4px_10px_rgba(0,0,0,0.3)] rounded-t-xl">
+<!-- Active Tab: Markets -->
+<div class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim bg-secondary-container/20 rounded-xl px-3 py-1 active:scale-90 transition-transform duration-200 cursor-pointer">
+<span class="material-symbols-outlined text-[24px]" data-icon="show_chart" style="font-variation-settings: 'FILL' 1;">show_chart</span>
+<span class="font-label-md-mobile text-label-md-mobile mt-1">Markets</span>
+</div>
+<!-- Inactive Tabs -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 active:scale-90 transition-transform duration-200 cursor-pointer px-3 py-1 rounded-xl">
+<span class="material-symbols-outlined text-[24px]" data-icon="newspaper">newspaper</span>
+<span class="font-label-md-mobile text-label-md-mobile mt-1">News</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 active:scale-90 transition-transform duration-200 cursor-pointer px-3 py-1 rounded-xl">
+<span class="material-symbols-outlined text-[24px]" data-icon="pie_chart">pie_chart</span>
+<span class="font-label-md-mobile text-label-md-mobile mt-1">Portfolio</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 active:scale-90 transition-transform duration-200 cursor-pointer px-3 py-1 rounded-xl">
+<span class="material-symbols-outlined text-[24px]" data-icon="notifications">notifications</span>
+<span class="font-label-md-mobile text-label-md-mobile mt-1">Alerts</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 active:scale-90 transition-transform duration-200 cursor-pointer px-3 py-1 rounded-xl">
+<span class="material-symbols-outlined text-[24px]" data-icon="menu">menu</span>
+<span class="font-label-md-mobile text-label-md-mobile mt-1">Menu</span>
+</div>
+</nav>
+</body></html>

@@ -16,12 +16,20 @@
       "schedule": "30 7 * * 1-5"
     },
     {
+      "path": "/api/cron/send-price-updates?slot=close",
+      "schedule": "15 10 * * 1-5"
+    },
+    {
       "path": "/api/cron/send-price-updates?slot=evening",
-      "schedule": "0 15 * * 1-5"
+      "schedule": "30 13 * * 1-5"
     },
     {
       "path": "/api/cron/big-move",
       "schedule": "30 3 * * 1-5"
+    },
+    {
+      "path": "/api/cron/check-user-alerts",
+      "schedule": "*/15 * * * 1-5"
     }
   ]
 }

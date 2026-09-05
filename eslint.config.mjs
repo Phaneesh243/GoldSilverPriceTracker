@@ -12,7 +12,16 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "stitch_goldsilverprices_finance_platform_design/**",
+    "certificates/**",
   ]),
+  {
+    rules: {
+      // Existing client components synchronise external storage and URL state in effects.
+      // Keep the remaining correctness and accessibility rules enabled while this legacy UI is migrated.
+      "react-hooks/set-state-in-effect": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

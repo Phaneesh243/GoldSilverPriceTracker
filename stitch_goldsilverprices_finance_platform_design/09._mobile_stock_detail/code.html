@@ -1,0 +1,301 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Stock Detail - AAPL</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error": "#690005",
+                      "error": "#ffb4ab",
+                      "surface-container-lowest": "#010f1f",
+                      "surface-bright": "#2c3a4c",
+                      "on-secondary-fixed-variant": "#594400",
+                      "on-primary-fixed-variant": "#3f475a",
+                      "on-tertiary-container": "#727e96",
+                      "on-surface": "#d4e4fa",
+                      "tertiary-fixed-dim": "#bbc7e1",
+                      "surface-container": "#122131",
+                      "surface-container-low": "#0d1c2d",
+                      "on-secondary": "#3d2e00",
+                      "outline": "#909097",
+                      "outline-variant": "#45464c",
+                      "on-tertiary-fixed-variant": "#3b475d",
+                      "primary-container": "#0b1324",
+                      "surface-variant": "#273647",
+                      "primary": "#bfc6de",
+                      "on-secondary-container": "#433300",
+                      "on-secondary-fixed": "#241a00",
+                      "surface": "#051424",
+                      "tertiary-fixed": "#d7e3fe",
+                      "secondary-fixed": "#ffdf91",
+                      "tertiary-container": "#061327",
+                      "primary-fixed-dim": "#bfc6de",
+                      "surface-container-high": "#1c2b3c",
+                      "on-primary-container": "#767e93",
+                      "on-primary": "#293043",
+                      "primary-fixed": "#dbe2fa",
+                      "inverse-surface": "#d4e4fa",
+                      "background": "#051424",
+                      "inverse-primary": "#575e72",
+                      "on-tertiary": "#253145",
+                      "on-tertiary-fixed": "#0f1c2f",
+                      "secondary-container": "#c29800",
+                      "surface-tint": "#bfc6de",
+                      "on-primary-fixed": "#141b2d",
+                      "secondary-fixed-dim": "#efc138",
+                      "on-background": "#d4e4fa",
+                      "secondary": "#efc138",
+                      "surface-container-highest": "#273647",
+                      "on-error-container": "#ffdad6",
+                      "tertiary": "#bbc7e1",
+                      "error-container": "#93000a",
+                      "on-surface-variant": "#c6c6cd",
+                      "surface-dim": "#051424",
+                      "inverse-on-surface": "#233143"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit-xs": "4px",
+                      "container-max": "1440px",
+                      "unit-lg": "24px",
+                      "unit-xl": "48px",
+                      "unit-md": "16px",
+                      "margin-desktop": "40px",
+                      "margin-tablet": "24px",
+                      "gutter": "24px",
+                      "unit-sm": "8px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "headline-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "headline-xl": [
+                              "Plus Jakarta Sans"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-md": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-xl": [
+                              "40px",
+                              {
+                                      "lineHeight": "48px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background antialiased pb-[80px]">
+<!-- Sticky Header -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-md border-b border-outline-variant px-margin-mobile h-16 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button aria-label="Go back" class="text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div>
+<h1 class="font-headline-md text-headline-md text-on-surface">AAPL</h1>
+<p class="font-label-md text-label-md text-on-surface-variant">Apple Inc.</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button aria-label="Add to watch list" class="text-on-surface-variant hover:text-secondary transition-colors">
+<span class="material-symbols-outlined">star_border</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="pt-20 px-margin-mobile flex flex-col gap-unit-xl pb-32">
+<!-- Price Overview -->
+<section class="flex flex-col gap-unit-xs">
+<div class="flex items-baseline gap-2">
+<h2 class="font-headline-xl text-headline-xl text-on-surface">$173.50</h2>
+<span class="font-body-md text-body-md text-on-surface-variant">USD</span>
+</div>
+<div class="flex items-center gap-2 font-label-md text-label-md">
+<span class="text-secondary flex items-center">
+<span class="material-symbols-outlined text-[16px] mr-1">arrow_upward</span>
+                    +1.25 (0.72%)
+                </span>
+<span class="text-on-surface-variant">Today</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Closed: Nov 28, 4:00 PM EST • After hours: $173.65</p>
+</section>
+<!-- Chart Area -->
+<section class="w-full bg-surface-container rounded-xl p-unit-md border border-outline-variant shadow-md">
+<!-- Timeframe selector -->
+<div class="flex justify-between mb-4 border-b border-outline-variant pb-2">
+<button class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors">1D</button>
+<button class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors">1W</button>
+<button class="font-label-md text-label-md text-secondary border-b-2 border-secondary pb-1 -mb-[9px]">1M</button>
+<button class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors">3M</button>
+<button class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors">1Y</button>
+<button class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors">ALL</button>
+</div>
+<!-- Mock Chart (Gradient placeholder) -->
+<div class="h-64 w-full relative overflow-hidden rounded-lg bg-gradient-to-t from-surface-container-high to-surface-container flex items-end">
+<div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxwb2x5bGluZSBwb2ludHM9IjAsMTUwIDIwLDE0MCA0MCwxNDUgNjAsMTIwIDgwLDEzMCAxMDAsMTAwIDEyMCwxMTAgMTQwLDgwIDE2MCw5MCAxODAsNjAgMjAwLDcwIDIyMCw0MCAyNDAsNTAgMjYwLDIwIDI4MCwzMCAzMDAsMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0VGQzEzOCIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+')] bg-no-repeat bg-bottom bg-cover opacity-70"></div>
+<div class="w-full h-1/2 bg-gradient-to-t from-secondary/20 to-transparent"></div>
+</div>
+</section>
+<!-- Key Stats Grid -->
+<section>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-unit-md">Key Statistics</h3>
+<div class="grid grid-cols-2 gap-unit-md">
+<div class="bg-surface-container rounded-lg p-3 border border-outline-variant flex flex-col gap-1">
+<span class="font-label-md text-label-md text-on-surface-variant">Market Cap</span>
+<span class="font-body-md text-body-md text-on-surface">2.73T</span>
+</div>
+<div class="bg-surface-container rounded-lg p-3 border border-outline-variant flex flex-col gap-1">
+<span class="font-label-md text-label-md text-on-surface-variant">P/E Ratio</span>
+<span class="font-body-md text-body-md text-on-surface">29.45</span>
+</div>
+<div class="bg-surface-container rounded-lg p-3 border border-outline-variant flex flex-col gap-1">
+<span class="font-label-md text-label-md text-on-surface-variant">Div Yield</span>
+<span class="font-body-md text-body-md text-on-surface">0.55%</span>
+</div>
+<div class="bg-surface-container rounded-lg p-3 border border-outline-variant flex flex-col gap-1">
+<span class="font-label-md text-label-md text-on-surface-variant">52W High</span>
+<span class="font-body-md text-body-md text-on-surface">$198.23</span>
+</div>
+<div class="bg-surface-container rounded-lg p-3 border border-outline-variant flex flex-col gap-1">
+<span class="font-label-md text-label-md text-on-surface-variant">52W Low</span>
+<span class="font-body-md text-body-md text-on-surface">$124.17</span>
+</div>
+<div class="bg-surface-container rounded-lg p-3 border border-outline-variant flex flex-col gap-1">
+<span class="font-label-md text-label-md text-on-surface-variant">Volume</span>
+<span class="font-body-md text-body-md text-on-surface">45.2M</span>
+</div>
+</div>
+</section>
+<!-- Related News -->
+<section>
+<div class="flex justify-between items-center mb-unit-md">
+<h3 class="font-headline-md text-headline-md text-on-surface">Latest News</h3>
+<button class="font-label-md text-label-md text-secondary flex items-center gap-1 hover:text-secondary-fixed-dim transition-colors">
+                    View All <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+<div class="flex flex-col gap-4">
+<!-- News Item 1 -->
+<article class="bg-surface-container rounded-lg p-4 border border-outline-variant flex gap-4 items-start cursor-pointer hover:bg-surface-variant/50 transition-colors">
+<div class="flex-1 flex flex-col gap-2">
+<span class="font-label-md text-label-md text-on-surface-variant">TechCrunch • 2h ago</span>
+<h4 class="font-body-md text-body-md text-on-surface font-semibold line-clamp-2">Apple announces new spatial computing features for upcoming headset.</h4>
+</div>
+<div class="w-20 h-20 rounded-md overflow-hidden shrink-0 bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="A sleek, modern pair of augmented reality glasses resting on a dark reflective surface. The lighting is dramatic, highlighting the smooth curves of the hardware. The background is a deep, immersive black with subtle blue and gold glowing accents reflecting off the lenses, creating a premium, high-tech corporate atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJxzCCNoigZQN2guoCLUDnHJKvsi5K2wjrmCSgvguycVMU8QNG33GPzg5OtLcVeRamZiP8rCcb_X-PbIrq9FGfq2akJyv5OOohGQ4o02pvVc2vRgknoAWZD3GRfn6L4MUnUG2Eq7q80aW6YBDpMLCbaRq-wNzYCFT-NRcMDHOnYrbTHqQtQHujz_FT5Ow_SJsNk2lA0KVVtrSgIccpBuHCJPxeSLl0OgN6rmb3yTGvdttWJaEzdFOn">
+</div>
+</article>
+<!-- News Item 2 -->
+<article class="bg-surface-container rounded-lg p-4 border border-outline-variant flex gap-4 items-start cursor-pointer hover:bg-surface-variant/50 transition-colors">
+<div class="flex-1 flex flex-col gap-2">
+<span class="font-label-md text-label-md text-on-surface-variant">Bloomberg • 5h ago</span>
+<h4 class="font-body-md text-body-md text-on-surface font-semibold line-clamp-2">Analysts upgrade AAPL price target amidst strong Q4 services growth.</h4>
+</div>
+<div class="w-20 h-20 rounded-md overflow-hidden shrink-0 bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="A macro shot of a financial chart on a digital screen, showing an upward trending line in bright gold. The surrounding elements are dark navy and black, with blurred numbers and grid lines in the background. The mood is analytical, professional, and optimistic, fitting a premium financial tracking application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPm4YaQUZqkysEwyKAStyVc3evsMuLfJ1Hp2MLsk90Yx0LOwmHC94o5A-0nd871pugK52x0l8nE93mo3tdtiIEzAtJYvxAqGWkG0_QfXFzRjtZSKAoZtmV_pkeGWkWpUQzBBuK4-8awagvn1QDo6hDiDM14KMaIhVZwvP34D_UunSeaMkQ_g2YSr-RDuLLrT7diXEF0jdD-USaHG4ISIJujIHwF9_Ky_xRYv6CAyI0Ch-NGOZsoeo9">
+</div>
+</article>
+</div>
+</section>
+</main>
+<!-- Bottom Action Buttons -->
+<div class="fixed bottom-0 left-0 w-full z-40 bg-surface-container/95 backdrop-blur-md border-t border-outline-variant p-4 flex gap-4 pb-safe">
+<button class="flex-1 bg-surface-variant hover:bg-surface-container-highest text-on-surface font-label-md text-label-md py-3 rounded-full border border-outline-variant transition-colors flex justify-center items-center gap-2">
+            Sell
+        </button>
+<button class="flex-1 bg-secondary hover:bg-secondary-fixed-dim text-on-secondary font-label-md text-label-md py-3 rounded-full transition-colors flex justify-center items-center gap-2 shadow-[0_4px_14px_rgba(239,193,56,0.2)]">
+            Buy AAPL
+        </button>
+</div>
+</body></html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Finance News Dashboard</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Hide scrollbar for horizontal scrolling containers */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ffb4ab",
+                        "surface-dim": "#051424",
+                        "tertiary-fixed": "#d7e3fe",
+                        "surface-bright": "#2c3a4c",
+                        "on-primary": "#293043",
+                        "secondary-fixed-dim": "#efc138",
+                        "surface-container-lowest": "#010f1f",
+                        "on-secondary": "#3d2e00",
+                        "on-tertiary-fixed": "#0f1c2f",
+                        "on-primary-fixed": "#141b2d",
+                        "on-surface": "#d4e4fa",
+                        "inverse-primary": "#575e72",
+                        "background": "#051424",
+                        "tertiary-fixed-dim": "#bbc7e1",
+                        "on-background": "#d4e4fa",
+                        "secondary": "#efc138",
+                        "secondary-container": "#c29800",
+                        "outline": "#909097",
+                        "surface-container-high": "#1c2b3c",
+                        "surface-tint": "#bfc6de",
+                        "inverse-surface": "#d4e4fa",
+                        "primary-container": "#0b1324",
+                        "on-secondary-fixed-variant": "#594400",
+                        "on-tertiary-container": "#727e96",
+                        "primary": "#bfc6de",
+                        "outline-variant": "#45464c",
+                        "tertiary": "#bbc7e1",
+                        "on-error": "#690005",
+                        "on-secondary-fixed": "#241a00",
+                        "surface-container": "#122131",
+                        "primary-fixed": "#dbe2fa",
+                        "secondary-fixed": "#ffdf91",
+                        "error-container": "#93000a",
+                        "inverse-on-surface": "#233143",
+                        "on-primary-fixed-variant": "#3f475a",
+                        "surface": "#051424",
+                        "on-secondary-container": "#433300",
+                        "tertiary-container": "#061327",
+                        "surface-container-highest": "#273647",
+                        "on-tertiary": "#253145",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#0d1c2d",
+                        "on-surface-variant": "#c6c6cd",
+                        "on-primary-container": "#767e93",
+                        "primary-fixed-dim": "#bfc6de",
+                        "surface-variant": "#273647",
+                        "on-tertiary-fixed-variant": "#3b475d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "40px",
+                        "gutter": "24px",
+                        "container-max": "1440px",
+                        "unit-md": "16px",
+                        "margin-mobile": "16px",
+                        "margin-tablet": "24px",
+                        "unit-xs": "4px",
+                        "unit-xl": "48px",
+                        "unit-lg": "24px",
+                        "unit-sm": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background antialiased selection:bg-secondary/30">
+<!-- TopNavBar (JSON Injected Styles) -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-surface-variant shadow-sm dark:shadow-none text-secondary dark:text-secondary-fixed-dim">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined cursor-pointer hover:text-secondary-fixed transition-colors">menu</span>
+<span class="font-headline-md text-headline-md font-bold text-secondary dark:text-secondary-fixed">GoldSilverPrices</span>
+</div>
+<div class="flex items-center gap-unit-md text-on-surface-variant">
+<button aria-label="Search" class="cursor-pointer active:scale-95 duration-150 hover:text-secondary dark:hover:text-secondary-fixed-dim transition-colors">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button aria-label="Notifications" class="cursor-pointer active:scale-95 duration-150 hover:text-secondary dark:hover:text-secondary-fixed-dim transition-colors hidden sm:block">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button aria-label="Dark Mode" class="cursor-pointer active:scale-95 duration-150 hover:text-secondary dark:hover:text-secondary-fixed-dim transition-colors hidden sm:block">
+<span class="material-symbols-outlined" data-icon="dark_mode">dark_mode</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant ml-2">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A small, professional portrait photo of a corporate executive in a dark modern office setting, deep navy suit, subtle gold tie accent, cinematic lighting, corporate style avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBN_BIy1QGZ7c_qj4RLJzWRk4HI_Ymwz9wU9PzHdcAkpCkmI1IAeHwNoFJcTcpE7sMdMHWpMA96iSO39Uq-fcjibsq-DKNGA-B63pZ6QGxAZsv0ovEVU9WLdfdcYcotMt1j84Mw6nqm7HQENRvKAFD7BV8knI335do9nTnDD7mlAVrECCkc1vdhNxlgi04RYqZFyTCUM_hSRbvJZnYvFuTfzwPV_Fm4nsAqScJqEAnBPQ7gEciWQYwn">
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-[80px] pb-[90px] px-margin-mobile flex flex-col gap-unit-lg max-w-container-max mx-auto">
+<!-- Section Header -->
+<header>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">Market News</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Latest updates impacting commodities and indices.</p>
+</header>
+<!-- Category Filter Chips -->
+<div class="flex overflow-x-auto gap-unit-sm hide-scrollbar -mx-margin-mobile px-margin-mobile pb-2 snap-x">
+<button class="snap-start shrink-0 px-4 py-2 rounded-full border border-secondary bg-secondary text-on-secondary font-label-md text-label-md transition-transform active:scale-95 shadow-[0_0_15px_rgba(239,193,56,0.2)]">
+                All News
+            </button>
+<button class="snap-start shrink-0 px-4 py-2 rounded-full border border-outline-variant bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-colors active:scale-95">
+                Precious Metals
+            </button>
+<button class="snap-start shrink-0 px-4 py-2 rounded-full border border-outline-variant bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-colors active:scale-95">
+                Equities
+            </button>
+<button class="snap-start shrink-0 px-4 py-2 rounded-full border border-outline-variant bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-colors active:scale-95">
+                Crypto
+            </button>
+<button class="snap-start shrink-0 px-4 py-2 rounded-full border border-outline-variant bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-colors active:scale-95">
+                Macro
+            </button>
+</div>
+<!-- Featured Hero Story -->
+<article class="relative rounded-xl overflow-hidden bg-surface-container border border-outline-variant shadow-lg group cursor-pointer">
+<div class="relative h-56 w-full">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A dramatic, high-contrast image of a physical gold bullion bar resting on a dark reflective surface. A glowing green upward trend line is superimposed, illuminated by harsh, moody corporate lighting. Deep navy blues and bright metallic golds." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA__Cp8NU81OqZX-dwTUHE6arSNtA7In5088cHWLDpS4L-aTQEKsEPMr0CUN-tD5cNMz-pCQqnmn8V3a8aaITo1PocQYQ79Ltlae9ySqsEIrQbslCs-E0odRFYE1UeHhrI7nqo-KD6Z5WmBAOPqvczOOSPgKYGnWxnKfOAFXkDEApFc6EoO_RJWtoR12YvBzjVRdXZH0B5ZI1LvpgjM24rBbO4mFsClhdlsfkWB93PofLLLZCLDCnuH">
+<div class="absolute inset-0 bg-gradient-to-t from-[#010f1f] via-[#010f1f]/50 to-transparent"></div>
+<div class="absolute top-4 left-4">
+<span class="bg-error text-on-error font-label-md text-label-md px-2 py-1 rounded shadow-sm">Breaking</span>
+</div>
+</div>
+<div class="p-unit-md relative z-10 -mt-12">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2 line-clamp-2">Gold Surges Past Historical Resistance Levels Amid Inflation Fears</h2>
+<div class="flex items-center justify-between mt-4">
+<div class="flex items-center gap-2 font-label-md text-label-md text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span>12 min ago</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant mx-1"></span>
+<span>Reuters</span>
+</div>
+<span class="material-symbols-outlined text-secondary">bookmark_border</span>
+</div>
+</div>
+</article>
+<!-- Vertical List of Compact News Cards -->
+<section class="flex flex-col gap-unit-md">
+<!-- News Item 1 -->
+<article class="flex gap-4 p-3 rounded-lg border border-outline-variant bg-surface-container hover:bg-surface-variant transition-colors cursor-pointer group active:scale-[0.98] duration-150">
+<div class="w-24 h-24 shrink-0 rounded-md overflow-hidden bg-surface-dim relative border border-surface-variant">
+<img class="w-full h-full object-cover group-hover:opacity-80 transition-opacity" data-alt="A close up abstract macro shot of digital stock market data displayed on a dark glowing screen. Numbers are crisp, colors are deep navy and subtle gold. Professional, sleek financial aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeYE6312m33kGYVeOsAV_rgXm2EsVbw662zdIWhoRdNVxWefRoo0E8aaGWhVZXJu24B8FiHJzbGRjNRaSpIEYwPNnHwV-yeVvSIx-1-bZ-usQfGrOZb-BAud_7cMn5WIF73Zbn-taF03RsV5pHofQ7uSNChQrYb9AtP8bTu9R4kNZdBYXIDtg2sgIw5bnljadgU-zA8e7O_793RE8kTpwRBppnlP6d0dJxrY-21vMWqnjMAo4Pgvia">
+</div>
+<div class="flex flex-col justify-between flex-1 py-1">
+<div>
+<span class="text-secondary font-label-md text-label-md mb-1 block">Equities</span>
+<h3 class="font-body-md text-body-md text-on-surface font-semibold line-clamp-2 leading-tight">Tech Sector Rallies as Major Earnings Reports Beat Analyst Expectations</h3>
+</div>
+<div class="flex items-center gap-2 font-label-md text-label-md text-on-surface-variant mt-2">
+<span>1h ago</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>Bloomberg</span>
+</div>
+</div>
+</article>
+<!-- News Item 2 -->
+<article class="flex gap-4 p-3 rounded-lg border border-outline-variant bg-surface-container hover:bg-surface-variant transition-colors cursor-pointer group active:scale-[0.98] duration-150">
+<div class="w-24 h-24 shrink-0 rounded-md overflow-hidden bg-surface-dim relative border border-surface-variant">
+<img class="w-full h-full object-cover group-hover:opacity-80 transition-opacity" data-alt="A modern, dark-themed rendering of a metallic Bitcoin coin hovering over a dark slate surface. Soft volumetric lighting highlights the edges of the coin, casting a long shadow. Premium crypto concept art." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnHJvxXtti-tSl31Ai-V_wvzAQtWnZwzNWHw2XqAgwPlnrY4nPVc623--OyuiGMQMYEarvp7MyGE7uJMtp4Sih3QwrzAYSPiYPY2VIiiiAZK1XWA1GEwwYBI3z-mIT3cAk5yev6uRKaD2DVJWLl1FyC-QLIcbwoMaivh38cs4I7jKqCKgN4kFw4mSrc-BWNyRdIb5e5-YOaC5fQqiLL8IIENSXYOoSv28djPEIUvp1RgAfxAI3Dsq4">
+</div>
+<div class="flex flex-col justify-between flex-1 py-1">
+<div>
+<span class="text-tertiary font-label-md text-label-md mb-1 block">Crypto</span>
+<h3 class="font-body-md text-body-md text-on-surface font-semibold line-clamp-2 leading-tight">Institutional Adoption Drives Bitcoin Toward New Quarterly Highs</h3>
+</div>
+<div class="flex items-center gap-2 font-label-md text-label-md text-on-surface-variant mt-2">
+<span>3h ago</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>CoinDesk</span>
+</div>
+</div>
+</article>
+<!-- News Item 3 -->
+<article class="flex gap-4 p-3 rounded-lg border border-outline-variant bg-surface-container hover:bg-surface-variant transition-colors cursor-pointer group active:scale-[0.98] duration-150">
+<div class="w-24 h-24 shrink-0 rounded-md overflow-hidden bg-surface-dim relative border border-surface-variant">
+<img class="w-full h-full object-cover group-hover:opacity-80 transition-opacity" data-alt="A serious, cinematic photograph of an oil rig platform at dusk. Dark silhouettes against a deep blue and subtle orange sky. Professional industrial energy sector imagery." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWe1LI1gXHiPTyNe4nnvctkA-FvMm1_6PcDYPNqrdR2UEiwmj1Gr8Ir41a4b8PxB5eyidHI6LxlAPiCSle0ZcmZSc23mxa0PLNvNJvCy0EKp4JNNUqFjBFPTqGpaBoNYGN6YiUA3OCM5jNx4UYu-iVGbqWLe31EFWF161qDayXCMW1IKg_3Z0zgW3Il8rKyzdXpDy1P2KAzUPPJgP-jvZehIv1XxyxO8ojDj0OqHNsRTn8QebhD1K_">
+</div>
+<div class="flex flex-col justify-between flex-1 py-1">
+<div>
+<span class="text-primary font-label-md text-label-md mb-1 block">Commodities</span>
+<h3 class="font-body-md text-body-md text-on-surface font-semibold line-clamp-2 leading-tight">Crude Oil Prices Stabilize Following OPEC Production Cut Announcements</h3>
+</div>
+<div class="flex items-center gap-2 font-label-md text-label-md text-on-surface-variant mt-2">
+<span>5h ago</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>WSJ</span>
+</div>
+</div>
+</article>
+<!-- News Item 4 -->
+<article class="flex gap-4 p-3 rounded-lg border border-outline-variant bg-surface-container hover:bg-surface-variant transition-colors cursor-pointer group active:scale-[0.98] duration-150">
+<div class="w-24 h-24 shrink-0 rounded-md overflow-hidden bg-surface-dim relative border border-surface-variant flex items-center justify-center bg-surface-container-high">
+<span class="material-symbols-outlined text-outline text-4xl">currency_exchange</span>
+</div>
+<div class="flex flex-col justify-between flex-1 py-1">
+<div>
+<span class="text-on-surface-variant font-label-md text-label-md mb-1 block">Forex</span>
+<h3 class="font-body-md text-body-md text-on-surface font-semibold line-clamp-2 leading-tight">USD Strengthens Against Euro Ahead of Central Bank Policy Meeting</h3>
+</div>
+<div class="flex items-center gap-2 font-label-md text-label-md text-on-surface-variant mt-2">
+<span>7h ago</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>MarketWatch</span>
+</div>
+</div>
+</article>
+</section>
+<!-- Load More -->
+<button class="w-full py-3 rounded-lg border border-outline text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-colors mt-4">
+            Load More Stories
+        </button>
+</main>
+<!-- BottomNavBar (JSON Injected Styles & Content) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-4 pb-safe bg-surface-container-highest dark:bg-surface-container-lowest border-t border-outline-variant shadow-[0_-4px_10px_rgba(0,0,0,0.3)] rounded-t-xl">
+<!-- Markets (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 active:scale-90 transition-transform duration-200 w-16 h-full">
+<span class="material-symbols-outlined mb-1" data-icon="show_chart">show_chart</span>
+<span class="font-label-md-mobile text-label-md-mobile text-[10px]">Markets</span>
+</button>
+<!-- News (Active) -->
+<button class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim bg-secondary-container/20 rounded-xl px-3 py-1 active:bg-surface-variant/30 active:scale-90 transition-transform duration-200 min-w-[64px]">
+<span class="material-symbols-outlined mb-1" data-icon="newspaper" data-weight="fill" style="font-variation-settings: 'FILL' 1;">newspaper</span>
+<span class="font-label-md-mobile text-label-md-mobile text-[10px] font-bold">News</span>
+</button>
+<!-- Portfolio (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 active:scale-90 transition-transform duration-200 w-16 h-full">
+<span class="material-symbols-outlined mb-1" data-icon="pie_chart">pie_chart</span>
+<span class="font-label-md-mobile text-label-md-mobile text-[10px]">Portfolio</span>
+</button>
+<!-- Alerts (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 active:scale-90 transition-transform duration-200 w-16 h-full">
+<span class="material-symbols-outlined mb-1" data-icon="notifications">notifications</span>
+<span class="font-label-md-mobile text-label-md-mobile text-[10px]">Alerts</span>
+</button>
+<!-- Menu (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 active:scale-90 transition-transform duration-200 w-16 h-full">
+<span class="material-symbols-outlined mb-1" data-icon="menu">menu</span>
+<span class="font-label-md-mobile text-label-md-mobile text-[10px]">Menu</span>
+</button>
+</nav>
+</body></html>

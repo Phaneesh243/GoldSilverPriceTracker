@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { notificationsConfigured, removeSubscription, saveSubscription } from "../../../../lib/push-notifications";
 import { redis } from "../../../../lib/redis";
+import { currentStorageUser } from "../../../../lib/storage-route";
+import { pushSubscriptionId, removePushSubscription, savePushSubscription } from "../../../../lib/storage";
 
 export const runtime = "nodejs";
 
@@ -76,6 +78,14 @@ export async function POST(request: Request) {
 
   try {
     await saveSubscription(parsed);
+    const subscription = parsed.subscription as { endpoint?: unknown; keys?: { p256dh?: unknown; auth?: unknown } };
+    const user = await currentStorageUser();
+    await savePushSubscription(user.id, {
+      endpoint: String(subscription.endpoint || ""),
+      p256dh: String(subscription.keys?.p256dh || ""),
+      auth: String(subscription.keys?.auth || ""),
+      platform: request.headers.get("user-agent") || "",
+    });
     return NextResponse.json({ ok: true });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
@@ -113,9 +123,10 @@ export async function DELETE(request: Request) {
 
   try {
     await removeSubscription(endpoint);
+    const user = await currentStorageUser();
+    await removePushSubscription(user.id, pushSubscriptionId(endpoint));
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: "Could not unsubscribe." }, { status: 500 });
   }
 }
-

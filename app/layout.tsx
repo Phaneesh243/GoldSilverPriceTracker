@@ -1,23 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { DM_Sans, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import ConsentPrompt from "./_components/ConsentPrompt";
 
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-dm-sans",
-  display: "swap",
-});
-
-const plusJakartaSans = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  weight: ["600", "700", "800"],
-  variable: "--font-plus-jakarta",
-  display: "swap",
-});
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://goldsilverprices.in").replace(/\/$/, "");
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://goldsilverprices.in"),
+  metadataBase: new URL(siteUrl),
   title: {
     default: "GoldSilverPrices - Gold & Silver Rates in India",
     template: "%s | GoldSilverPrices",
@@ -32,19 +20,24 @@ export const metadata: Metadata = {
     "gold price in Mumbai",
   ],
   alternates: { canonical: "/" },
+  applicationName: "GoldSilverPrices",
+  category: "finance",
+  icons: { icon: "/icon.svg", apple: "/icon.svg" },
+  manifest: "/manifest.webmanifest",
   openGraph: {
     title: "GoldSilverPrices - Gold & Silver Rates in India",
     description: "Track gold and silver prices across Indian cities with calculators and historical trends.",
-    url: "https://goldsilverprices.in",
+    url: siteUrl,
     siteName: "GoldSilverPrices",
     type: "website",
+    images: [{ url: "/opengraph-image.svg", width: 1200, height: 630, alt: "GoldSilverPrices market intelligence" }],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "GoldSilverPrices - Gold & Silver Rates in India",
     description: "Track gold and silver prices across Indian cities with calculators and historical trends.",
   },
-  robots: { index: true, follow: true },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
 };
 
 export const viewport: Viewport = {
@@ -68,21 +61,21 @@ const siteSchema = {
   "@graph": [
     {
       "@type": "Organization",
-      "@id": "https://goldsilverprices.in/#organization",
+      "@id": `${siteUrl}/#organization`,
       name: "GoldSilverPrices",
-      url: "https://goldsilverprices.in",
+      url: siteUrl,
     },
     {
       "@type": "WebSite",
-      "@id": "https://goldsilverprices.in/#website",
+      "@id": `${siteUrl}/#website`,
       name: "GoldSilverPrices",
-      url: "https://goldsilverprices.in",
+      url: siteUrl,
       publisher: {
         "@id": "https://goldsilverprices.in/#organization",
       },
       potentialAction: {
         "@type": "SearchAction",
-        target: "https://goldsilverprices.in/gold-price/{search_term_string}",
+      target: `${siteUrl}/search?q={search_term_string}`,
         "query-input": "required name=search_term_string",
       },
     },
@@ -91,11 +84,12 @@ const siteSchema = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${dmSans.variable} ${plusJakartaSans.variable}`}>
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
+      <body>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteSchema).replace(/</g, "\\u003c") }} />
         {children}
+        <ConsentPrompt />
       </body>
     </html>
   );

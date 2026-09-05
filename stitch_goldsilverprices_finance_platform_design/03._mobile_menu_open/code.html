@@ -1,0 +1,258 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>GoldSilverPrices - Menu</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#93000a",
+                        "secondary": "#efc138",
+                        "on-surface-variant": "#c6c6cd",
+                        "on-secondary-fixed-variant": "#594400",
+                        "on-primary-container": "#767e93",
+                        "surface-tint": "#bfc6de",
+                        "on-primary-fixed-variant": "#3f475a",
+                        "on-secondary": "#3d2e00",
+                        "on-error": "#690005",
+                        "inverse-on-surface": "#233143",
+                        "surface-variant": "#273647",
+                        "secondary-container": "#c29800",
+                        "on-tertiary-fixed": "#0f1c2f",
+                        "on-primary-fixed": "#141b2d",
+                        "outline": "#909097",
+                        "tertiary-container": "#061327",
+                        "on-error-container": "#ffdad6",
+                        "error": "#ffb4ab",
+                        "surface-dim": "#051424",
+                        "surface-container-lowest": "#010f1f",
+                        "surface-container": "#122131",
+                        "on-tertiary-fixed-variant": "#3b475d",
+                        "on-secondary-container": "#433300",
+                        "surface-container-low": "#0d1c2d",
+                        "on-surface": "#d4e4fa",
+                        "surface-bright": "#2c3a4c",
+                        "tertiary-fixed": "#d7e3fe",
+                        "on-tertiary-container": "#727e96",
+                        "primary-fixed": "#dbe2fa",
+                        "surface-container-high": "#1c2b3c",
+                        "on-secondary-fixed": "#241a00",
+                        "background": "#051424",
+                        "on-tertiary": "#253145",
+                        "primary-fixed-dim": "#bfc6de",
+                        "inverse-primary": "#575e72",
+                        "primary-container": "#0b1324",
+                        "tertiary-fixed-dim": "#bbc7e1",
+                        "primary": "#bfc6de",
+                        "surface": "#051424",
+                        "inverse-surface": "#d4e4fa",
+                        "tertiary": "#bbc7e1",
+                        "on-primary": "#293043",
+                        "outline-variant": "#45464c",
+                        "surface-container-highest": "#273647",
+                        "secondary-fixed-dim": "#efc138",
+                        "on-background": "#d4e4fa",
+                        "secondary-fixed": "#ffdf91"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit-lg": "24px",
+                        "gutter": "24px",
+                        "margin-desktop": "40px",
+                        "container-max": "1440px",
+                        "unit-md": "16px",
+                        "margin-tablet": "24px",
+                        "margin-mobile": "16px",
+                        "unit-xl": "48px",
+                        "unit-sm": "8px",
+                        "unit-xs": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #051424;
+            color: #d4e4fa;
+        }
+        /* Hide scrollbar for cleaner look on mobile overlay */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        .expandable-content {
+            display: none;
+        }
+        .expandable-content.open {
+            display: block;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-hidden">
+<!-- Full-screen Menu Overlay Canvas -->
+<div class="fixed inset-0 z-[100] bg-surface flex flex-col w-full h-[884px]">
+<!-- Header -->
+<header class="flex justify-between items-center px-margin-mobile py-unit-md border-b border-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-headline-md text-headline-md font-bold text-secondary">GoldSilverPrices</span>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-secondary transition-colors rounded-full hover:bg-surface-variant active:scale-95 duration-150 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</header>
+<!-- Menu List -->
+<div class="flex-1 overflow-y-auto px-margin-mobile py-unit-lg">
+<nav class="flex flex-col gap-2">
+<!-- Home Link (Direct) -->
+<a class="flex items-center justify-between p-4 rounded-lg hover:bg-surface-variant active:bg-surface-container-high transition-colors text-on-surface hover:text-secondary group" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors" data-icon="home">home</span>
+<span class="font-body-lg text-body-lg font-semibold">Home</span>
+</div>
+</a>
+<!-- Prices (Expandable) -->
+<div class="rounded-lg overflow-hidden border border-transparent has-[.open]:border-surface-variant has-[.open]:bg-surface-container-low transition-all">
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-variant active:bg-surface-container-high transition-colors text-on-surface hover:text-secondary group" onclick="toggleExpand('prices-content', this)">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors" data-icon="payments">payments</span>
+<span class="font-body-lg text-body-lg font-semibold">Prices</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant transition-transform duration-300 transform" data-icon="expand_more">expand_more</span>
+</button>
+<div class="expandable-content pl-11 pr-4 pb-4 bg-surface-container-low" id="prices-content">
+<ul class="flex flex-col gap-3 mt-2 border-l border-surface-variant pl-4">
+<li><a class="block text-on-surface-variant hover:text-secondary py-1 font-body-md text-body-md" href="#">Live Gold</a></li>
+<li><a class="block text-on-surface-variant hover:text-secondary py-1 font-body-md text-body-md" href="#">Live Silver</a></li>
+<li><a class="block text-on-surface-variant hover:text-secondary py-1 font-body-md text-body-md" href="#">Historical Data</a></li>
+<li><a class="block text-on-surface-variant hover:text-secondary py-1 font-body-md text-body-md" href="#">Ratios</a></li>
+</ul>
+</div>
+</div>
+<!-- Charts Link (Direct) -->
+<a class="flex items-center justify-between p-4 rounded-lg hover:bg-surface-variant active:bg-surface-container-high transition-colors text-on-surface hover:text-secondary group" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors" data-icon="show_chart">show_chart</span>
+<span class="font-body-lg text-body-lg font-semibold">Charts</span>
+</div>
+</a>
+<!-- Alerts Link (Direct) -->
+<a class="flex items-center justify-between p-4 rounded-lg hover:bg-surface-variant active:bg-surface-container-high transition-colors text-on-surface hover:text-secondary group" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors" data-icon="notifications">notifications</span>
+<span class="font-body-lg text-body-lg font-semibold">Alerts</span>
+</div>
+</a>
+<!-- News Link (Direct) -->
+<a class="flex items-center justify-between p-4 rounded-lg hover:bg-surface-variant active:bg-surface-container-high transition-colors text-on-surface hover:text-secondary group" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors" data-icon="newspaper">newspaper</span>
+<span class="font-body-lg text-body-lg font-semibold">News</span>
+</div>
+</a>
+<!-- Tools (Expandable) -->
+<div class="rounded-lg overflow-hidden border border-transparent has-[.open]:border-surface-variant has-[.open]:bg-surface-container-low transition-all">
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-variant active:bg-surface-container-high transition-colors text-on-surface hover:text-secondary group" onclick="toggleExpand('tools-content', this)">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors" data-icon="construction">construction</span>
+<span class="font-body-lg text-body-lg font-semibold">Tools</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant transition-transform duration-300 transform" data-icon="expand_more">expand_more</span>
+</button>
+<div class="expandable-content pl-11 pr-4 pb-4 bg-surface-container-low" id="tools-content">
+<ul class="flex flex-col gap-3 mt-2 border-l border-surface-variant pl-4">
+<li><a class="block text-on-surface-variant hover:text-secondary py-1 font-body-md text-body-md" href="#">Calculators</a></li>
+<li><a class="block text-on-surface-variant hover:text-secondary py-1 font-body-md text-body-md" href="#">Currency Converter</a></li>
+<li><a class="block text-on-surface-variant hover:text-secondary py-1 font-body-md text-body-md" href="#">API Access</a></li>
+</ul>
+</div>
+</div>
+<!-- More (Expandable) -->
+<div class="rounded-lg overflow-hidden border border-transparent has-[.open]:border-surface-variant has-[.open]:bg-surface-container-low transition-all mb-8">
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-variant active:bg-surface-container-high transition-colors text-on-surface hover:text-secondary group" onclick="toggleExpand('more-content', this)">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors" data-icon="more_horiz">more_horiz</span>
+<span class="font-body-lg text-body-lg font-semibold">More</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant transition-transform duration-300 transform" data-icon="expand_more">expand_more</span>
+</button>
+<div class="expandable-content pl-11 pr-4 pb-4 bg-surface-container-low" id="more-content">
+<ul class="flex flex-col gap-3 mt-2 border-l border-surface-variant pl-4">
+<li><a class="block text-on-surface-variant hover:text-secondary py-1 font-body-md text-body-md" href="#">About Us</a></li>
+<li><a class="block text-on-surface-variant hover:text-secondary py-1 font-body-md text-body-md" href="#">Support</a></li>
+<li><a class="block text-on-surface-variant hover:text-secondary py-1 font-body-md text-body-md" href="#">Settings</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<!-- User Profile / Auth Section at Bottom of Menu List -->
+<div class="mt-auto border-t border-surface-variant pt-6 pb-8">
+<div class="flex items-center gap-4 bg-surface-container-low p-4 rounded-xl border border-surface-variant">
+<div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A small, professional avatar placeholder image showing a generic user silhouette in dark slate and muted gold tones, suitable for a premium financial app interface in dark mode." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBGUTlO0ocBvCztJTMWTAxFQg2mGJ7kGTFXqqYfb7B5aKiH5UTUZXCY2boY66fNpLX3TfZhXidRVVPt5nv_G8Z7qyqJaH9nk7N8R_nkf9SpLu6em-OFl1Uk1aMMHKnX5iJxAGUWnjeRcefnjZdqZkaYiMDa8pp_FAHa0hcQ3FfGkSuZvJx6ZjkWp8tKQz5oOJ89ZRejTEtGCHm8iXv4SXin-kYMgHS1DNEDdpITN3sNYgY0LStge--">
+</div>
+<div class="flex-1">
+<p class="font-body-md text-body-md font-semibold text-on-surface">Guest User</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Sign in to sync portfolio</p>
+</div>
+<button class="text-secondary font-label-md text-label-md uppercase tracking-wider px-3 py-2 bg-secondary/10 rounded-lg active:bg-secondary/20 transition-colors">
+                        Sign In
+                    </button>
+</div>
+</div>
+</div>
+</div>
+<script>
+        function toggleExpand(id, btn) {
+            const content = document.getElementById(id);
+            const icon = btn.querySelector('.material-symbols-outlined[data-icon="expand_more"]');
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                icon.style.transform = 'rotate(0deg)';
+                btn.parentElement.classList.remove('bg-surface-container-low');
+                btn.parentElement.classList.remove('border-surface-variant');
+                btn.parentElement.classList.add('border-transparent');
+            } else {
+                content.classList.add('open');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+    </script>
+</body></html>

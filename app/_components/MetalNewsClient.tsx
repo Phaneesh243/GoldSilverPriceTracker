@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import type { MetalKey } from "../../lib/metals";
 
-type NewsItem = { title: string; link: string; source: string; publishedAt: string };
+type NewsItem = { id: string; slug: string; title: string; link: string; source: string; publishedAt: string; summary?: string };
 
 export default function MetalNewsClient({ metal, countryCode = "IN" }: { metal: MetalKey; countryCode?: string }) {
   const [items, setItems] = useState<NewsItem[]>([]);
@@ -33,11 +34,13 @@ export default function MetalNewsClient({ metal, countryCode = "IN" }: { metal: 
   return (
     <div className="news-mini-list">
       {items.slice(0, 5).map((item) => (
-        <a href={item.link} target="_blank" rel="noopener noreferrer" key={item.link}>
+        <article key={item.id || item.link}>
           <span>{item.source}</span>
-          <strong>{item.title}</strong>
+          <Link href={`/news/article/${encodeURIComponent(item.slug)}`}><strong>{item.title}</strong></Link>
+          {item.summary ? <p>{item.summary}</p> : null}
           <small>{item.publishedAt ? new Date(item.publishedAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }) : "Latest"}</small>
-        </a>
+          <a href={item.link} target="_blank" rel="noopener noreferrer">Read source</a>
+        </article>
       ))}
       {!items.length ? <p>No related headlines are available right now.</p> : null}
     </div>

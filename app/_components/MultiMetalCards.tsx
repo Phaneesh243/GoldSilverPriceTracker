@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { useEffect, useMemo, useState } from "react";
-import { Bell, Eye, TrendingDown, TrendingUp } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Bell, Eye, RefreshCw, TrendingDown, TrendingUp } from "lucide-react";
 import { REQUEST_NOTIFICATIONS_EVENT } from "./ConsentPrompt";
 import { formatCurrency } from "../../lib/country-data";
 import { metals, mostSearchedMetalLinks, type MetalKey } from "../../lib/metals";
 import type { MetalPrice } from "../../lib/metal-prices";
+import { useLiveRefresh } from "../_hooks/useLiveRefresh";
 
 type MetalCurrentPayload = {
   countryCode: string;
@@ -40,31 +41,13 @@ function signalFor(metal: MetalPrice) {
 }
 
 export function MultiMetalCards({ city = "mumbai", countryCode = "IN" }: { city?: string; countryCode?: string }) {
-  const [payload, setPayload] = useState<MetalCurrentPayload | null>(null);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function load() {
-      try {
-        const response = await fetch(`/api/metals/current?city=${city}&country=${countryCode}`, { signal: controller.signal });
-        if (!response.ok) throw new Error("Metal API unavailable");
-        setPayload((await response.json()) as MetalCurrentPayload);
-        setError(false);
-      } catch {
-        if (!controller.signal.aborted) setError(true);
-      }
-    }
-
-    void load();
-    const timer = window.setInterval(load, 60000);
-
-    return () => {
-      controller.abort();
-      window.clearInterval(timer);
-    };
+  const load = useCallback(async (signal: AbortSignal) => {
+    const response = await fetch(`/api/metals/current?city=${city}&country=${countryCode}`, { cache: "no-store", signal });
+    if (!response.ok) throw new Error("The metal price provider is unavailable.");
+    return response.json() as Promise<MetalCurrentPayload>;
   }, [city, countryCode]);
+  const live = useLiveRefresh({ load, intervalMs: 5 * 60_000 });
+  const payload = live.data;
 
   const rows = payload?.metals ?? [];
 
@@ -76,11 +59,9 @@ export function MultiMetalCards({ city = "mumbai", countryCode = "IN" }: { city?
           <h2 id="multi-metal-title">Today&apos;s most watched metal prices</h2>
           <p>Gold, silver, platinum and copper in one fast view. Unavailable feeds are never replaced with fake prices.</p>
         </div>
-        <Link className="soft-link" href="/metal-comparison">
-          Compare metals
-        </Link>
+        <div className="section-heading-actions"><button className="soft-link" type="button" onClick={() => void live.refresh()} disabled={live.loading || live.refreshing}><RefreshCw size={15} />{live.refreshing ? "Refreshing…" : "Refresh"}</button><Link className="soft-link" href="/metal-comparison">Compare metals</Link></div>
       </div>
-      {error ? <div className="inline-error">Multi-metal prices are temporarily unavailable.</div> : null}
+      {live.error ? <div className="inline-error">Provider unavailable: {live.error}</div> : null}
       <div className="metal-card-grid">
         {metals.map((config) => {
           const metal = rows.find((item) => item.key === config.key);
@@ -130,21 +111,56 @@ export function MostSearchedMetalPrices() {
 export function WatchlistClient({ city = "mumbai", countryCode = "IN" }: { city?: string; countryCode?: string }) {
   const [watchlist, setWatchlist] = useState<MetalKey[]>(["gold", "silver"]);
   const [prices, setPrices] = useState<MetalPrice[]>([]);
+  const [storageMode, setStorageMode] = useState(false);
 
   useEffect(() => {
-    const saved = window.localStorage.getItem("gsp-metal-watchlist-v1");
-    if (saved) {
-      try {
-        setWatchlist(JSON.parse(saved) as MetalKey[]);
-      } catch {
-        setWatchlist(["gold", "silver"]);
-      }
-    }
+    let active = true;
+    fetch("/api/storage/watchlist")
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Storage unavailable");
+        return (await response.json()) as { data?: Array<{ assetKey?: string }> };
+      })
+      .then((payload) => {
+        if (!active || !payload) return;
+        const saved = (payload.data || []).map((item) => item.assetKey).filter((key): key is MetalKey => metals.some((metal) => metal.key === key));
+        setWatchlist(saved);
+        setStorageMode(true);
+      })
+      .catch(() => {
+        if (!active) return;
+        const saved = window.localStorage.getItem("gsp-metal-watchlist-v1");
+        if (saved) {
+          try {
+            setWatchlist(JSON.parse(saved) as MetalKey[]);
+          } catch {
+            setWatchlist(["gold", "silver"]);
+          }
+        }
+      });
+    return () => {
+      active = false;
+    };
   }, []);
 
   useEffect(() => {
-    window.localStorage.setItem("gsp-metal-watchlist-v1", JSON.stringify(watchlist));
-  }, [watchlist]);
+    if (!storageMode) window.localStorage.setItem("gsp-metal-watchlist-v1", JSON.stringify(watchlist));
+  }, [storageMode, watchlist]);
+
+  async function toggleWatchlist(metalKey: MetalKey, checked: boolean) {
+    setWatchlist((current) => (checked ? [...new Set([...current, metalKey])] : current.filter((item) => item !== metalKey)));
+    if (!storageMode) return;
+    if (!checked) {
+      await fetch(`/api/storage/watchlist?id=${encodeURIComponent(metalKey)}`, { method: "DELETE" });
+      return;
+    }
+    const config = metals.find((item) => item.key === metalKey);
+    if (!config) return;
+    await fetch("/api/storage/watchlist", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ assetKey: config.key, symbol: config.symbol, name: config.name, assetType: "metal", route: config.route }),
+    });
+  }
 
   useEffect(() => {
     const controller = new AbortController();
@@ -170,11 +186,7 @@ export function WatchlistClient({ city = "mumbai", countryCode = "IN" }: { city?
           <label key={metal.key}>
             <input
               checked={watchlist.includes(metal.key)}
-              onChange={(event) =>
-                setWatchlist((current) =>
-                  event.target.checked ? [...new Set([...current, metal.key])] : current.filter((item) => item !== metal.key),
-                )
-              }
+              onChange={(event) => void toggleWatchlist(metal.key, event.target.checked)}
               type="checkbox"
             />
             {metal.name}

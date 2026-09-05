@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "verify:release": "node scripts/verify-release.mjs"
   },
   "dependencies": {
     "@types/web-push": "^3.6.4",

@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { countryOptions } from "../../lib/country-data";
 import { cityRates } from "../../lib/market-data";
-import NotificationToggle from "./NotificationToggle";
+import NotificationCenter from "./NotificationCenter";
 
 function todayValue() {
   return new Intl.DateTimeFormat("en-CA", {
@@ -78,7 +78,6 @@ export default function SiteHeader({ citySlug = "mumbai" }: { citySlug?: string 
     const saved = window.localStorage.getItem("gsp-theme");
     const next = saved === "dark" || saved === "light" ? saved : "light";
     // Hydration guard: localStorage is intentionally read only after the client mounts.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTheme(next);
     document.documentElement.dataset.theme = next;
     setMounted(true);
@@ -231,7 +230,7 @@ export default function SiteHeader({ citySlug = "mumbai" }: { citySlug?: string 
             <span className="date-label">{dateLabel(dateValue)}</span>
             <input value={dateValue} max={todayValue()} onChange={(event) => pushFilter({ date: event.target.value })} type="date" aria-label="Select date" />
           </label>
-          <NotificationToggle citySlug={activeCity.slug} />
+          <NotificationCenter />
           <button className="icon-btn" onClick={toggleTheme} aria-label="Toggle color theme" disabled={!mounted}>
             {mounted && theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
           </button>
@@ -269,7 +268,7 @@ export default function SiteHeader({ citySlug = "mumbai" }: { citySlug?: string 
             <span>{dateLabel(dateValue)}</span>
             <input value={dateValue} max={todayValue()} onChange={(event) => pushFilter({ date: event.target.value })} type="date" aria-label="Select date" />
           </label>
-          <span className="mobile-alert-button"><NotificationToggle citySlug={activeCity.slug} /></span>
+          <span className="mobile-alert-button"><NotificationCenter /></span>
           <button className={`icon-btn mobile-quick-refresh${isRefreshing ? " is-refreshing" : ""}`} onClick={refreshPrices} aria-label="Refresh price data" title="Refresh price data" disabled={isRefreshing}><RefreshCw size={18} /></button>
           <button className="icon-btn mobile-theme-button" onClick={toggleTheme} aria-label="Toggle color theme" disabled={!mounted}>
             {mounted && theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}

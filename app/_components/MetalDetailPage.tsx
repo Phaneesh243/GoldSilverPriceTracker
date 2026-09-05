@@ -1,11 +1,16 @@
 import type { CSSProperties } from "react";
 import Link from "next/link";
 import InfoPage from "./InfoPage";
+import AdSlot from "./AdSlot";
+import Breadcrumbs from "./Breadcrumbs";
+import MetalCalculator from "./MetalCalculator";
+import MetalPriceChart from "./MetalPriceChart";
 import MetalNewsClient from "./MetalNewsClient";
 import { PriceAlertClient } from "./MultiMetalCards";
+import { AssetActionButtons } from "./WatchlistAlertsClient";
 import { formatCurrency } from "../../lib/country-data";
 import { getMetalHistory, getMetalPrice } from "../../lib/metal-prices";
-import { getMetalConfig, type MetalKey } from "../../lib/metals";
+import { getMetalConfig, metals, type MetalKey } from "../../lib/metals";
 
 function formatMaybe(value: number | null | undefined, countryCode: string, digits = 2) {
   return typeof value === "number" ? formatCurrency(value, countryCode, digits) : "Unavailable";
@@ -44,6 +49,15 @@ export default async function MetalDetailPage({ metalKey }: { metalKey: MetalKey
   const config = getMetalConfig(metalKey);
   const [price, history] = await Promise.all([getMetalPrice(metalKey), getMetalHistory(metalKey, "IN", "10d")]);
   const signal = buyWaitSignal(history.data.map((item) => item.close));
+  const relatedMetals = metals.filter((metal) => metal.key !== metalKey);
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: `${config.name} Price Today in India`,
+    description: `Live ${config.name.toLowerCase()} price, historical movement, calculator, news and alerts for India.`,
+    url: `https://goldsilverprices.in${config.route}`,
+    isPartOf: { "@type": "WebSite", name: "GoldSilverPrices", url: "https://goldsilverprices.in" },
+  };
 
   return (
     <InfoPage
@@ -51,6 +65,8 @@ export default async function MetalDetailPage({ metalKey }: { metalKey: MetalKey
       title={`${config.name} Price Today`}
       description={`Live ${config.name.toLowerCase()} price, recent trend, calculator links, alerts and investor information for India.`}
     >
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Metals", href: "/metals" }, { label: `${config.name} price today` }]} />
       <div className="metal-detail-hero">
         <div className="metal-price-panel" style={{ "--metal-color": config.color } as CSSProperties}>
           <div className="metal-panel-top">
@@ -83,7 +99,11 @@ export default async function MetalDetailPage({ metalKey }: { metalKey: MetalKey
           <p>{signal.text}</p>
           <em>Informational only, not investment advice.</em>
         </div>
+        <AssetActionButtons asset={{ assetKey: metalKey, symbol: config.symbol, name: config.name, assetType: "metal", route: config.route, market: "India metals" }} />
       </div>
+
+      <MetalPriceChart metal={metalKey} color={config.color} />
+      <AdSlot id={`${metalKey}-after-chart`} />
 
       {price.variants?.length ? (
         <section className="metal-section-card">
@@ -137,6 +157,8 @@ export default async function MetalDetailPage({ metalKey }: { metalKey: MetalKey
         </section>
       )}
 
+      <MetalCalculator metal={metalKey} price={price.price} countryCode="IN" />
+
       <section className="metal-section-card">
         <div className="metal-section-heading">
           <span>Recent movement</span>
@@ -184,11 +206,32 @@ export default async function MetalDetailPage({ metalKey }: { metalKey: MetalKey
             <Link href="/investment-return-calculator">Calculate return</Link>
             <Link href="/metal-comparison">Compare metals</Link>
             <Link href={config.last10Route}>Open last 10 days</Link>
+            <Link href={`/gold-price/mumbai`}>Check city rates</Link>
           </div>
         </div>
       </section>
 
+      <section className="metal-related-card" aria-labelledby="related-metals-title">
+        <div className="metal-section-heading">
+          <div>
+            <span>Explore more</span>
+            <h2 id="related-metals-title">Related metal prices</h2>
+          </div>
+          <Link href="/metals">View all metals</Link>
+        </div>
+        <div className="related-metal-links">
+          {relatedMetals.map((metal) => (
+            <Link href={metal.route} key={metal.key} style={{ "--metal-color": metal.color } as CSSProperties}>
+              <span>{metal.symbol}</span>
+              <b>{metal.name} price today</b>
+              <small>{metal.unitLabel}</small>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       <PriceAlertClient />
+      <AdSlot id={`${metalKey}-before-news`} />
 
       <section className="metal-section-card metal-news-card">
         <div className="metal-section-heading">
@@ -196,6 +239,19 @@ export default async function MetalDetailPage({ metalKey }: { metalKey: MetalKey
           <h2>{config.name} news</h2>
         </div>
         <MetalNewsClient metal={metalKey} />
+      </section>
+
+      <section className="metal-faq" aria-labelledby="metal-faq-title">
+        <span>Common questions</span>
+        <h2 id="metal-faq-title">About {config.name.toLowerCase()} prices</h2>
+        <details open>
+          <summary>Are these final jeweller prices?</summary>
+          <p>No. Retail prices can include taxes, retailer premiums, making charges, wastage and local market differences.</p>
+        </details>
+        <details>
+          <summary>How often is the live price updated?</summary>
+          <p>The page displays the provider timestamp and availability state. Refresh frequency depends on the upstream feed.</p>
+        </details>
       </section>
     </InfoPage>
   );

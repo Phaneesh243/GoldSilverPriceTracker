@@ -1,0 +1,405 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>GoldSilverPrices - Article Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error": "#ffb4ab",
+                      "surface-dim": "#051424",
+                      "tertiary-fixed": "#d7e3fe",
+                      "surface-bright": "#2c3a4c",
+                      "on-primary": "#293043",
+                      "secondary-fixed-dim": "#efc138",
+                      "surface-container-lowest": "#010f1f",
+                      "on-secondary": "#3d2e00",
+                      "on-tertiary-fixed": "#0f1c2f",
+                      "on-primary-fixed": "#141b2d",
+                      "on-surface": "#d4e4fa",
+                      "inverse-primary": "#575e72",
+                      "background": "#051424",
+                      "tertiary-fixed-dim": "#bbc7e1",
+                      "on-background": "#d4e4fa",
+                      "secondary": "#efc138",
+                      "secondary-container": "#c29800",
+                      "outline": "#909097",
+                      "surface-container-high": "#1c2b3c",
+                      "surface-tint": "#bfc6de",
+                      "inverse-surface": "#d4e4fa",
+                      "primary-container": "#0b1324",
+                      "on-secondary-fixed-variant": "#594400",
+                      "on-tertiary-container": "#727e96",
+                      "primary": "#bfc6de",
+                      "outline-variant": "#45464c",
+                      "tertiary": "#bbc7e1",
+                      "on-error": "#690005",
+                      "on-secondary-fixed": "#241a00",
+                      "surface-container": "#122131",
+                      "primary-fixed": "#dbe2fa",
+                      "secondary-fixed": "#ffdf91",
+                      "error-container": "#93000a",
+                      "inverse-on-surface": "#233143",
+                      "on-primary-fixed-variant": "#3f475a",
+                      "surface": "#051424",
+                      "on-secondary-container": "#433300",
+                      "tertiary-container": "#061327",
+                      "surface-container-highest": "#273647",
+                      "on-tertiary": "#253145",
+                      "on-error-container": "#ffdad6",
+                      "surface-container-low": "#0d1c2d",
+                      "on-surface-variant": "#c6c6cd",
+                      "on-primary-container": "#767e93",
+                      "primary-fixed-dim": "#bfc6de",
+                      "surface-variant": "#273647",
+                      "on-tertiary-fixed-variant": "#3b475d"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-desktop": "40px",
+                      "gutter": "24px",
+                      "container-max": "1440px",
+                      "unit-md": "16px",
+                      "margin-mobile": "16px",
+                      "margin-tablet": "24px",
+                      "unit-xs": "4px",
+                      "unit-xl": "48px",
+                      "unit-lg": "24px",
+                      "unit-sm": "8px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "body-lg": ["Inter"],
+                      "label-md": ["Inter"],
+                      "headline-lg-mobile": ["Plus Jakarta Sans"],
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "body-md": ["Inter"],
+                      "headline-xl": ["Plus Jakarta Sans"],
+                      "body-sm": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+          font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for a premium feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #051424; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #273647; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #45464c; 
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden">
+<!-- SideNavBar Component -->
+<nav class="hidden lg:flex flex-col fixed left-0 top-0 h-full z-40 bg-surface-container-low border-r border-outline-variant w-[280px]">
+<!-- Header -->
+<div class="px-6 py-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-variant flex items-center justify-center border border-outline-variant shadow-sm">
+<span class="material-symbols-outlined text-secondary">monitoring</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-secondary">GoldSilverPrices</h1>
+<p class="font-label-md text-label-md text-on-surface-variant">Market Intelligence</p>
+</div>
+</div>
+</div>
+<!-- Main Navigation Links -->
+<div class="flex-1 overflow-y-auto px-2 space-y-1 mt-4">
+<a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-4 opacity-70 group-hover:opacity-100">payments</span>
+<span class="font-label-md text-label-md">Metals</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-4 opacity-70 group-hover:opacity-100">trending_up</span>
+<span class="font-label-md text-label-md">Stocks</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-4 opacity-70 group-hover:opacity-100">currency_bitcoin</span>
+<span class="font-label-md text-label-md">Crypto</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-4 opacity-70 group-hover:opacity-100">account_balance_wallet</span>
+<span class="font-label-md text-label-md">Mutual Funds</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-4 opacity-70 group-hover:opacity-100">description</span>
+<span class="font-label-md text-label-md">Bonds</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-4 opacity-70 group-hover:opacity-100">security</span>
+<span class="font-label-md text-label-md">Insurance</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-4 opacity-70 group-hover:opacity-100">currency_exchange</span>
+<span class="font-label-md text-label-md">Currencies</span>
+</a>
+<!-- ACTIVE TAB -->
+<a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-secondary-fixed border-l-4 border-secondary bg-surface-variant/50 transition-all" href="#">
+<span class="material-symbols-outlined mr-4 fill">newspaper</span>
+<span class="font-label-md text-label-md">News</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-4 opacity-70 group-hover:opacity-100">calculate</span>
+<span class="font-label-md text-label-md">Calculators</span>
+</a>
+</div>
+<!-- Footer Navigation Links -->
+<div class="px-2 pb-6 mt-auto border-t border-outline-variant pt-4">
+<a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-4 opacity-70 group-hover:opacity-100">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-4 opacity-70 group-hover:opacity-100">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="lg:ml-[280px] min-h-screen relative">
+<!-- Top App Bar (Minimal for mobile fallback, mostly hidden on desktop per prompt focus) -->
+<header class="lg:hidden fixed top-0 left-0 w-full z-30 bg-surface-dim border-b border-surface-variant h-16 flex items-center justify-between px-margin-mobile backdrop-blur-md bg-opacity-90">
+<h1 class="font-headline-md text-headline-md font-bold text-secondary">GoldSilverPrices</h1>
+<button class="text-on-surface-variant"><span class="material-symbols-outlined">menu</span></button>
+</header>
+<!-- Article Container -->
+<article class="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop py-unit-xl lg:py-unit-xl pt-24 lg:pt-16">
+<!-- Breadcrumb -->
+<nav aria-label="Breadcrumb" class="flex text-on-surface-variant font-label-md text-label-md mb-8">
+<ol class="inline-flex items-center space-x-1 md:space-x-3">
+<li class="inline-flex items-center">
+<a class="hover:text-secondary transition-colors" href="#">News</a>
+</li>
+<li>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-[16px] mx-1">chevron_right</span>
+<a class="hover:text-secondary transition-colors" href="#">Markets</a>
+</div>
+</li>
+<li aria-current="page">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-[16px] mx-1">chevron_right</span>
+<span class="text-surface-tint">Commodities</span>
+</div>
+</li>
+</ol>
+</nav>
+<!-- Featured Image -->
+<div class="w-full h-[300px] md:h-[450px] lg:h-[540px] rounded-xl overflow-hidden mb-12 relative border border-outline-variant shadow-lg">
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container/80 to-transparent z-10 pointer-events-none"></div>
+<img class="w-full h-full object-cover relative z-0" data-alt="A striking digital illustration representing the global gold and silver commodities market. A glowing, metallic gold bullish trend line arcs dynamically upward across a deep navy, dark-mode technical chart grid. Soft, high-contrast lighting highlights the gold textures against the deep, layered shadows of the background, creating a premium financial aesthetic. 8k resolution, modern corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7WQFNQEsClX65yn1NpP5Ktc-BGMtam9-BtXUK3_pRoCnfn-lPTxEdtJfT3YNx-nikKPK3KsIgvtjjeYqZGSjNzmAM8tcC54SrT7244-OuAncMXehln1v7CG5Xhew6VpjesxtsqVSLkRGsO-Lj7_beAE4fN0MVmglK5ZsWGr9vjaWyVg3vh1sq5zZzYcCn9dw3Z6JtsfiPpF0XPh97ZwbRZlIAe_5mSoSP3XVJ_px7dYoJvQxknOF6">
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Main Article Column -->
+<div class="lg:col-span-8 pr-0 lg:pr-8">
+<!-- Article Header -->
+<header class="mb-10">
+<div class="flex items-center gap-3 mb-6">
+<span class="bg-secondary/10 text-secondary border border-secondary/20 px-3 py-1 rounded-full font-label-md text-label-md uppercase tracking-wider">Analysis</span>
+<span class="text-on-surface-variant font-label-md text-label-md flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">schedule</span> 6 min read</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-inverse-surface mb-6 leading-tight">Gold Breaks Critical Resistance Level as Institutional Buying Surges</h1>
+<div class="flex flex-wrap items-center justify-between border-b border-surface-variant pb-6 gap-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-variant overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot portrait of a financial analyst. The subject is wearing a tailored dark suit with a subtle gold tie, positioned against a blurred dark navy office background. The lighting is crisp and modern, highlighting a serious, knowledgeable expression. High quality, corporate style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKizkzQc1oJN1WsLv-l2yalIoiLnSCiJzku78JMybmw8OAQCTyaH3lqqVnM27dtvr2ineDT_8WKYcaStLkiYzuACzIhvFEuJi1ShSgivlVL9VTnX1OtJ8-BCFKObB6FBeOxDtwWJ6BxM9Awotwb_bWhETksEUb5GSsFSsrdlUFXXg3I-rNXrn_a0bsFpJBxPxfJ2lkK5iPr_AHpoqyxOyjQgv_2rsIVcJPEds5NY-6wWoxn41Y0YxJ">
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-inverse-surface">Eleanor Vance</p>
+<p class="font-label-md text-label-md text-on-surface-variant">Senior Commodities Analyst • Oct 24, 2023</p>
+</div>
+</div>
+<!-- Share Actions -->
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-secondary hover:bg-surface-variant transition-colors border border-outline-variant/50">
+<svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.008 5.96H5.078z"></path></svg>
+</button>
+<button class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-secondary hover:bg-surface-variant transition-colors border border-outline-variant/50">
+<svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path clip-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" fill-rule="evenodd"></path></svg>
+</button>
+<button class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-secondary hover:bg-surface-variant transition-colors border border-outline-variant/50" title="Copy Link">
+<span class="material-symbols-outlined text-[20px]">link</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Article Body -->
+<div class="prose prose-invert max-w-none text-on-surface font-body-lg text-body-lg space-y-6">
+<p class="text-xl text-surface-tint leading-relaxed font-light mb-8">
+                            In a striking display of market resilience, spot gold prices have shattered the stubborn $2,050 resistance level, driven by an unprecedented wave of institutional accumulation and shifting macroeconomic indicators pointing towards a prolonged period of elevated inflation.
+                        </p>
+<p>
+                            The precious metal's trajectory over the past week has been nothing short of remarkable. Following the Federal Reserve's ambiguous forward guidance regarding rate holds, capital reallocation from equities into safe-haven assets has accelerated. Our proprietary flow data indicates a 42% week-over-week increase in ETF physical bullion backing requests.
+                        </p>
+<h2 class="font-headline-lg text-headline-lg text-inverse-surface mt-12 mb-6">The Institutional Catalyst</h2>
+<p>
+                            Retail sentiment alone cannot account for the sheer volume pushing this breakout. Analysis of block trades reveals substantial entry positions from sovereign wealth funds, particularly in emerging markets seeking de-dollarization alternatives.
+                        </p>
+<div class="my-8 p-6 bg-surface-container border border-outline-variant rounded-xl border-l-4 border-l-secondary relative overflow-hidden">
+<div class="absolute -right-4 -top-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]">format_quote</span>
+</div>
+<p class="font-headline-md text-headline-md text-inverse-surface relative z-10 mb-4 italic">
+                                "We are witnessing a structural shift in how central banks view tier-one capital. Gold is no longer just a hedge; it is returning to its role as foundational liquidity."
+                            </p>
+<p class="font-label-md text-label-md text-on-surface-variant text-right uppercase tracking-wider">— Director of Strategy, Apex Global Partners</p>
+</div>
+<h3 class="font-headline-md text-headline-md text-inverse-surface mt-10 mb-4">Technical Breakdown</h3>
+<p>
+                            From a technical perspective, the crossing of the 50-day moving average above the 200-day moving average—the classic 'Golden Cross'—was confirmed earlier this month. However, it was the decisive close above $2,050 on high volume that validated the breakout sequence.
+                        </p>
+<ul class="list-disc pl-6 space-y-3 mt-4 mb-6">
+<li><strong>Immediate Support:</strong> Now established at previous resistance of $2,015.</li>
+<li><strong>Upside Targets:</strong> Fibonacci extensions suggest $2,120 as the next psychological barrier, followed by $2,185.</li>
+<li><strong>Volatility Index:</strong> The Gold VIX (GVZ) remains relatively compressed, indicating steady accumulation rather than panic buying.</li>
+</ul>
+<p>
+                            Investors should remain vigilant regarding upcoming CPI prints, which could temporarily shock the dollar index (DXY) and create short-term volatility in metal spot prices. However, the macro foundation for the current bullish phase appears robust.
+                        </p>
+</div>
+<!-- Tags -->
+<div class="mt-12 pt-6 border-t border-surface-variant flex gap-2 flex-wrap">
+<span class="px-3 py-1 bg-surface-container rounded-full text-on-surface font-label-md text-label-md border border-outline-variant/30 hover:border-secondary transition-colors cursor-pointer">#Gold</span>
+<span class="px-3 py-1 bg-surface-container rounded-full text-on-surface font-label-md text-label-md border border-outline-variant/30 hover:border-secondary transition-colors cursor-pointer">#Commodities</span>
+<span class="px-3 py-1 bg-surface-container rounded-full text-on-surface font-label-md text-label-md border border-outline-variant/30 hover:border-secondary transition-colors cursor-pointer">#MarketAnalysis</span>
+<span class="px-3 py-1 bg-surface-container rounded-full text-on-surface font-label-md text-label-md border border-outline-variant/30 hover:border-secondary transition-colors cursor-pointer">#FedRates</span>
+</div>
+</div>
+<!-- Sidebar Column -->
+<aside class="lg:col-span-4 mt-12 lg:mt-0 space-y-8">
+<!-- Market Snapshot Widget (Contextual to the design system) -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-6 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-headline-md text-headline-md text-inverse-surface">Gold Spot (XAU)</h3>
+<span class="material-symbols-outlined text-secondary">monitoring</span>
+</div>
+<div class="flex items-baseline gap-2 mb-2">
+<span class="font-headline-xl text-headline-xl text-secondary font-bold">$2,064.30</span>
+<span class="font-label-md text-label-md text-primary">+1.24%</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Real-time data • USD / oz</p>
+<button class="w-full py-2 bg-secondary/10 hover:bg-secondary/20 text-secondary border border-secondary/30 rounded-lg font-label-md text-label-md transition-colors">View Full Chart</button>
+</div>
+<!-- Related Stories -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-6 shadow-sm">
+<h3 class="font-headline-md text-headline-md text-inverse-surface mb-6 border-b border-surface-variant pb-4">Related Stories</h3>
+<div class="space-y-6">
+<!-- Story Item -->
+<a class="group flex gap-4 items-start" href="#">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border border-outline-variant/50">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="A macro shot of a shiny silver bullion bar resting on a dark, textured graphite surface. Cool, metallic blue lighting accents the ridges of the silver bar, emphasizing an industrial, premium financial market look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-TwMc37-ex0FMlrMNFvw0H0BGfejbxdeKhYrHbnBUrtH-QMakZm6txJouVFDbs6RIi6QgVDANHDHDPUZEJqOkXHWrHE2ucXjFgOZcvMU6v5rstCEDtuScVeKy6AKv4lTPZHDm6i3ZqLZaynaAUn3jLCrw7CCIGCrINlyeQDkMu1DvWzZdE_IBZbvfQbx15q9_U3Op_NMX1Z2k9B8JhDTnsXOsKX1OIDh6efvBo422sZGMRmHDDxkt">
+</div>
+<div>
+<h4 class="font-body-md text-body-md text-inverse-surface group-hover:text-secondary transition-colors leading-snug mb-1">Silver Lags Behind Gold, But Industrial Demand Signals Recovery</h4>
+<p class="font-label-md text-label-md text-on-surface-variant">4 hours ago</p>
+</div>
+</a>
+<!-- Story Item -->
+<a class="group flex gap-4 items-start" href="#">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border border-outline-variant/50">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Abstract visualization of central bank monetary policy. A complex mechanism of interlocking dark metallic gears illuminated by subtle gold and blue LED lights, representing the intricate machinery of global finance and interest rates." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVjT6_mxtBAlsnJ-3JH99tW4Ow-KSdQozoInxS-kAuFsc2yoAq2FCAGb9SpIhg24lXiYujpUNVBWzCb2B5HZBEqCncFJMfd0JQSpQWsBottHBldDZtoNhdYYrVl1N6qvUqkO-N6zoLwkjnbxX174gmliGztDuxeRsFMd735pJoYfgH3M4DhmMhaXmgN6VOPZCZekUV4e2YKtV5H54LhuPSjXjdGyoZ1JC7508AMjPQef3rZe7-PTor">
+</div>
+<div>
+<h4 class="font-body-md text-body-md text-inverse-surface group-hover:text-secondary transition-colors leading-snug mb-1">Central Bank Accumulation Hits Record High in Q3</h4>
+<p class="font-label-md text-label-md text-on-surface-variant">Yesterday</p>
+</div>
+</a>
+<!-- Story Item -->
+<a class="group flex gap-4 items-start" href="#">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border border-outline-variant/50">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="A wide shot of a bustling trading floor displayed on multiple glowing monitors in a dark room. The screens show complex candlestick charts in shades of deep blue, green, and red, reflecting the intensity of global equity markets." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7qYmqsU9GjP6NlDG1r11XSqhG6KmZKMSXPdxw8IosLxHHppjU9jkoQsK908SXqHwycmMOCNirtrsa1IhT55VU1H51aiewGACrNYgtMlrAu-lAx07RC8RMEccSX7LoSQrZCYZFu5OMZKUFc-5ykCtpezwGrpwqXqxOshS97ZDz8kODUN95Au4J1407xd85fPRId10A7H5HuSBoS_91RfHPZIYmXTDj7xgAo6gCvSQKUjcvr-OOJ496">
+</div>
+<div>
+<h4 class="font-body-md text-body-md text-inverse-surface group-hover:text-secondary transition-colors leading-snug mb-1">Equities Stumble as Bond Yields Defy Expectations</h4>
+<p class="font-label-md text-label-md text-on-surface-variant">Yesterday</p>
+</div>
+</a>
+</div>
+</div>
+<!-- Most Read -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-6 shadow-sm">
+<h3 class="font-headline-md text-headline-md text-inverse-surface mb-6 border-b border-surface-variant pb-4">Trending Now</h3>
+<div class="space-y-4">
+<!-- Trending Item -->
+<a class="group flex items-start gap-3" href="#">
+<span class="font-headline-xl text-headline-xl text-surface-variant font-bold leading-none mt-1 group-hover:text-secondary transition-colors">1</span>
+<div>
+<h4 class="font-body-md text-body-md text-inverse-surface group-hover:text-secondary transition-colors leading-snug">The 5 Mining Stocks Poised to Outperform in 2024</h4>
+</div>
+</a>
+<div class="border-b border-surface-variant/50 ml-10"></div>
+<!-- Trending Item -->
+<a class="group flex items-start gap-3" href="#">
+<span class="font-headline-xl text-headline-xl text-surface-variant font-bold leading-none mt-1 group-hover:text-secondary transition-colors">2</span>
+<div>
+<h4 class="font-body-md text-body-md text-inverse-surface group-hover:text-secondary transition-colors leading-snug">Understanding the Gold/Silver Ratio Compression</h4>
+</div>
+</a>
+<div class="border-b border-surface-variant/50 ml-10"></div>
+<!-- Trending Item -->
+<a class="group flex items-start gap-3" href="#">
+<span class="font-headline-xl text-headline-xl text-surface-variant font-bold leading-none mt-1 group-hover:text-secondary transition-colors">3</span>
+<div>
+<h4 class="font-body-md text-body-md text-inverse-surface group-hover:text-secondary transition-colors leading-snug">Is Platinum the Forgotten Precious Metal?</h4>
+</div>
+</a>
+</div>
+</div>
+<!-- Newsletter Signup (Glassmorphism element) -->
+<div class="bg-gradient-to-br from-surface-container-high to-surface-container border border-secondary/20 rounded-xl p-6 relative overflow-hidden">
+<div class="absolute -right-10 -bottom-10 w-32 h-32 bg-secondary/10 rounded-full blur-2xl"></div>
+<h3 class="font-headline-md text-headline-md text-secondary mb-2 relative z-10">Market Alerts</h3>
+<p class="font-body-sm text-body-sm text-on-surface mb-4 relative z-10">Get the latest breakout alerts and daily analysis delivered directly to your inbox.</p>
+<form class="relative z-10 flex flex-col gap-3">
+<input class="w-full bg-surface-dim border border-outline-variant rounded-lg px-4 py-2 font-body-sm text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-all placeholder:text-on-surface-variant" placeholder="Email address" type="email">
+<button class="w-full bg-secondary text-on-secondary font-label-md text-label-md py-2 rounded-lg hover:bg-secondary-fixed transition-colors" type="button">Subscribe</button>
+</form>
+</div>
+</aside>
+</div>
+</article>
+<!-- Footer -->
+<footer class="border-t border-surface-variant mt-12 py-8 px-margin-desktop text-center">
+<p class="font-body-sm text-body-sm text-on-surface-variant">© 2023 GoldSilverPrices Market Intelligence. All rights reserved.</p>
+</footer>
+</main>
+</body></html>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bell, Cookie, X } from "lucide-react";
+import { Bell, Mail, X } from "lucide-react";
 
 const CONSENT_KEY = "gsp-consent-v1";
 const NOTIFICATION_KEY = "gsp-notification-choice-v1";
@@ -115,11 +115,6 @@ export default function ConsentPrompt() {
     };
   }, []);
 
-  async function acceptCookies() {
-    window.localStorage.setItem(CONSENT_KEY, "accepted");
-    setMessage("Cookie preferences saved.");
-  }
-
   async function allowNotifications() {
     setBusy(true);
     window.localStorage.setItem(CONSENT_KEY, "accepted");
@@ -157,23 +152,23 @@ export default function ConsentPrompt() {
   }
 
   return (
-    <div className="consent-panel" role="dialog" aria-label="Cookie and notification preferences" aria-live="polite">
+    <div className="consent-panel" role="dialog" aria-label="Market alert preferences" aria-live="polite">
       <button className="consent-close" onClick={close} aria-label="Close consent message">
         <X size={16} />
       </button>
       <div className="consent-icons" aria-hidden="true">
-        <Cookie size={18} />
+        <Mail size={18} />
         <Bell size={18} />
       </div>
       <div>
-        <strong>Stay updated with live metal prices</strong>
-        <p>We use essential cookies for preferences. You can also allow notifications for scheduled gold and silver updates.</p>
+        <strong>Get provider-backed market alerts</strong>
+        <p>Allow browser alerts for price rules and market updates. Email alerts remain a separate choice in Notification settings. You can disable either channel at any time.</p>
         {message ? <small>{message}</small> : null}
       </div>
       <div className="consent-actions">
-        <button onClick={acceptCookies}>Accept cookies</button>
+        <button onClick={close}>Not now</button>
         <button className="primary" onClick={allowNotifications} disabled={busy}>
-          {busy ? "Enabling..." : "Allow updates"}
+          {busy ? "Enabling..." : "Allow alerts"}
         </button>
       </div>
     </div>

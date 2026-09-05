@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { notificationsConfigured } from "../../../../lib/push-notifications";
 import { redis } from "../../../../lib/redis";
+import { emailAlertsConfigured } from "../../../../lib/email";
 
 export const runtime = "nodejs";
 
@@ -18,6 +19,8 @@ export async function GET() {
       vapidPublicKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || null,
       vapidPrivateKey: hasPrivateKey,
       vapidEmail: hasEmail,
+      emailProvider: "Resend",
+      emailConfigured: emailAlertsConfigured(),
     },
     { headers: { "Cache-Control": "no-store" } },
   );

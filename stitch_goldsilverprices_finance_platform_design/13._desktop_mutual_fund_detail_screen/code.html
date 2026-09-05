@@ -1,0 +1,334 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Mutual Fund Detail - GoldSilverPrices</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#c6c6cd",
+                        "on-error": "#690005",
+                        "secondary-container": "#c29800",
+                        "surface-container-highest": "#273647",
+                        "on-secondary-container": "#433300",
+                        "error-container": "#93000a",
+                        "surface-tint": "#bfc6de",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary": "#3d2e00",
+                        "surface-container-lowest": "#010f1f",
+                        "on-secondary-fixed-variant": "#594400",
+                        "surface-container-low": "#0d1c2d",
+                        "on-tertiary-fixed-variant": "#3b475d",
+                        "primary-container": "#0b1324",
+                        "surface-container": "#122131",
+                        "primary": "#bfc6de",
+                        "background": "#051424",
+                        "on-primary-container": "#767e93",
+                        "tertiary-container": "#061327",
+                        "error": "#ffb4ab",
+                        "secondary": "#efc138",
+                        "surface-container-high": "#1c2b3c",
+                        "on-tertiary-fixed": "#0f1c2f",
+                        "surface": "#051424",
+                        "surface-variant": "#273647",
+                        "outline": "#909097",
+                        "outline-variant": "#45464c",
+                        "tertiary-fixed-dim": "#bbc7e1",
+                        "surface-dim": "#051424",
+                        "inverse-on-surface": "#233143",
+                        "primary-fixed-dim": "#bfc6de",
+                        "on-secondary-fixed": "#241a00",
+                        "on-tertiary-container": "#727e96",
+                        "secondary-fixed-dim": "#efc138",
+                        "inverse-surface": "#d4e4fa",
+                        "on-tertiary": "#253145",
+                        "inverse-primary": "#575e72",
+                        "tertiary-fixed": "#d7e3fe",
+                        "primary-fixed": "#dbe2fa",
+                        "on-primary-fixed-variant": "#3f475a",
+                        "on-primary": "#293043",
+                        "surface-bright": "#2c3a4c",
+                        "tertiary": "#bbc7e1",
+                        "on-background": "#d4e4fa",
+                        "on-primary-fixed": "#141b2d",
+                        "on-surface": "#d4e4fa",
+                        "secondary-fixed": "#ffdf91"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "unit-md": "16px",
+                        "unit-lg": "24px",
+                        "gutter": "24px",
+                        "margin-tablet": "24px",
+                        "unit-sm": "8px",
+                        "margin-desktop": "40px",
+                        "unit-xl": "48px",
+                        "unit-xs": "4px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-sm": ["Inter"],
+                        "label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0B1324;
+            color: #d4e4fa;
+        }
+        
+        /* Custom Scrollbar for dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B1324; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #273647; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #45464c; 
+        }
+
+        .chart-glow {
+            filter: drop-shadow(0 4px 12px rgba(239, 193, 56, 0.2));
+        }
+        
+        .glass-panel {
+            background: linear-gradient(145deg, rgba(18, 33, 49, 0.8) 0%, rgba(13, 28, 45, 0.9) 100%);
+            backdrop-filter: blur(12px);
+            border: 1px solid #1E293B;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden">
+<!-- TopNavBar (Mobile) -->
+<nav class="lg:hidden fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-surface-variant shadow-sm dark:shadow-none">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary cursor-pointer" data-icon="menu">menu</span>
+<div class="font-headline-md text-headline-md font-bold text-secondary dark:text-secondary-fixed">GoldSilverPrices</div>
+</div>
+<div class="flex items-center gap-4 text-secondary dark:text-secondary-fixed-dim">
+<span class="material-symbols-outlined cursor-pointer active:scale-95 duration-150" data-icon="search">search</span>
+<span class="material-symbols-outlined cursor-pointer active:scale-95 duration-150" data-icon="notifications">notifications</span>
+<img alt="User Profile" class="w-8 h-8 rounded-full bg-surface-container" data-alt="A small circular profile picture placeholder for a user in a dark themed financial application. The image should be abstract or a generic silhouette, styled with cool blue and deep navy tones to match the UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOUHy8fsfiPq7Gp6bpeELPuBDnyQ_y6F73MP0hIlZKKtCN09LTmtM0OrJHvQ1ciiM08G1e-hr5vSG5tr7aNVEQ5w5t44Iz_V0lw0R8lQXMNQZJf2j4y2uZ8GcZtidUOlSrqEz9sy0oEF9OI7huv9gU1wOQNrUjsiiPKkUctjC72avHQAE_ImgvzuypfaJdDRCXsoyv570LzgjhdPhvYCn8PSzfC9AZRPu_5eUaD1jz44uCMNOmrKsz">
+</div>
+</nav>
+<!-- SideNavBar (Desktop) -->
+<nav class="hidden lg:flex flex-col fixed left-0 top-0 h-full z-40 bg-surface-container dark:bg-surface-container-low border-r border-outline-variant shadow-md dark:shadow-none docked left-0 h-full w-[280px]">
+<div class="p-6 border-b border-outline-variant">
+<div class="font-headline-md text-headline-md font-bold text-secondary flex items-center gap-3 mb-1">
+<div class="w-8 h-8 rounded bg-secondary flex items-center justify-center text-on-secondary">
+<span class="material-symbols-outlined text-xl" data-icon="monitoring">monitoring</span>
+</div>
+                GoldSilverPrices
+            </div>
+<div class="text-on-surface-variant font-body-sm text-body-sm">Market Intelligence</div>
+</div>
+<div class="flex-1 overflow-y-auto py-4 flex flex-col gap-1 px-3">
+<a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-4 text-on-surface-variant" data-icon="payments">payments</span>
+<span class="font-label-md text-label-md">Metals</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-4 text-on-surface-variant" data-icon="trending_up">trending_up</span>
+<span class="font-label-md text-label-md">Stocks</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-4 text-on-surface-variant" data-icon="currency_bitcoin">currency_bitcoin</span>
+<span class="font-label-md text-label-md">Crypto</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-secondary dark:text-secondary-fixed border-l-4 border-secondary bg-surface-variant/50 transition-all" href="#">
+<span class="material-symbols-outlined mr-4 text-secondary" data-icon="account_balance_wallet" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="font-label-md text-label-md">Mutual Funds</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-4 text-on-surface-variant" data-icon="description">description</span>
+<span class="font-label-md text-label-md">Bonds</span>
+</a>
+<a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-4 text-on-surface-variant" data-icon="security">security</span>
+<span class="font-label-md text-label-md">Insurance</span>
+</a>
+</div>
+<div class="p-4 border-t border-outline-variant flex flex-col gap-1">
+<a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-4 text-on-surface-variant" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<div class="flex items-center gap-3 mt-4 px-4 pb-2">
+<img alt="User Profile" class="w-10 h-10 rounded-full border border-outline-variant" data-alt="A small circular profile picture placeholder for a user in a dark themed financial application. The image should be abstract or a generic silhouette, styled with cool blue and deep navy tones to match the UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcqbxyHFrBA5q52Gk3wYi6CP_msxIunA3L2hRsNWYx4eW705FAOJLJDVc2WDPifdsjjaVuv5z_WyaAST3ZefhuvCeO_OWWE_B3laCS-kRY-hwfQD5mRl_TEdy8ChmO7zOj-04qfzRIAVolj3JqZwtpjJ_EM1p2Tbxqq5_pDM8USfvpRqQHpATApntt3O20Pm9QzW2Lz_GnOJTPQD3h_xoXjexH88IdR8ASrxRjrkdr5jNY0PdgLjOz">
+<div>
+<div class="font-label-md text-label-md text-on-surface">Jane Doe</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant text-xs">Pro Member</div>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="pt-16 lg:pt-0 lg:ml-[280px] min-h-screen pb-24 lg:pb-8">
+<!-- Header Section -->
+<header class="px-margin-mobile md:px-margin-desktop py-unit-lg lg:py-8 border-b border-outline-variant/30">
+<div class="max-w-container-max mx-auto">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="px-2 py-1 bg-surface-container-highest rounded text-on-surface-variant font-label-md text-label-md text-[10px] uppercase tracking-wider">Index Fund</span>
+<span class="px-2 py-1 bg-surface-container-highest rounded text-on-surface-variant font-label-md text-label-md text-[10px] uppercase tracking-wider">Large Cap</span>
+</div>
+<h1 class="font-headline-lg-mobile md:font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-surface mb-1">Vanguard 500 Index Fund</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">VFIAX • NYSE</p>
+</div>
+<div class="flex flex-col md:items-end">
+<div class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-secondary mb-1">
+                            $473.82
+                        </div>
+<div class="flex items-center gap-2 text-emerald-400 font-label-md text-label-md">
+<span class="material-symbols-outlined text-sm" data-icon="arrow_upward">arrow_upward</span>
+                            +$5.21 (1.12%) Today
+                        </div>
+</div>
+</div>
+</div>
+</header>
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-unit-lg">
+<!-- Actions Mobile Only -->
+<div class="flex gap-4 mb-unit-lg lg:hidden">
+<button class="flex-1 bg-secondary text-on-secondary font-label-md text-label-md py-3 px-4 rounded-lg flex items-center justify-center gap-2 hover:bg-secondary-fixed transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="add_circle">add_circle</span>
+                    Lumpsum
+                </button>
+<button class="flex-1 bg-surface-container-high border border-outline-variant text-on-surface font-label-md text-label-md py-3 px-4 rounded-lg flex items-center justify-center gap-2 hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="autorenew">autorenew</span>
+                    Start SIP
+                </button>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column (Chart & Main Stats) -->
+<div class="lg:col-span-8 flex flex-col gap-gutter">
+<!-- Chart Card -->
+<div class="glass-panel rounded-xl p-4 md:p-6 shadow-md">
+<div class="flex items-center justify-between mb-6">
+<h2 class="font-headline-md text-headline-md text-on-surface">Performance</h2>
+<!-- Timeframe Pills -->
+<div class="flex bg-surface-container rounded-lg p-1 border border-outline-variant/50">
+<button class="px-3 py-1 text-xs font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors">1D</button>
+<button class="px-3 py-1 text-xs font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors">1W</button>
+<button class="px-3 py-1 text-xs font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors">1M</button>
+<button class="px-3 py-1 text-xs font-label-md text-label-md rounded bg-surface-variant text-secondary transition-colors">1Y</button>
+<button class="px-3 py-1 text-xs font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors">5Y</button>
+</div>
+</div>
+<!-- Chart Container (Placeholder for real chart) -->
+<div class="relative h-64 md:h-80 w-full mb-4">
+<!-- Faux Chart SVG -->
+<svg class="absolute inset-0 w-full h-full chart-glow" preserveAspectRatio="none" viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#efc138" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#efc138" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+<!-- Grid Lines -->
+<line stroke="#1E293B" stroke-width="1" x1="0" x2="800" y1="50" y2="50"></line>
+<line stroke="#1E293B" stroke-width="1" x1="0" x2="800" y1="125" y2="125"></line>
+<line stroke="#1E293B" stroke-width="1" x1="0" x2="800" y1="200" y2="200"></line>
+<line stroke="#1E293B" stroke-width="1" x1="0" x2="800" y1="275" y2="275"></line>
+<!-- Area Fill -->
+<path d="M0,250 C100,220 200,260 300,180 C400,100 500,150 600,90 C700,30 800,80 800,80 L800,300 L0,300 Z" fill="url(#chartGradient)"></path>
+<!-- Main Line -->
+<path d="M0,250 C100,220 200,260 300,180 C400,100 500,150 600,90 C700,30 800,80 800,80" fill="none" stroke="#efc138" stroke-width="3"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Right Column (Details & Actions) -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<!-- Desktop Actions -->
+<div class="hidden lg:flex gap-4">
+<button class="flex-1 bg-secondary text-on-secondary font-label-md text-label-md py-4 rounded-lg flex items-center justify-center gap-2 hover:bg-secondary-fixed transition-colors shadow-[0_4px_14px_rgba(239,193,56,0.2)]">
+<span class="material-symbols-outlined text-lg" data-icon="add_circle">add_circle</span>
+                            Lumpsum
+                        </button>
+<button class="flex-1 bg-surface-container-high border border-outline-variant text-on-surface font-label-md text-label-md py-4 rounded-lg flex items-center justify-center gap-2 hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="autorenew">autorenew</span>
+                            Start SIP
+                        </button>
+</div>
+<!-- Key Stats Bento Box -->
+<div class="grid grid-cols-2 gap-4">
+<div class="glass-panel p-4 rounded-xl flex flex-col">
+<span class="text-on-surface-variant font-label-md text-label-md text-xs mb-1 uppercase tracking-wider">NAV</span>
+<span class="font-headline-md text-headline-md text-on-surface">$473.82</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm text-xs mt-auto pt-2">As of Today</span>
+</div>
+<div class="glass-panel p-4 rounded-xl flex flex-col">
+<span class="text-on-surface-variant font-label-md text-label-md text-xs mb-1 uppercase tracking-wider">Expense Ratio</span>
+<span class="font-headline-md text-headline-md text-on-surface">0.04%</span>
+<span class="text-emerald-400 font-body-sm text-body-sm text-xs mt-auto pt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[10px]" data-icon="check_circle">check_circle</span> Low
+                            </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-4 pb-safe bg-surface-container-highest dark:bg-surface-container-lowest border-t border-outline-variant shadow-[0_-4px_10px_rgba(0,0,0,0.3)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="show_chart">show_chart</span>
+<span class="font-label-md-mobile text-label-md-mobile text-[10px]">Markets</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="newspaper">newspaper</span>
+<span class="font-label-md-mobile text-label-md-mobile text-[10px]">News</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim bg-secondary-container/20 rounded-xl px-3 py-1 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="pie_chart" style="font-variation-settings: 'FILL' 1;">pie_chart</span>
+<span class="font-label-md-mobile text-label-md-mobile text-[10px]">Portfolio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="notifications">notifications</span>
+<span class="font-label-md-mobile text-label-md-mobile text-[10px]">Alerts</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="menu">menu</span>
+<span class="font-label-md-mobile text-label-md-mobile text-[10px]">Menu</span>
+</a>
+</nav>
+</body></html>

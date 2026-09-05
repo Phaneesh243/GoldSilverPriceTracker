@@ -1,0 +1,493 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Metals Dashboard - GoldSilverPrices</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error": "#690005",
+                      "error": "#ffb4ab",
+                      "surface-container-lowest": "#010f1f",
+                      "surface-bright": "#2c3a4c",
+                      "on-secondary-fixed-variant": "#594400",
+                      "on-primary-fixed-variant": "#3f475a",
+                      "on-tertiary-container": "#727e96",
+                      "on-surface": "#d4e4fa",
+                      "tertiary-fixed-dim": "#bbc7e1",
+                      "surface-container": "#122131",
+                      "surface-container-low": "#0d1c2d",
+                      "on-secondary": "#3d2e00",
+                      "outline": "#909097",
+                      "outline-variant": "#45464c",
+                      "on-tertiary-fixed-variant": "#3b475d",
+                      "primary-container": "#0b1324",
+                      "surface-variant": "#273647",
+                      "primary": "#bfc6de",
+                      "on-secondary-container": "#433300",
+                      "on-secondary-fixed": "#241a00",
+                      "surface": "#051424",
+                      "tertiary-fixed": "#d7e3fe",
+                      "secondary-fixed": "#ffdf91",
+                      "tertiary-container": "#061327",
+                      "primary-fixed-dim": "#bfc6de",
+                      "surface-container-high": "#1c2b3c",
+                      "on-primary-container": "#767e93",
+                      "on-primary": "#293043",
+                      "primary-fixed": "#dbe2fa",
+                      "inverse-surface": "#d4e4fa",
+                      "background": "#051424",
+                      "inverse-primary": "#575e72",
+                      "on-tertiary": "#253145",
+                      "on-tertiary-fixed": "#0f1c2f",
+                      "secondary-container": "#c29800",
+                      "surface-tint": "#bfc6de",
+                      "on-primary-fixed": "#141b2d",
+                      "secondary-fixed-dim": "#efc138",
+                      "on-background": "#d4e4fa",
+                      "secondary": "#efc138",
+                      "surface-container-highest": "#273647",
+                      "on-error-container": "#ffdad6",
+                      "tertiary": "#bbc7e1",
+                      "error-container": "#93000a",
+                      "on-surface-variant": "#c6c6cd",
+                      "surface-dim": "#051424",
+                      "inverse-on-surface": "#233143"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit-xs": "4px",
+                      "container-max": "1440px",
+                      "unit-lg": "24px",
+                      "unit-xl": "48px",
+                      "unit-md": "16px",
+                      "margin-desktop": "40px",
+                      "margin-tablet": "24px",
+                      "gutter": "24px",
+                      "unit-sm": "8px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Plus Jakarta Sans"],
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "body-lg": ["Inter"],
+                      "label-md": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "body-sm": ["Inter"],
+                      "headline-xl": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: linear-gradient(135deg, rgba(18, 33, 49, 0.7) 0%, rgba(13, 28, 45, 0.8) 100%);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(69, 70, 76, 0.3);
+        }
+        .chart-glow {
+            filter: drop-shadow(0 4px 12px rgba(239, 193, 56, 0.15));
+        }
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #051424; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #273647; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #45464c; 
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased selection:bg-secondary/30 selection:text-secondary-fixed">
+<!-- TopNavBar (Mobile) -->
+<header class="md:hidden fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile h-16 bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-surface-variant shadow-sm dark:shadow-none">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-headline-md text-headline-md font-bold text-secondary dark:text-secondary-fixed">GoldSilverPrices</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed-dim cursor-pointer active:scale-95 duration-150" data-icon="search">search</span>
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed-dim cursor-pointer active:scale-95 duration-150" data-icon="notifications">notifications</span>
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-outline-variant object-cover" data-alt="A small, circular avatar portrait of a professional individual against a deep navy blue background, lit with subtle studio lighting to match a premium corporate financial dashboard aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD23qOzvyQAa-lPLwi05zjO_G9VCtJW1aiKEotINXvS1hn8VVN-2RZCRZ4ofs_dRBvDnCTpdxlDfWo8_XKOFz2iA7d2SgiTU0H5xu-gPfRZor-_-hBuAz7DrZb7Vz1Xg-5yiW94PD7IF4Wk8vLDWufL-bYMso5P3J5XCmtpEeC5oCzDe9jEYpKqDqV2pvL93evp847Xr8wavy5ZRyJzkErJqhEzlIObuIGzMoPQVPwZ8NXlKLUm1Uaf">
+</div>
+</header>
+<!-- SideNavBar (Desktop) -->
+<nav class="hidden lg:flex flex-col fixed left-0 top-0 h-full z-40 bg-surface-container dark:bg-surface-container-low border-r border-outline-variant shadow-md dark:shadow-none h-full w-[280px]">
+<div class="p-6 border-b border-outline-variant/30 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center border border-secondary/20">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">diamond</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-secondary">GoldSilverPrices</h1>
+<p class="font-label-md text-label-md text-on-surface-variant">Market Intelligence</p>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto py-4">
+<ul class="space-y-1">
+<!-- Active Item: Metals -->
+<li>
+<a class="group flex items-center px-4 py-3 cursor-pointer text-secondary dark:text-secondary-fixed border-l-4 border-secondary bg-surface-variant/50" href="#">
+<span class="material-symbols-outlined mr-3 text-secondary" data-icon="payments">payments</span>
+<span class="font-body-md text-body-md font-medium">Metals</span>
+</a>
+</li>
+<li>
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="trending_up">trending_up</span>
+<span class="font-body-md text-body-md">Stocks</span>
+</a>
+</li>
+<li>
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="currency_bitcoin">currency_bitcoin</span>
+<span class="font-body-md text-body-md">Crypto</span>
+</a>
+</li>
+<li>
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-body-md text-body-md">Mutual Funds</span>
+</a>
+</li>
+<li>
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="description">description</span>
+<span class="font-body-md text-body-md">Bonds</span>
+</a>
+</li>
+<li>
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="security">security</span>
+<span class="font-body-md text-body-md">Insurance</span>
+</a>
+</li>
+<li>
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="currency_exchange">currency_exchange</span>
+<span class="font-body-md text-body-md">Currencies</span>
+</a>
+</li>
+<li>
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="newspaper">newspaper</span>
+<span class="font-body-md text-body-md">News</span>
+</a>
+</li>
+<li>
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="calculate">calculate</span>
+<span class="font-body-md text-body-md">Calculators</span>
+</a>
+</li>
+</ul>
+</div>
+<div class="p-4 border-t border-outline-variant/30">
+<ul class="space-y-1">
+<li>
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</li>
+<li>
+<a class="group flex items-center px-4 py-3 cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="help">help</span>
+<span class="font-body-md text-body-md">Support</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- BottomNavBar (Mobile) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-4 pb-safe bg-surface-container-highest dark:bg-surface-container-lowest border-t border-outline-variant shadow-[0_-4px_10px_rgba(0,0,0,0.3)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim bg-secondary-container/20 rounded-xl px-3 py-1 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="show_chart" style="font-variation-settings: 'FILL' 1;">show_chart</span>
+<span class="font-label-md-mobile text-label-md-mobile">Markets</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 rounded-xl px-3 py-1 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="newspaper">newspaper</span>
+<span class="font-label-md-mobile text-label-md-mobile">News</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 rounded-xl px-3 py-1 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="pie_chart">pie_chart</span>
+<span class="font-label-md-mobile text-label-md-mobile">Portfolio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 rounded-xl px-3 py-1 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="notifications">notifications</span>
+<span class="font-label-md-mobile text-label-md-mobile">Alerts</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 rounded-xl px-3 py-1 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="menu">menu</span>
+<span class="font-label-md-mobile text-label-md-mobile">Menu</span>
+</a>
+</nav>
+<!-- Main Content Area -->
+<main class="pt-16 lg:pt-0 lg:pl-[280px] pb-24 lg:pb-8 min-h-screen">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin-desktop py-8 space-y-gutter">
+<!-- Page Header & Controls -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-surface-variant pb-6">
+<div>
+<div class="flex items-center gap-2 text-on-surface-variant mb-2">
+<span class="font-label-md text-label-md uppercase tracking-wider">Markets</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="font-label-md text-label-md text-secondary">Precious Metals</span>
+</div>
+<h2 class="font-headline-xl text-headline-lg-mobile md:text-headline-xl font-bold text-on-surface">Metals Dashboard</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Real-time spot prices and market intelligence.</p>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<!-- Unit Selector -->
+<div class="bg-surface-container-high rounded-lg p-1 flex border border-outline-variant/50">
+<button class="px-4 py-1.5 rounded-md bg-secondary text-on-secondary font-label-md text-label-md transition-colors shadow-sm">oz</button>
+<button class="px-4 py-1.5 rounded-md text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors">kg</button>
+</div>
+<!-- City/Region Selector -->
+<button class="flex items-center gap-2 bg-surface-container-high border border-outline-variant/50 rounded-lg px-4 py-2 hover:bg-surface-variant transition-colors text-on-surface">
+<span class="material-symbols-outlined text-secondary" data-icon="location_city" style="font-variation-settings: 'FILL' 1;">location_city</span>
+<span class="font-body-sm text-body-sm font-medium">New York (NYMEX)</span>
+<span class="material-symbols-outlined text-on-surface-variant ml-1 text-sm">expand_more</span>
+</button>
+</div>
+</div>
+<!-- Top Highlights: Spot Price Cards -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<!-- Gold -->
+<div class="glass-panel rounded-xl p-4 md:p-5 relative overflow-hidden group hover:border-secondary/50 transition-colors">
+<div class="absolute -right-6 -top-6 w-24 h-24 bg-secondary/10 rounded-full blur-2xl group-hover:bg-secondary/20 transition-all"></div>
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(239,193,56,0.8)]"></div>
+<h3 class="font-body-md text-body-sm md:text-body-md font-semibold text-on-surface">Gold</h3>
+</div>
+<span class="material-symbols-outlined text-secondary opacity-50" data-icon="diamond">diamond</span>
+</div>
+<div class="font-headline-md text-headline-md md:text-headline-lg font-bold text-on-surface mt-1 tracking-tight">$2,345.60</div>
+<div class="flex items-center gap-1 mt-2 text-emerald-400">
+<span class="material-symbols-outlined text-sm" data-icon="arrow_upward">arrow_upward</span>
+<span class="font-label-md text-label-md">+1.24% ($28.90)</span>
+</div>
+</div>
+<!-- Silver -->
+<div class="glass-panel rounded-xl p-4 md:p-5 relative overflow-hidden group hover:border-surface-tint/50 transition-colors">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-surface-tint shadow-[0_0_8px_rgba(191,198,222,0.8)]"></div>
+<h3 class="font-body-md text-body-sm md:text-body-md font-semibold text-on-surface">Silver</h3>
+</div>
+</div>
+<div class="font-headline-md text-headline-md md:text-headline-lg font-bold text-on-surface mt-1 tracking-tight">$28.40</div>
+<div class="flex items-center gap-1 mt-2 text-emerald-400">
+<span class="material-symbols-outlined text-sm" data-icon="arrow_upward">arrow_upward</span>
+<span class="font-label-md text-label-md">+0.85% ($0.24)</span>
+</div>
+</div>
+<!-- Platinum -->
+<div class="glass-panel rounded-xl p-4 md:p-5 relative overflow-hidden group hover:border-tertiary/50 transition-colors">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_rgba(187,199,225,0.8)]"></div>
+<h3 class="font-body-md text-body-sm md:text-body-md font-semibold text-on-surface">Platinum</h3>
+</div>
+</div>
+<div class="font-headline-md text-headline-md md:text-headline-lg font-bold text-on-surface mt-1 tracking-tight">$980.15</div>
+<div class="flex items-center gap-1 mt-2 text-error">
+<span class="material-symbols-outlined text-sm" data-icon="arrow_downward">arrow_downward</span>
+<span class="font-label-md text-label-md">-0.42% ($4.12)</span>
+</div>
+</div>
+<!-- Copper -->
+<div class="glass-panel rounded-xl p-4 md:p-5 relative overflow-hidden group hover:border-orange-400/50 transition-colors">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-orange-400 shadow-[0_0_8px_rgba(251,146,60,0.8)]"></div>
+<h3 class="font-body-md text-body-sm md:text-body-md font-semibold text-on-surface">Copper</h3>
+</div>
+</div>
+<div class="font-headline-md text-headline-md md:text-headline-lg font-bold text-on-surface mt-1 tracking-tight">$4.12</div>
+<div class="flex items-center gap-1 mt-2 text-emerald-400">
+<span class="material-symbols-outlined text-sm" data-icon="arrow_upward">arrow_upward</span>
+<span class="font-label-md text-label-md">+2.10% ($0.08)</span>
+</div>
+</div>
+</div>
+<!-- Bento Grid Layout for Main Content -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Main Chart Area (Spans 2 columns) -->
+<div class="lg:col-span-2 glass-panel rounded-xl border border-outline-variant/30 flex flex-col">
+<div class="p-5 border-b border-surface-variant/50 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<h3 class="font-headline-md text-headline-md text-on-surface">Gold Price History</h3>
+<span class="bg-secondary/10 text-secondary px-2 py-0.5 rounded text-xs font-semibold">Live</span>
+</div>
+<!-- Timeframe selector -->
+<div class="hidden sm:flex bg-surface-container rounded-md p-1 border border-outline-variant/50">
+<button class="px-3 py-1 rounded text-on-surface-variant text-sm hover:text-on-surface transition-colors">1D</button>
+<button class="px-3 py-1 rounded text-on-surface-variant text-sm hover:text-on-surface transition-colors">1W</button>
+<button class="px-3 py-1 rounded bg-surface-variant text-on-surface text-sm shadow-sm transition-colors">1M</button>
+<button class="px-3 py-1 rounded text-on-surface-variant text-sm hover:text-on-surface transition-colors">1Y</button>
+<button class="px-3 py-1 rounded text-on-surface-variant text-sm hover:text-on-surface transition-colors">ALL</button>
+</div>
+</div>
+<div class="p-5 flex-1 min-h-[300px] relative w-full h-64">
+<!-- Conceptual Chart Visualization using placeholder -->
+<div class="absolute inset-0 bg-gradient-to-t from-secondary/5 to-transparent w-full h-full opacity-50 rounded-b-xl"></div>
+<!-- Replace with actual chart library in prod -->
+<svg class="w-full h-full chart-glow" preserveAspectRatio="none" viewBox="0 0 800 200">
+<path d="M0,150 C50,140 100,160 150,120 C200,80 250,130 300,90 C350,50 400,110 450,70 C500,30 550,80 600,40 C650,0 700,60 750,20 L800,40" fill="none" stroke="#EDBF36" stroke-width="3"></path>
+<path d="M0,150 C50,140 100,160 150,120 C200,80 250,130 300,90 C350,50 400,110 450,70 C500,30 550,80 600,40 C650,0 700,60 750,20 L800,40 L800,200 L0,200 Z" fill="url(#chart-grad)" opacity="0.2"></path>
+<defs>
+<linearGradient id="chart-grad" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#EDBF36"></stop>
+<stop offset="100%" stop-color="transparent"></stop>
+</linearGradient>
+</defs>
+</svg>
+<!-- Y-Axis labels (Conceptual) -->
+<div class="absolute right-5 top-5 bottom-10 flex flex-col justify-between text-xs text-on-surface-variant/50 font-mono">
+<span>$2,400</span>
+<span>$2,350</span>
+<span>$2,300</span>
+<span>$2,250</span>
+</div>
+</div>
+</div>
+<!-- Market Summary / Comparison Table -->
+<div class="glass-panel rounded-xl border border-outline-variant/30 flex flex-col overflow-hidden">
+<div class="p-5 border-b border-surface-variant/50">
+<h3 class="font-headline-md text-headline-md text-on-surface">Market Overview</h3>
+</div>
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container/50 border-b border-surface-variant font-label-md text-label-md text-on-surface-variant">
+<th class="py-3 px-4 font-medium">Metal</th>
+<th class="py-3 px-4 font-medium text-right">Price</th>
+<th class="py-3 px-4 font-medium text-right">24h Chg</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm">
+<tr class="border-b border-surface-variant/30 hover:bg-surface-container/40 transition-colors">
+<td class="py-3 px-4 flex items-center gap-2">
+<div class="w-1.5 h-1.5 rounded-full bg-secondary"></div>
+<span class="text-on-surface font-medium">Gold</span>
+</td>
+<td class="py-3 px-4 text-right text-on-surface font-mono">$2,345.60</td>
+<td class="py-3 px-4 text-right text-emerald-400 font-mono">+1.24%</td>
+</tr>
+<tr class="border-b border-surface-variant/30 hover:bg-surface-container/40 transition-colors">
+<td class="py-3 px-4 flex items-center gap-2">
+<div class="w-1.5 h-1.5 rounded-full bg-surface-tint"></div>
+<span class="text-on-surface font-medium">Silver</span>
+</td>
+<td class="py-3 px-4 text-right text-on-surface font-mono">$28.40</td>
+<td class="py-3 px-4 text-right text-emerald-400 font-mono">+0.85%</td>
+</tr>
+<tr class="border-b border-surface-variant/30 hover:bg-surface-container/40 transition-colors">
+<td class="py-3 px-4 flex items-center gap-2">
+<div class="w-1.5 h-1.5 rounded-full bg-tertiary"></div>
+<span class="text-on-surface font-medium">Platinum</span>
+</td>
+<td class="py-3 px-4 text-right text-on-surface font-mono">$980.15</td>
+<td class="py-3 px-4 text-right text-error font-mono">-0.42%</td>
+</tr>
+<tr class="border-b border-surface-variant/30 hover:bg-surface-container/40 transition-colors">
+<td class="py-3 px-4 flex items-center gap-2">
+<div class="w-1.5 h-1.5 rounded-full bg-orange-400"></div>
+<span class="text-on-surface font-medium">Copper</span>
+</td>
+<td class="py-3 px-4 text-right text-on-surface font-mono">$4.12</td>
+<td class="py-3 px-4 text-right text-emerald-400 font-mono">+2.10%</td>
+</tr>
+<tr class="hover:bg-surface-container/40 transition-colors">
+<td class="py-3 px-4 flex items-center gap-2">
+<div class="w-1.5 h-1.5 rounded-full bg-purple-400"></div>
+<span class="text-on-surface font-medium">Palladium</span>
+</td>
+<td class="py-3 px-4 text-right text-on-surface font-mono">$950.30</td>
+<td class="py-3 px-4 text-right text-error font-mono">-1.15%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Recent News Widget -->
+<div class="lg:col-span-3 glass-panel rounded-xl border border-outline-variant/30 p-5 mt-4">
+<div class="flex justify-between items-center mb-6 border-b border-surface-variant pb-4">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">newspaper</span>
+                            Metals Market News
+                        </h3>
+<a class="text-secondary hover:text-secondary-fixed text-sm font-medium flex items-center" href="#">
+                            View All <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- News Item 1 -->
+<div class="group cursor-pointer">
+<div class="h-32 mb-3 rounded-lg bg-surface-container-high overflow-hidden relative">
+<div class="bg-cover bg-center w-full h-full opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300" data-alt="A macro photograph of stacked gold bars glowing under dramatic, warm studio lighting inside a secure vault, symbolizing wealth and market stability. The background is a deep, shadowy navy blue, contrasting with the brilliant #EDBF36 gold tones." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBbyRs8HumIwGj601fJ8xMatq3ljxoT_r7qdWKHD_kxYaXVIeNPI62gpjGc5II1RjDyG4XK9-sA6ZbRlXtGtU_A8AYivKXMrWf0MStRfMOMNY5cxGSpQRODOLl5vmEu6yy5ngcajWD5CYE0Q9R5StsyoMgX6nqXYXwN8aRsQJP-sqaooiU1cIDIHBEgQl7R6mBuixovrUHaZTj4JobEB57bWTzL1xi4PF42jPXgc3YslNqJNSZqM28Z')"></div>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-secondary/20 text-secondary text-xs px-2 py-0.5 rounded border border-secondary/30">Gold</span>
+<span class="text-on-surface-variant text-xs">2 hours ago</span>
+</div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface group-hover:text-secondary transition-colors line-clamp-2">Gold Prices Surge Amidst Global Inflation Concerns</h4>
+</div>
+<!-- News Item 2 -->
+<div class="group cursor-pointer">
+<div class="h-32 mb-3 rounded-lg bg-surface-container-high overflow-hidden relative">
+<div class="bg-cover bg-center w-full h-full opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300" data-alt="A sleek, modern digital trading screen displaying glowing line charts in a dark mode interface. Silver coins are scattered in the foreground, out of focus, while the sharp blue and gold chart lines dominate the composition." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDzvrzZMTaHADemvvV5pPfINHSQqENV-xNP6bjNVnoamojk1KXCdaH6eXQbDspFsCga_Onb6taBKyJBXgJ-UNBSr-2sJnxl9OZqLvvvUsKGlQUvF3BWN3JHnvsgzKQU-Do70pLsfPD0YIPkG1ANasb8pjytmcLwGUN0bsbwSEBRLdejVezIx4xUP8IGuhL7r4mBGZsvE0wjBjFVS7bvhEtZ2D8rpDuWQR3cEbSSiAgAFidjTFu2dLeP')"></div>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-surface-tint/20 text-surface-tint text-xs px-2 py-0.5 rounded border border-surface-tint/30">Silver</span>
+<span class="text-on-surface-variant text-xs">4 hours ago</span>
+</div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface group-hover:text-secondary transition-colors line-clamp-2">Industrial Demand Boosts Silver Prospects for Q3</h4>
+</div>
+<!-- News Item 3 -->
+<div class="group cursor-pointer">
+<div class="h-32 mb-3 rounded-lg bg-surface-container-high overflow-hidden relative">
+<div class="bg-cover bg-center w-full h-full opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300" data-alt="Close up of raw copper wire coils in an industrial setting, dramatically lit with moody, dark lighting. The rich orange and copper tones pop against a dark, metallic background, representing raw industrial materials." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCJTaMBamu9_3CaKlJ1b5WnU8fgHBoa0UixSSEwzxnqSkuhWdtO6sDW1rbc5jN-mfVOgkyFMk9-WOf39gnJi33w-D74DVkAXn8VOnhUo5tN-hXrAA6zbMHhiDv6KYi0aGXEdHSnxLROVUY2GnOYBywXpfSge_2PdfKRyoU8cfS6dNtZPJtXwfWUOZ7jduiuOTFd6XUxZsIUo20gPg4qe-usFUSKisDdV68reMmf4YsxgNLx90NW4zlj')"></div>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-orange-400/20 text-orange-400 text-xs px-2 py-0.5 rounded border border-orange-400/30">Copper</span>
+<span class="text-on-surface-variant text-xs">6 hours ago</span>
+</div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface group-hover:text-secondary transition-colors line-clamp-2">Copper Hits Weekly High as Supply Chain Issues Persist</h4>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

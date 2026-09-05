@@ -1,0 +1,317 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Insurance Comparison | GoldSilverPrices</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-high": "#1c2b3c",
+                    "on-surface": "#d4e4fa",
+                    "primary-fixed-dim": "#bfc6de",
+                    "error-container": "#93000a",
+                    "outline-variant": "#45464c",
+                    "inverse-primary": "#575e72",
+                    "surface-container": "#122131",
+                    "tertiary": "#bbc7e1",
+                    "on-secondary": "#3d2e00",
+                    "secondary-fixed": "#ffdf91",
+                    "on-tertiary-fixed-variant": "#3b475d",
+                    "secondary": "#efc138",
+                    "tertiary-container": "#061327",
+                    "primary": "#bfc6de",
+                    "on-error": "#690005",
+                    "surface": "#051424",
+                    "inverse-on-surface": "#233143",
+                    "secondary-container": "#c29800",
+                    "error": "#ffb4ab",
+                    "on-primary": "#293043",
+                    "on-background": "#d4e4fa",
+                    "outline": "#909097",
+                    "surface-tint": "#bfc6de",
+                    "tertiary-fixed-dim": "#bbc7e1",
+                    "primary-fixed": "#dbe2fa",
+                    "on-secondary-fixed-variant": "#594400",
+                    "background": "#051424",
+                    "surface-container-low": "#0d1c2d",
+                    "on-tertiary-fixed": "#0f1c2f",
+                    "on-secondary-container": "#433300",
+                    "surface-container-highest": "#273647",
+                    "surface-bright": "#2c3a4c",
+                    "on-secondary-fixed": "#241a00",
+                    "primary-container": "#0b1324",
+                    "inverse-surface": "#d4e4fa",
+                    "surface-dim": "#051424",
+                    "on-tertiary": "#253145",
+                    "on-primary-fixed": "#141b2d",
+                    "on-primary-fixed-variant": "#3f475a",
+                    "surface-container-lowest": "#010f1f",
+                    "surface-variant": "#273647",
+                    "on-tertiary-container": "#727e96",
+                    "on-surface-variant": "#c6c6cd",
+                    "on-primary-container": "#767e93",
+                    "on-error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#efc138",
+                    "tertiary-fixed": "#d7e3fe"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit-xs": "4px",
+                    "unit-sm": "8px",
+                    "gutter": "24px",
+                    "unit-md": "16px",
+                    "margin-mobile": "16px",
+                    "unit-lg": "24px",
+                    "unit-xl": "48px",
+                    "margin-desktop": "40px",
+                    "container-max": "1440px",
+                    "margin-tablet": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { background-color: theme('colors.surface'); color: theme('colors.on-surface'); }
+        /* Hide scrollbar for clean horizontal scrolling if needed on smaller screens */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="hidden lg:flex flex-col fixed left-0 top-0 h-full z-40 bg-surface-container dark:bg-surface-container-low border-r border-outline-variant w-[280px] shadow-md dark:shadow-none">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-10 h-10 rounded-full bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">local_atm</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-secondary">GoldSilverPrices</h1>
+<p class="font-label-md text-label-md text-on-surface-variant">Market Intelligence</p>
+</div>
+</div>
+<ul class="space-y-1">
+<!-- Inactive Tabs -->
+<li><a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#"><span class="material-symbols-outlined mr-3 text-[20px]">payments</span><span class="font-label-md text-label-md">Metals</span></a></li>
+<li><a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#"><span class="material-symbols-outlined mr-3 text-[20px]">trending_up</span><span class="font-label-md text-label-md">Stocks</span></a></li>
+<li><a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#"><span class="material-symbols-outlined mr-3 text-[20px]">currency_bitcoin</span><span class="font-label-md text-label-md">Crypto</span></a></li>
+<li><a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#"><span class="material-symbols-outlined mr-3 text-[20px]">account_balance_wallet</span><span class="font-label-md text-label-md">Mutual Funds</span></a></li>
+<li><a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#"><span class="material-symbols-outlined mr-3 text-[20px]">description</span><span class="font-label-md text-label-md">Bonds</span></a></li>
+<!-- Active Tab -->
+<li><a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-secondary dark:text-secondary-fixed border-l-4 border-secondary bg-surface-variant/50" href="#"><span class="material-symbols-outlined mr-3 text-[20px]" style="font-variation-settings: 'FILL' 1;">security</span><span class="font-label-md text-label-md">Insurance</span></a></li>
+<!-- More Inactive -->
+<li><a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#"><span class="material-symbols-outlined mr-3 text-[20px]">currency_exchange</span><span class="font-label-md text-label-md">Currencies</span></a></li>
+<li><a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#"><span class="material-symbols-outlined mr-3 text-[20px]">newspaper</span><span class="font-label-md text-label-md">News</span></a></li>
+<li><a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all" href="#"><span class="material-symbols-outlined mr-3 text-[20px]">calculate</span><span class="font-label-md text-label-md">Calculators</span></a></li>
+</ul>
+</div>
+<div class="mt-auto p-6 border-t border-outline-variant">
+<ul class="space-y-1">
+<li><a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all" href="#"><span class="material-symbols-outlined mr-3 text-[20px]">settings</span><span class="font-label-md text-label-md">Settings</span></a></li>
+<li><a class="group flex items-center px-4 py-3 cursor-pointer rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all" href="#"><span class="material-symbols-outlined mr-3 text-[20px]">help</span><span class="font-label-md text-label-md">Support</span></a></li>
+</ul>
+</div>
+</nav>
+<!-- TopNavBar (Mobile) -->
+<header class="lg:hidden fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile h-16 bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-surface-variant shadow-sm dark:shadow-none">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">menu</span>
+<span class="font-headline-md text-headline-md font-bold text-secondary dark:text-secondary-fixed">GoldSilverPrices</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed-dim cursor-pointer active:scale-95 duration-150 hover:text-secondary dark:hover:text-secondary-fixed-dim transition-colors">notifications</span>
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed-dim cursor-pointer active:scale-95 duration-150 hover:text-secondary dark:hover:text-secondary-fixed-dim transition-colors">dark_mode</span>
+<img class="w-8 h-8 rounded-full border border-outline-variant object-cover" data-alt="A small circular profile picture of a professional user in a dark, premium setting, subtle lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMkvR4D7KIf5WmoLjuHdF5TtnCXTvsxWmd7LL2zvzXMe4hXfe1pSEuikI3L1DbMeo_vO7O9W_CeFDA3qxzel47QVDC0gvftcxRWI27YZx8S-WF--GsBhqrBcJMsiLIGMQuMcRrX5_Ej_6fR6NPv03oDcbfJSFnefHUwgsG239jO-sfcv5iO4pGzQuFGo6tgOerU70__ddG4g2V8lnYQ4YJZYlPfOajNhcbGeHPFPoT-8D1mEsCx3ke">
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 lg:ml-[280px] mt-16 lg:mt-0 p-margin-mobile md:p-margin-desktop w-full max-w-container-max mx-auto overflow-x-hidden">
+<!-- Header Section -->
+<div class="mb-unit-xl flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+<div>
+<h2 class="font-headline-xl text-headline-xl text-on-surface mb-2">Compare Policies</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Analyze top health insurance plans side-by-side to find the optimal coverage.</p>
+</div>
+<button class="flex items-center gap-2 bg-surface-container-high border border-outline-variant text-on-surface px-4 py-2 rounded-full font-label-md text-label-md hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[18px]">filter_list</span> Modify Criteria
+            </button>
+</div>
+<!-- Comparison Table / Grid -->
+<div class="relative bg-surface-container-low rounded-xl border border-outline-variant overflow-hidden shadow-lg mb-8">
+<div class="overflow-x-auto no-scrollbar">
+<table class="w-full min-w-[800px] text-left border-collapse">
+<!-- Table Header -->
+<thead>
+<tr class="border-b border-outline-variant bg-surface-container-high">
+<th class="p-6 w-1/4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Features</th>
+<!-- Plan 1 -->
+<th class="p-6 w-1/4 border-l border-outline-variant relative">
+<div class="absolute top-0 left-0 w-full h-1 bg-secondary rounded-tl-sm"></div>
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">SecureHealth Pro</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Provider A</p>
+</div>
+<span class="bg-secondary/10 text-secondary border border-secondary/30 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wide">Recommended</span>
+</div>
+<button class="w-full bg-secondary text-on-secondary font-label-md text-label-md py-2 rounded-lg hover:bg-secondary-fixed transition-colors active:scale-[0.98]">Select Plan</button>
+</th>
+<!-- Plan 2 -->
+<th class="p-6 w-1/4 border-l border-outline-variant">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">LifeGuard Plus</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Provider B</p>
+</div>
+</div>
+<button class="w-full bg-surface-container text-on-surface border border-outline-variant font-label-md text-label-md py-2 rounded-lg hover:bg-surface-variant transition-colors active:scale-[0.98]">Select Plan</button>
+</th>
+<!-- Plan 3 -->
+<th class="p-6 w-1/4 border-l border-outline-variant">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Basic Shield</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Provider C</p>
+</div>
+</div>
+<button class="w-full bg-surface-container text-on-surface border border-outline-variant font-label-md text-label-md py-2 rounded-lg hover:bg-surface-variant transition-colors active:scale-[0.98]">Select Plan</button>
+</th>
+</tr>
+</thead>
+<!-- Table Body -->
+<tbody class="font-body-md text-body-md">
+<!-- Row 1: Premium -->
+<tr class="border-b border-outline-variant hover:bg-surface-container transition-colors">
+<td class="p-6 text-on-surface-variant font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-primary">payments</span> Annual Premium
+                            </td>
+<td class="p-6 border-l border-outline-variant text-on-surface text-right">
+<span class="font-headline-md text-headline-md text-secondary">$1,250</span><span class="text-body-sm text-on-surface-variant">/yr</span>
+</td>
+<td class="p-6 border-l border-outline-variant text-on-surface text-right">
+<span class="font-headline-md text-headline-md">$980</span><span class="text-body-sm text-on-surface-variant">/yr</span>
+</td>
+<td class="p-6 border-l border-outline-variant text-on-surface text-right">
+<span class="font-headline-md text-headline-md">$650</span><span class="text-body-sm text-on-surface-variant">/yr</span>
+</td>
+</tr>
+<!-- Row 2: Coverage Amount -->
+<tr class="border-b border-outline-variant hover:bg-surface-container transition-colors">
+<td class="p-6 text-on-surface-variant font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-primary">shield</span> Coverage Amount
+                            </td>
+<td class="p-6 border-l border-outline-variant text-on-surface text-right">$500,000</td>
+<td class="p-6 border-l border-outline-variant text-on-surface text-right">$300,000</td>
+<td class="p-6 border-l border-outline-variant text-on-surface text-right">$150,000</td>
+</tr>
+<!-- Row 3: Claim Settlement Ratio -->
+<tr class="border-b border-outline-variant hover:bg-surface-container transition-colors">
+<td class="p-6 text-on-surface-variant font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-primary">fact_check</span> Claim Settlement Ratio
+                            </td>
+<td class="p-6 border-l border-outline-variant text-on-surface text-right text-emerald-400 font-semibold">98.5%</td>
+<td class="p-6 border-l border-outline-variant text-on-surface text-right text-emerald-400">95.2%</td>
+<td class="p-6 border-l border-outline-variant text-on-surface text-right text-error">88.4%</td>
+</tr>
+<!-- Row 4: Waiting Periods -->
+<tr class="border-b border-outline-variant hover:bg-surface-container transition-colors">
+<td class="p-6 text-on-surface-variant font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-primary">hourglass_empty</span> Waiting Period (Pre-existing)
+                            </td>
+<td class="p-6 border-l border-outline-variant text-on-surface text-right">12 Months</td>
+<td class="p-6 border-l border-outline-variant text-on-surface text-right">24 Months</td>
+<td class="p-6 border-l border-outline-variant text-on-surface text-right text-error">48 Months</td>
+</tr>
+<!-- Row 5: Key Exclusions -->
+<tr class="hover:bg-surface-container transition-colors">
+<td class="p-6 text-on-surface-variant font-semibold flex items-center gap-2 align-top">
+<span class="material-symbols-outlined text-[20px] text-primary">block</span> Key Exclusions
+                            </td>
+<td class="p-6 border-l border-outline-variant text-on-surface">
+<ul class="list-disc pl-4 space-y-1 text-body-sm text-on-surface-variant">
+<li>Cosmetic Surgery</li>
+<li>Self-inflicted injuries</li>
+</ul>
+</td>
+<td class="p-6 border-l border-outline-variant text-on-surface">
+<ul class="list-disc pl-4 space-y-1 text-body-sm text-on-surface-variant">
+<li>Maternity (First 3 yrs)</li>
+<li>Dental procedures</li>
+</ul>
+</td>
+<td class="p-6 border-l border-outline-variant text-on-surface">
+<ul class="list-disc pl-4 space-y-1 text-body-sm text-on-surface-variant">
+<li>Outpatient care</li>
+<li>Mental health coverage</li>
+<li>Alternative treatments</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Disclaimer -->
+<div class="mt-8 p-4 bg-surface-container-lowest border border-outline-variant rounded-lg flex items-start gap-3">
+<span class="material-symbols-outlined text-on-surface-variant mt-0.5 text-[20px]">info</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+<strong class="text-on-surface">Disclaimer:</strong> Premium amounts and coverage details are estimated based on standard profiles and may vary based on individual underwriting. Claim settlement ratios are based on the latest available financial year data. Please read the specific policy wording carefully before concluding a sale.
+            </p>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-4 pb-safe bg-surface-container-highest dark:bg-surface-container-lowest border-t border-outline-variant shadow-[0_-4px_10px_rgba(0,0,0,0.3)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">show_chart</span>
+<span class="font-label-md-mobile text-label-md-mobile mt-1">Markets</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">newspaper</span>
+<span class="font-label-md-mobile text-label-md-mobile mt-1">News</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim bg-secondary-container/20 rounded-xl px-3 py-1 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">security</span>
+<span class="font-label-md-mobile text-label-md-mobile mt-1">Insurance</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-label-md-mobile text-label-md-mobile mt-1">Alerts</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">menu</span>
+<span class="font-label-md-mobile text-label-md-mobile mt-1">Menu</span>
+</a>
+</nav>
+</body></html>

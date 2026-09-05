@@ -1,0 +1,364 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>GoldSilverPrices - Market Intelligence</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#93000a",
+                        "secondary": "#efc138",
+                        "on-surface-variant": "#c6c6cd",
+                        "on-secondary-fixed-variant": "#594400",
+                        "on-primary-container": "#767e93",
+                        "surface-tint": "#bfc6de",
+                        "on-primary-fixed-variant": "#3f475a",
+                        "on-secondary": "#3d2e00",
+                        "on-error": "#690005",
+                        "inverse-on-surface": "#233143",
+                        "surface-variant": "#273647",
+                        "secondary-container": "#c29800",
+                        "on-tertiary-fixed": "#0f1c2f",
+                        "on-primary-fixed": "#141b2d",
+                        "outline": "#909097",
+                        "tertiary-container": "#061327",
+                        "on-error-container": "#ffdad6",
+                        "error": "#ffb4ab",
+                        "surface-dim": "#051424",
+                        "surface-container-lowest": "#010f1f",
+                        "surface-container": "#122131",
+                        "on-tertiary-fixed-variant": "#3b475d",
+                        "on-secondary-container": "#433300",
+                        "surface-container-low": "#0d1c2d",
+                        "on-surface": "#d4e4fa",
+                        "surface-bright": "#2c3a4c",
+                        "tertiary-fixed": "#d7e3fe",
+                        "on-tertiary-container": "#727e96",
+                        "primary-fixed": "#dbe2fa",
+                        "surface-container-high": "#1c2b3c",
+                        "on-secondary-fixed": "#241a00",
+                        "background": "#051424",
+                        "on-tertiary": "#253145",
+                        "primary-fixed-dim": "#bfc6de",
+                        "inverse-primary": "#575e72",
+                        "primary-container": "#0b1324",
+                        "tertiary-fixed-dim": "#bbc7e1",
+                        "primary": "#bfc6de",
+                        "surface": "#051424",
+                        "inverse-surface": "#d4e4fa",
+                        "tertiary": "#bbc7e1",
+                        "on-primary": "#293043",
+                        "outline-variant": "#45464c",
+                        "surface-container-highest": "#273647",
+                        "secondary-fixed-dim": "#efc138",
+                        "on-background": "#d4e4fa",
+                        "secondary-fixed": "#ffdf91"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit-lg": "24px",
+                        "gutter": "24px",
+                        "margin-desktop": "40px",
+                        "container-max": "1440px",
+                        "unit-md": "16px",
+                        "margin-tablet": "24px",
+                        "margin-mobile": "16px",
+                        "unit-xl": "48px",
+                        "unit-sm": "8px",
+                        "unit-xs": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Hide scrollbar for clean horizontal scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background antialiased max-w-[390px] mx-auto min-h-screen relative overflow-x-hidden font-body-sm pb-24">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 w-full max-w-[390px] left-1/2 -translate-x-1/2 z-50 flex justify-between items-center px-margin-mobile h-16 bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-surface-variant shadow-sm dark:shadow-none">
+<!-- Search (on left as per JSON) -->
+<button aria-label="Search" class="text-on-surface-variant dark:text-on-surface-variant cursor-pointer active:scale-95 duration-150 p-2 -ml-2 rounded-full hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all">
+<span class="material-symbols-outlined text-[24px]">search</span>
+</button>
+<!-- Brand Logo -->
+<div class="font-headline-md text-headline-md font-bold text-secondary dark:text-secondary-fixed flex-1 text-center">
+            GoldSilverPrices
+        </div>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-1">
+<button aria-label="Location" class="text-on-surface-variant dark:text-on-surface-variant hover:text-secondary dark:hover:text-secondary-fixed-dim transition-colors cursor-pointer active:scale-95 duration-150 p-1 rounded-full">
+<span class="material-symbols-outlined text-[24px]">location_on</span>
+</button>
+<button aria-label="Dark Mode" class="text-on-surface-variant dark:text-on-surface-variant hover:text-secondary dark:hover:text-secondary-fixed-dim transition-colors cursor-pointer active:scale-95 duration-150 p-1 rounded-full">
+<span class="material-symbols-outlined text-[24px]">dark_mode</span>
+</button>
+<button aria-label="Notifications" class="text-on-surface-variant dark:text-on-surface-variant hover:text-secondary dark:hover:text-secondary-fixed-dim transition-colors cursor-pointer active:scale-95 duration-150 p-1 rounded-full relative">
+<span class="material-symbols-outlined text-[24px]">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button aria-label="User Profile" class="ml-1 shrink-0 cursor-pointer active:scale-95 duration-150">
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a mature investor in a dimly lit, modern corporate environment. The lighting is dramatic, emphasizing the subject's face against a dark navy blue background with subtle metallic gold reflections. Premium aesthetic, high resolution, 8k, sharp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCImDNZR0UOHSsmN5eQw3MKInt82S0ZRGjw6vAJufRGS9eWYjWRqSzQTs22vdxsXyRLsbc93C4xVxmvPscLbd908DC7HJAJAV16WqjKemIcr61VERKSlhXQVG4TGaDiOP740Z-4a1Qu1SvYvN08hZe9PNkc2GiqzouRtP6SbOJS_QoF65yFephOhHmv5700Qi19mPS5YpYP4JqGsBaf_jRWqxLQgb-tR6S1odJwZhrajwZ_nxjA0YWm">
+</div>
+</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="pt-20 px-margin-mobile flex flex-col gap-6">
+<!-- Market Summary Scrollable Row -->
+<section>
+<h2 class="font-headline-md text-headline-md mb-3 text-on-background">Live Markets</h2>
+<div class="flex gap-4 overflow-x-auto no-scrollbar -mx-margin-mobile px-margin-mobile snap-x snap-mandatory">
+<!-- Gold Card -->
+<div class="snap-center shrink-0 w-[240px] bg-surface-container rounded-xl p-4 border border-outline-variant/30 flex flex-col justify-between h-[120px] relative overflow-hidden">
+<div class="flex justify-between items-start z-10">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">circle</span>
+</div>
+<div>
+<h3 class="font-body-md text-body-md font-semibold text-on-surface">Gold</h3>
+<p class="font-label-md text-label-md text-on-surface-variant">XAU/USD</p>
+</div>
+</div>
+<span class="text-secondary font-label-md text-label-md bg-secondary/10 px-2 py-0.5 rounded-full">+1.24%</span>
+</div>
+<div class="z-10">
+<p class="font-headline-lg-mobile text-headline-lg-mobile text-secondary">$2,345.60</p>
+</div>
+<!-- Decorative Chart Line -->
+<svg class="absolute bottom-0 left-0 w-full h-1/2 opacity-30 pointer-events-none" preserveAspectRatio="none" viewBox="0 0 100 40">
+<path d="M0 40 L0 30 Q10 25, 20 28 T40 20 T60 15 T80 25 T100 10 L100 40 Z" fill="url(#goldGrad)"></path>
+<path d="M0 30 Q10 25, 20 28 T40 20 T60 15 T80 25 T100 10" fill="none" stroke="#efc138" stroke-width="1.5"></path>
+<defs>
+<linearGradient id="goldGrad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#efc138"></stop>
+<stop offset="100%" stop-color="transparent"></stop>
+</linearGradient>
+</defs>
+</svg>
+</div>
+<!-- Silver Card -->
+<div class="snap-center shrink-0 w-[240px] bg-surface-container rounded-xl p-4 border border-outline-variant/30 flex flex-col justify-between h-[120px] relative overflow-hidden">
+<div class="flex justify-between items-start z-10">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface" style="font-variation-settings: 'FILL' 1;">circle</span>
+</div>
+<div>
+<h3 class="font-body-md text-body-md font-semibold text-on-surface">Silver</h3>
+<p class="font-label-md text-label-md text-on-surface-variant">XAG/USD</p>
+</div>
+</div>
+<span class="text-error font-label-md text-label-md bg-error/10 px-2 py-0.5 rounded-full">-0.45%</span>
+</div>
+<div class="z-10">
+<p class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">$29.40</p>
+</div>
+<!-- Decorative Chart Line -->
+<svg class="absolute bottom-0 left-0 w-full h-1/2 opacity-20 pointer-events-none" preserveAspectRatio="none" viewBox="0 0 100 40">
+<path d="M0 40 L0 10 Q10 15, 20 12 T40 20 T60 25 T80 15 T100 30 L100 40 Z" fill="url(#silverGrad)"></path>
+<path d="M0 10 Q10 15, 20 12 T40 20 T60 25 T80 15 T100 30" fill="none" stroke="#c6c6cd" stroke-width="1.5"></path>
+<defs>
+<linearGradient id="silverGrad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#c6c6cd"></stop>
+<stop offset="100%" stop-color="transparent"></stop>
+</linearGradient>
+</defs>
+</svg>
+</div>
+<!-- Platinum Card -->
+<div class="snap-center shrink-0 w-[240px] bg-surface-container rounded-xl p-4 border border-outline-variant/30 flex flex-col justify-between h-[120px] relative overflow-hidden">
+<div class="flex justify-between items-start z-10">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">circle</span>
+</div>
+<div>
+<h3 class="font-body-md text-body-md font-semibold text-on-surface">Platinum</h3>
+<p class="font-label-md text-label-md text-on-surface-variant">XPT/USD</p>
+</div>
+</div>
+<span class="text-secondary font-label-md text-label-md bg-secondary/10 px-2 py-0.5 rounded-full">+0.12%</span>
+</div>
+<div class="z-10">
+<p class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">$1,025.50</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Today's Prices List -->
+<section class="bg-surface-container rounded-xl border border-outline-variant/30 p-4">
+<div class="flex justify-between items-center mb-4">
+<h2 class="font-body-lg text-body-lg font-semibold text-on-surface">Market Movers</h2>
+<button class="text-secondary font-label-md text-label-md flex items-center gap-1 active:scale-95 duration-150">
+                    View All <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+<div class="flex flex-col gap-0 divide-y divide-outline-variant/20">
+<!-- Row 1 -->
+<div class="flex justify-between items-center py-3 group hover:bg-surface-variant/30 transition-colors -mx-4 px-4 cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center border border-outline-variant/20">
+<span class="material-symbols-outlined text-secondary">trending_up</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-on-surface font-semibold">S&amp;P 500</p>
+<p class="font-label-md text-label-md text-on-surface-variant">Index</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-body-md text-body-md text-on-surface">5,234.18</p>
+<p class="font-label-md text-label-md text-secondary">+0.8%</p>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="flex justify-between items-center py-3 group hover:bg-surface-variant/30 transition-colors -mx-4 px-4 cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center border border-outline-variant/20">
+<span class="material-symbols-outlined text-secondary">currency_bitcoin</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-on-surface font-semibold">Bitcoin</p>
+<p class="font-label-md text-label-md text-on-surface-variant">Crypto</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-body-md text-body-md text-on-surface">64,210.00</p>
+<p class="font-label-md text-label-md text-error">-2.1%</p>
+</div>
+</div>
+<!-- Row 3 -->
+<div class="flex justify-between items-center py-3 group hover:bg-surface-variant/30 transition-colors -mx-4 px-4 cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center border border-outline-variant/20">
+<span class="material-symbols-outlined text-secondary">oil_barrel</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-on-surface font-semibold">Crude Oil</p>
+<p class="font-label-md text-label-md text-on-surface-variant">Commodity</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-body-md text-body-md text-on-surface">82.45</p>
+<p class="font-label-md text-label-md text-secondary">+1.5%</p>
+</div>
+</div>
+</div>
+</section>
+<!-- News Cards -->
+<section>
+<h2 class="font-headline-md text-headline-md mb-3 text-on-background">Latest Insights</h2>
+<div class="flex flex-col gap-4">
+<!-- News Item 1 -->
+<div class="bg-surface-container rounded-xl overflow-hidden border border-outline-variant/30 active:scale-[0.98] transition-transform cursor-pointer flex">
+<div class="w-24 h-24 shrink-0 bg-surface-variant">
+<img alt="Gold Bullion" class="w-full h-full object-cover" data-alt="A macro shot of physical gold bullion bars stacked neatly. The lighting highlights the gleaming yellow metal against a dark, moody background. Professional financial photography style, deep shadows, crisp details, conveying wealth and stability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtNBbBXxMwseP5MjYmfuzzhVYA0S-gXklukCf6xsW2jN2ySImjp0dO2c-hiWppCiTWfMelGPgGarrjQ4zU96BU4ebEYfe7rB9mIA-EcufBxysIRBl5jCh6i3FpKwYxS19RXEMmC8xg44cVg3z2BRXbfrPTXRuW4FFAtiIUwq_hDNro2XVBM1GdzkatB17WfPOzh_onFvzEaQl-UMMgVuAt9NjpZP00iTnRxqqbSXuaeisGEhjAXCvm">
+</div>
+<div class="p-3 flex flex-col justify-between flex-1">
+<h3 class="font-body-sm text-body-sm font-semibold text-on-surface line-clamp-2">Central Banks Increase Gold Reserves to Record Highs Amid Global Uncertainty</h3>
+<div class="flex justify-between items-center mt-2">
+<span class="font-label-md text-label-md text-on-surface-variant">2 hours ago</span>
+<span class="material-symbols-outlined text-[16px] text-secondary">bookmark_border</span>
+</div>
+</div>
+</div>
+<!-- News Item 2 -->
+<div class="bg-surface-container rounded-xl overflow-hidden border border-outline-variant/30 active:scale-[0.98] transition-transform cursor-pointer flex">
+<div class="w-24 h-24 shrink-0 bg-surface-variant">
+<img alt="Stock Chart" class="w-full h-full object-cover" data-alt="Abstract digital rendering of a volatile financial chart with red and green candlesticks. A glowing silver line cuts through the data points. The aesthetic is modern, tech-forward, dark mode UI style, with subtle depth and glowing data elements." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIEWS8grI0miWY1ljAvhSEel0Ha_J6FnzvqJGKWygdrIRjHwkKu6KdXOJHvtdagRd_sCzIbmU3AYG3FK579_PjIERfiWs13IbbNxrv15SWuAPOlq9267FfFcDfDrXxde_bssRO4j_PVjriPVAEMXO_ICKpeUx35q86tbmPA5G-42VR0sk1ivVBSBWASNjS0fTG99lrNyA_viUqz78Y6VcNo1pveZPlXFyceKGoGembg3EWvPP8DK8f">
+</div>
+<div class="p-3 flex flex-col justify-between flex-1">
+<h3 class="font-body-sm text-body-sm font-semibold text-on-surface line-clamp-2">Tech Stocks Rally as AI Earnings Beat Expectations Across the Board</h3>
+<div class="flex justify-between items-center mt-2">
+<span class="font-label-md text-label-md text-on-surface-variant">4 hours ago</span>
+<span class="material-symbols-outlined text-[16px] text-secondary">bookmark_border</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full max-w-[390px] left-1/2 -translate-x-1/2 z-50 flex justify-around items-center h-16 px-4 pb-safe bg-surface-container-highest dark:bg-surface-container-lowest border-t border-outline-variant shadow-[0_-4px_10px_rgba(0,0,0,0.3)] rounded-t-xl font-label-md text-label-md">
+<!-- Tab 1: Markets (Active) -->
+<button class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim bg-secondary-container/20 rounded-xl px-3 py-1 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">show_chart</span>
+<span class="mt-1 text-[10px] tracking-wide">Markets</span>
+</button>
+<!-- Tab 2: News -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 rounded-xl px-3 py-1 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined text-[24px]">newspaper</span>
+<span class="mt-1 text-[10px] tracking-wide">News</span>
+</button>
+<!-- Tab 3: Portfolio -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 rounded-xl px-3 py-1 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined text-[24px]">pie_chart</span>
+<span class="mt-1 text-[10px] tracking-wide">Portfolio</span>
+</button>
+<!-- Tab 4: Alerts -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 rounded-xl px-3 py-1 active:scale-90 transition-transform duration-200 relative">
+<span class="material-symbols-outlined text-[24px]">notifications</span>
+<span class="mt-1 text-[10px] tracking-wide">Alerts</span>
+<span class="absolute top-1 right-2 w-2 h-2 bg-secondary rounded-full"></span>
+</button>
+<!-- Tab 5: Menu -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-variant/30 rounded-xl px-3 py-1 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined text-[24px]">menu</span>
+<span class="mt-1 text-[10px] tracking-wide">Menu</span>
+</button>
+</nav>
+<!-- Safe area padding for newer iPhones -->
+<style>
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            .pb-safe {
+                padding-bottom: calc(env(safe-area-inset-bottom) + 0.5rem);
+            }
+        }
+    </style>
+</body></html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Stock Market Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#690005",
+                        "error": "#ffb4ab",
+                        "surface-container-lowest": "#010f1f",
+                        "surface-bright": "#2c3a4c",
+                        "on-secondary-fixed-variant": "#594400",
+                        "on-primary-fixed-variant": "#3f475a",
+                        "on-tertiary-container": "#727e96",
+                        "on-surface": "#d4e4fa",
+                        "tertiary-fixed-dim": "#bbc7e1",
+                        "surface-container": "#122131",
+                        "surface-container-low": "#0d1c2d",
+                        "on-secondary": "#3d2e00",
+                        "outline": "#909097",
+                        "outline-variant": "#45464c",
+                        "on-tertiary-fixed-variant": "#3b475d",
+                        "primary-container": "#0b1324",
+                        "surface-variant": "#273647",
+                        "primary": "#bfc6de",
+                        "on-secondary-container": "#433300",
+                        "on-secondary-fixed": "#241a00",
+                        "surface": "#051424",
+                        "tertiary-fixed": "#d7e3fe",
+                        "secondary-fixed": "#ffdf91",
+                        "tertiary-container": "#061327",
+                        "primary-fixed-dim": "#bfc6de",
+                        "surface-container-high": "#1c2b3c",
+                        "on-primary-container": "#767e93",
+                        "on-primary": "#293043",
+                        "primary-fixed": "#dbe2fa",
+                        "inverse-surface": "#d4e4fa",
+                        "background": "#051424",
+                        "inverse-primary": "#575e72",
+                        "on-tertiary": "#253145",
+                        "on-tertiary-fixed": "#0f1c2f",
+                        "secondary-container": "#c29800",
+                        "surface-tint": "#bfc6de",
+                        "on-primary-fixed": "#141b2d",
+                        "secondary-fixed-dim": "#efc138",
+                        "on-background": "#d4e4fa",
+                        "secondary": "#efc138",
+                        "surface-container-highest": "#273647",
+                        "on-error-container": "#ffdad6",
+                        "tertiary": "#bbc7e1",
+                        "error-container": "#93000a",
+                        "on-surface-variant": "#c6c6cd",
+                        "surface-dim": "#051424",
+                        "inverse-on-surface": "#233143"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit-xs": "4px",
+                        "container-max": "1440px",
+                        "unit-lg": "24px",
+                        "unit-xl": "48px",
+                        "unit-md": "16px",
+                        "margin-desktop": "40px",
+                        "margin-tablet": "24px",
+                        "gutter": "24px",
+                        "unit-sm": "8px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-sm": ["Inter"],
+                        "headline-xl": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0B1324; /* Background Level 0 */
+            color: #d4e4fa; /* on-background */
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-card {
+            background-color: #111B2F; /* Level 1 Container */
+            border: 1px solid #1E293B;
+            border-radius: 0.75rem; /* xl */
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 16px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-[80px]">
+<!-- TopNavBar (Shared Component JSON) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-surface-variant shadow-sm dark:shadow-none">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed-dim cursor-pointer active:scale-95 duration-150" data-icon="search">search</span>
+</div>
+<div class="font-headline-md text-headline-md font-bold text-secondary dark:text-secondary-fixed text-center flex-1">
+            GoldSilverPrices
+        </div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed-dim cursor-pointer active:scale-95 duration-150 hover:text-secondary dark:hover:text-secondary-fixed-dim transition-colors" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed-dim cursor-pointer active:scale-95 duration-150 hover:text-secondary dark:hover:text-secondary-fixed-dim transition-colors" data-icon="dark_mode">dark_mode</span>
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-secondary object-cover cursor-pointer" data-alt="A small circular user profile picture showing a professional headshot in high contrast studio lighting against a dark background, fitting a premium corporate financial dashboard aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfvxDzXQLI8I0S2sYfL3fm8aXtjamf5X_E_AFDh_GXjtjf8sTrCCjsfiqWopIoMN6492tgBUNYcSh3coJZOMwDqEVJCeMFZwuRJt125j9SIgnOWfuA0xI61rcb46T4xbs7raoBt3ruf3lS8vvlj5_KAPkyU9V73nuIQE49IhDIacNoR8spRdVN09dZTV_RMSVIHrPiuWPKA0vrbdFtyr1nvHQfQ6_dEOG9PsP-AhA1s5kHuxzBPP5_">
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-[80px] px-margin-mobile flex flex-col gap-6 max-w-container-max mx-auto pb-safe">
+<!-- Market Status Banner -->
+<div class="bg-surface-container-high rounded-lg p-3 flex items-center justify-between border border-surface-variant shadow-sm">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="font-label-md text-label-md text-on-surface uppercase tracking-wider">US Markets Open</span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Closes in 3h 45m</div>
+</div>
+<!-- Major Indices Mini-Cards (Horizontal Scroll on Mobile) -->
+<section>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-3">Markets</h2>
+<div class="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
+<div class="glass-card min-w-[140px] p-4 flex-shrink-0 flex flex-col gap-1 cursor-pointer hover:bg-surface-variant/50 transition-colors">
+<span class="font-label-md text-label-md text-on-surface-variant">S&amp;P 500</span>
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">5,123.41</span>
+<div class="flex items-center gap-1 text-emerald-400">
+<span class="material-symbols-outlined text-[16px]" data-icon="trending_up">trending_up</span>
+<span class="font-body-sm text-body-sm">+1.24%</span>
+</div>
+</div>
+<div class="glass-card min-w-[140px] p-4 flex-shrink-0 flex flex-col gap-1 cursor-pointer hover:bg-surface-variant/50 transition-colors">
+<span class="font-label-md text-label-md text-on-surface-variant">NASDAQ</span>
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">16,234.12</span>
+<div class="flex items-center gap-1 text-emerald-400">
+<span class="material-symbols-outlined text-[16px]" data-icon="trending_up">trending_up</span>
+<span class="font-body-sm text-body-sm">+1.85%</span>
+</div>
+</div>
+<div class="glass-card min-w-[140px] p-4 flex-shrink-0 flex flex-col gap-1 cursor-pointer hover:bg-surface-variant/50 transition-colors">
+<span class="font-label-md text-label-md text-on-surface-variant">DOW</span>
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">39,120.50</span>
+<div class="flex items-center gap-1 text-error">
+<span class="material-symbols-outlined text-[16px]" data-icon="trending_down">trending_down</span>
+<span class="font-body-sm text-body-sm">-0.15%</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Tabbed View: Gainers/Losers -->
+<section class="glass-card overflow-hidden">
+<div class="flex border-b border-surface-variant">
+<button class="flex-1 py-3 text-center font-label-md text-label-md text-secondary border-b-2 border-secondary bg-surface-variant/20">Gainers</button>
+<button class="flex-1 py-3 text-center font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">Losers</button>
+<button class="flex-1 py-3 text-center font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">Active</button>
+</div>
+<div class="flex flex-col">
+<!-- Stock Row -->
+<div class="flex items-center justify-between p-4 border-b border-surface-variant/50 hover:bg-surface-variant/30 transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center font-bold text-on-surface">NVDA</div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface font-semibold">NVIDIA Corp</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Technology</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-body-md text-body-md text-on-surface font-semibold">$875.20</span>
+<span class="font-body-sm text-body-sm text-emerald-400">+4.52%</span>
+</div>
+</div>
+<!-- Stock Row -->
+<div class="flex items-center justify-between p-4 border-b border-surface-variant/50 hover:bg-surface-variant/30 transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center font-bold text-on-surface">AMD</div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface font-semibold">Adv. Micro Devices</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Technology</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-body-md text-body-md text-on-surface font-semibold">$202.15</span>
+<span class="font-body-sm text-body-sm text-emerald-400">+3.10%</span>
+</div>
+</div>
+<!-- Stock Row -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-variant/30 transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center font-bold text-on-surface">SMCI</div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface font-semibold">Super Micro Comp</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Technology</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-body-md text-body-md text-on-surface font-semibold">$1,100.40</span>
+<span class="font-body-sm text-body-sm text-emerald-400">+2.85%</span>
+</div>
+</div>
+</div>
+<div class="p-3 text-center border-t border-surface-variant bg-surface-container-lowest/50">
+<button class="font-label-md text-label-md text-secondary hover:text-secondary-fixed-dim transition-colors">View All Gainers</button>
+</div>
+</section>
+<!-- Sector Performance -->
+<section>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-3 mt-2">Sector Performance</h2>
+<div class="glass-card p-4 flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface w-1/3">Technology</span>
+<div class="w-1/2 bg-surface-container-high rounded-full h-2 overflow-hidden">
+<div class="bg-emerald-500 h-full rounded-full" style="width: 75%"></div>
+</div>
+<span class="font-body-sm text-body-sm text-emerald-400 w-1/6 text-right">+2.4%</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface w-1/3">Financials</span>
+<div class="w-1/2 bg-surface-container-high rounded-full h-2 overflow-hidden">
+<div class="bg-emerald-500 h-full rounded-full" style="width: 45%"></div>
+</div>
+<span class="font-body-sm text-body-sm text-emerald-400 w-1/6 text-right">+0.8%</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface w-1/3">Energy</span>
+<div class="w-1/2 bg-surface-container-high rounded-full h-2 overflow-hidden">
+<div class="bg-error h-full rounded-full" style="width: 60%; margin-left: auto;"></div>
+</div>
+<span class="font-body-sm text-body-sm text-error w-1/6 text-right">-1.2%</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Shared Component JSON) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-4 pb-safe bg-surface-container-highest dark:bg-surface-container-lowest border-t border-outline-variant shadow-[0_-4px_10px_rgba(0,0,0,0.3)] rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim bg-secondary-container/20 rounded-xl px-3 py-1 active:scale-90 transition-transform duration-200 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="show_chart" data-weight="fill" style="font-variation-settings: 'FILL' 1;">show_chart</span>
+<span class="font-label-md text-label-md">Markets</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant/30 active:scale-90 transition-transform duration-200 cursor-pointer rounded-xl px-3 py-1">
+<span class="material-symbols-outlined" data-icon="newspaper">newspaper</span>
+<span class="font-label-md text-label-md">News</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant/30 active:scale-90 transition-transform duration-200 cursor-pointer rounded-xl px-3 py-1">
+<span class="material-symbols-outlined" data-icon="pie_chart">pie_chart</span>
+<span class="font-label-md text-label-md">Portfolio</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant/30 active:scale-90 transition-transform duration-200 cursor-pointer rounded-xl px-3 py-1">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="font-label-md text-label-md">Alerts</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant/30 active:scale-90 transition-transform duration-200 cursor-pointer rounded-xl px-3 py-1">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+<span class="font-label-md text-label-md">Menu</span>
+</div>
+</nav>
+</body></html>

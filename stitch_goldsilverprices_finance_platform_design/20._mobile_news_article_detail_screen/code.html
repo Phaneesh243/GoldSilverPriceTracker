@@ -1,0 +1,273 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>GoldSilverPrices - Article Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error": "#ffb4ab",
+                    "surface-dim": "#051424",
+                    "tertiary-fixed": "#d7e3fe",
+                    "surface-bright": "#2c3a4c",
+                    "on-primary": "#293043",
+                    "secondary-fixed-dim": "#efc138",
+                    "surface-container-lowest": "#010f1f",
+                    "on-secondary": "#3d2e00",
+                    "on-tertiary-fixed": "#0f1c2f",
+                    "on-primary-fixed": "#141b2d",
+                    "on-surface": "#d4e4fa",
+                    "inverse-primary": "#575e72",
+                    "background": "#051424",
+                    "tertiary-fixed-dim": "#bbc7e1",
+                    "on-background": "#d4e4fa",
+                    "secondary": "#efc138",
+                    "secondary-container": "#c29800",
+                    "outline": "#909097",
+                    "surface-container-high": "#1c2b3c",
+                    "surface-tint": "#bfc6de",
+                    "inverse-surface": "#d4e4fa",
+                    "primary-container": "#0b1324",
+                    "on-secondary-fixed-variant": "#594400",
+                    "on-tertiary-container": "#727e96",
+                    "primary": "#bfc6de",
+                    "outline-variant": "#45464c",
+                    "tertiary": "#bbc7e1",
+                    "on-error": "#690005",
+                    "on-secondary-fixed": "#241a00",
+                    "surface-container": "#122131",
+                    "primary-fixed": "#dbe2fa",
+                    "secondary-fixed": "#ffdf91",
+                    "error-container": "#93000a",
+                    "inverse-on-surface": "#233143",
+                    "on-primary-fixed-variant": "#3f475a",
+                    "surface": "#051424",
+                    "on-secondary-container": "#433300",
+                    "tertiary-container": "#061327",
+                    "surface-container-highest": "#273647",
+                    "on-tertiary": "#253145",
+                    "on-error-container": "#ffdad6",
+                    "surface-container-low": "#0d1c2d",
+                    "on-surface-variant": "#c6c6cd",
+                    "on-primary-container": "#767e93",
+                    "primary-fixed-dim": "#bfc6de",
+                    "surface-variant": "#273647",
+                    "on-tertiary-fixed-variant": "#3b475d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "40px",
+                    "gutter": "24px",
+                    "container-max": "1440px",
+                    "unit-md": "16px",
+                    "margin-mobile": "16px",
+                    "margin-tablet": "24px",
+                    "unit-xs": "4px",
+                    "unit-xl": "48px",
+                    "unit-lg": "24px",
+                    "unit-sm": "8px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Inter"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "body-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1;
+        }
+        /* Hide scrollbar for clean reading experience */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        body {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background antialiased min-h-screen pb-24 md:hidden">
+<!-- Detail Header (Contextual Replacement for TopNavBar) -->
+<!-- Suppressed global navs per "Task-Focused" rule, providing contextual back navigation -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile h-16 bg-surface/80 backdrop-blur-md border-b border-outline-variant shadow-sm transition-transform duration-300" id="detail-header">
+<button class="w-10 h-10 flex items-center justify-center rounded-full active:bg-surface-variant transition-colors group">
+<span class="material-symbols-outlined text-secondary group-hover:text-secondary-fixed-dim transition-colors" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full active:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-on-surface" data-icon="format_size">format_size</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full active:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-on-surface" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="pt-16 w-full">
+<!-- Hero Image -->
+<div class="w-full relative h-[300px]">
+<img class="w-full h-full object-cover" data-alt="A dramatic, high-contrast photograph of physical gold bars stacked securely in a dark, modern vault, illuminated by a single warm spotlight. The image features a premium, corporate aesthetic with deep shadows and gleaming metallic highlights, emphasizing wealth and stability in a dark mode setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnNz0MSY_KDK71fvSaA1k8ERP3C1P2Wf76HL9w7gkVm8gwN7yFc6lAZI0fEXSjYScwWjymXz9DsGUBRWwogDY93afRLjau_v31VMkXbg2R_BAJru4yCL0FV1llOehTxvTxGHT-Ji-8LQT2XC5UWAxEZkQNHSht9AKDzRzb9JRonWrsceQ4I05Z6UfXQRk-7plZM3tR2rOZpoiLKsSudCBFkF5Jz8NLDwPs8H36xGj0PDcSvzH4o3ID">
+<!-- Gradient Overlay for smooth transition into content -->
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+</div>
+<!-- Article Container -->
+<article class="px-margin-mobile -mt-12 relative z-10">
+<!-- Meta Data -->
+<div class="flex items-center gap-3 mb-3">
+<span class="px-2 py-1 bg-surface-variant text-on-surface font-label-md text-label-md rounded-md uppercase tracking-wider">Markets</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="schedule">schedule</span>
+                    4 min read
+                </span>
+</div>
+<!-- Headline -->
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-4 leading-tight">
+                Gold Surges Past $2,400 as Geopolitical Tensions Escalate
+            </h1>
+<!-- Author / Source Row -->
+<div class="flex items-center justify-between border-y border-outline-variant py-4 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border border-outline-variant">
+<span class="material-symbols-outlined text-secondary" data-icon="business">business</span>
+</div>
+<div>
+<p class="font-headline-md text-[16px] leading-[20px] text-on-surface">GoldSilverPrices Intelligence</p>
+<p class="font-label-md text-label-md text-on-surface-variant">Oct 24, 2023 • 09:30 AM EST</p>
+</div>
+</div>
+</div>
+<!-- Article Body Text -->
+<div class="space-y-6 font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+<p>
+                    The precious metals market experienced a significant shockwave this morning, with spot gold pushing past the psychological resistance level of $2,400 per ounce. This marks the highest trading level seen in the past three quarters, driven largely by sudden shifts in global monetary policy and escalating macroeconomic uncertainties.
+                </p>
+<p>
+                    Investors are rapidly rotating capital out of high-risk equities and seeking the traditional safe-haven characteristics of physical commodities. Silver has mirrored this upward trajectory, recording a 4.2% gain in early morning trading, while platinum and palladium have seen more modest, yet stable, increases.
+                </p>
+<!-- Pull Quote Component -->
+<blockquote class="my-8 pl-4 border-l-4 border-secondary bg-surface-container-low p-4 rounded-r-lg">
+<p class="font-headline-md text-headline-md text-on-surface italic text-[20px] leading-snug mb-2">
+                        "We are witnessing a fundamental reassessment of risk premiums across all major asset classes. Gold is simply fulfilling its historical mandate."
+                    </p>
+<footer class="font-label-md text-label-md text-secondary-fixed-dim uppercase tracking-wider">
+                        — Sarah Jenkins, Lead Commodities Analyst
+                    </footer>
+</blockquote>
+<p>
+                    Central bank accumulation continues to provide a robust floor for the market. Several emerging market economies have quietly increased their sovereign reserves over the past month, signaling a longer-term strategic shift away from dollar-denominated assets. This structural demand is likely to insulate gold prices from short-term volatility induced by upcoming inflation data releases.
+                </p>
+<!-- Inline Data Highlight -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-4 my-6 flex items-center justify-between">
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase">Current Spot Price (XAU/USD)</p>
+<p class="font-headline-xl text-headline-xl text-secondary mt-1">$2,412.80</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="px-2 py-1 bg-surface-variant text-[#a8c7fa] font-label-md text-label-md rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="trending_up">trending_up</span>
+                            +1.8%
+                        </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-1">Today</span>
+</div>
+</div>
+<p>
+                    Looking ahead, market participants are closely monitoring the upcoming Federal Reserve symposium. Any dovish signals regarding interest rate trajectories could serve as a catalyst for a further breakout, potentially testing new all-time highs before the end of the fiscal quarter. Conversely, hawkish rhetoric may prompt temporary profit-taking, though the underlying support levels remain exceptionally strong.
+                </p>
+</div>
+<!-- Tags -->
+<div class="mt-8 pt-6 border-t border-outline-variant flex flex-wrap gap-2">
+<span class="px-3 py-1.5 border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-variant hover:text-on-surface cursor-pointer transition-colors">#Gold</span>
+<span class="px-3 py-1.5 border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-variant hover:text-on-surface cursor-pointer transition-colors">#Commodities</span>
+<span class="px-3 py-1.5 border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-variant hover:text-on-surface cursor-pointer transition-colors">#MarketAnalysis</span>
+</div>
+</article>
+</main>
+<!-- Contextual Sticky Bottom Action Bar -->
+<div class="fixed bottom-0 left-0 w-full z-50 bg-surface-container-highest/95 backdrop-blur-lg border-t border-outline-variant shadow-[0_-4px_20px_rgba(0,0,0,0.4)] pb-safe transition-transform duration-300" id="action-bar">
+<div class="flex justify-around items-center h-16 px-4">
+<!-- Like Action -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface active:scale-90 transition-all duration-200 group w-16">
+<div class="p-1.5 rounded-full group-hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[24px]" data-icon="thumb_up">thumb_up</span>
+</div>
+<span class="font-label-md text-[10px] leading-tight mt-0.5">2.4k</span>
+</button>
+<!-- Comment Action -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface active:scale-90 transition-all duration-200 group w-16">
+<div class="p-1.5 rounded-full group-hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[24px]" data-icon="chat_bubble_outline">chat_bubble_outline</span>
+</div>
+<span class="font-label-md text-[10px] leading-tight mt-0.5">142</span>
+</button>
+<!-- Share Action -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface active:scale-90 transition-all duration-200 group w-16">
+<div class="p-1.5 rounded-full group-hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[24px]" data-icon="ios_share">ios_share</span>
+</div>
+<span class="font-label-md text-[10px] leading-tight mt-0.5">Share</span>
+</button>
+<!-- Bookmark Action -->
+<button class="flex flex-col items-center justify-center text-secondary hover:text-secondary-fixed-dim active:scale-90 transition-all duration-200 group w-16">
+<div class="p-1.5 rounded-full bg-secondary-container/20 transition-colors">
+<span class="material-symbols-outlined text-[24px] filled" data-icon="bookmark" data-weight="fill">bookmark</span>
+</div>
+<span class="font-label-md text-[10px] leading-tight mt-0.5">Saved</span>
+</button>
+</div>
+</div>
+<script>
+        // Simple script to hide/show header on scroll down/up for better reading experience
+        let lastScrollY = window.scrollY;
+        const header = document.getElementById('detail-header');
+        const actionBar = document.getElementById('action-bar');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > lastScrollY && window.scrollY > 100) {
+                // Scrolling down
+                header.style.transform = 'translateY(-100%)';
+            } else {
+                // Scrolling up
+                header.style.transform = 'translateY(0)';
+            }
+            lastScrollY = window.scrollY;
+        });
+    </script>
+</body></html>

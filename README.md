@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GoldSilverPrices
 
-## Getting Started
+GoldSilverPrices is an India-focused financial intelligence application built with Next.js 16, React and TypeScript. It brings together metals, Indian stocks, crypto, mutual funds, bonds, insurance, currencies, news, calculators, watchlists, alerts and portfolio tools.
 
-First, run the development server:
+## Local development
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Requirements:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Node.js 20 or newer
+- npm
+- Redis-compatible storage for accounts, watchlists, alerts and notifications
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+    npm install
+    npm run dev
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open http://localhost:3000.
 
-## Learn More
+## Required environment variables
 
-To learn more about Next.js, take a look at the following resources:
+Copy .env.example to .env.local and configure values locally. Never commit .env.local.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- NEXT_PUBLIC_SITE_URL: public HTTPS site URL
+- UPSTASH_REDIS_REST_URL: Upstash Redis REST URL
+- UPSTASH_REDIS_REST_TOKEN: Upstash Redis REST token
+- NEXT_PUBLIC_VAPID_PUBLIC_KEY: Web Push public key
+- VAPID_PRIVATE_KEY: Web Push private key
+- VAPID_EMAIL: VAPID contact email
+- CRON_SECRET: secret used to protect scheduled jobs
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Rotate any credentials that have been exposed and add replacement values in the deployment provider’s secret manager.
 
-## Deploy on Vercel
+## Data-source policy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Market data is provider-backed and must display source, status and update time. The application must never replace an unavailable feed with invented current values. Static educational content is allowed; static prices, returns, rankings, yields, NAVs, premiums and portfolio totals are not.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Current free integrations include:
+
+- Indian stock quotes: Yahoo Finance chart endpoint, delayed/unofficial and subject to provider terms
+- Crypto market data: CoinGecko public API
+- Reference FX: Frankfurter/ECB-style reference feed
+- News: Google News RSS with source attribution
+- Metal city rates: current upstream feed with explicit provider disclosure
+- Mutual-fund NAV: AMFI NAVAll feed
+
+Before commercial production, verify licensing, rate limits, attribution and redistribution rights. Bond fundamentals, insurance quotes and complete stock fundamentals require an approved provider or official source integration.
+
+## Verification
+
+    npm run typecheck
+    npm run lint
+    npm run build
+    npm run verify:release
+
+Health endpoint:
+
+    /api/health
+
+## Deployment
+
+1. Configure all environment variables in the deployment secret manager.
+2. Rotate old Redis, VAPID and cron credentials.
+3. Run typecheck, lint, release verification and build.
+4. Deploy with npm run build followed by npm run start, or use a compatible Next.js hosting provider.
+5. Configure scheduled cron routes from vercel.json.
+6. Monitor /api/health, provider errors, cron failures and notification delivery.
+7. Submit the sitemap to Google Search Console and validate structured data.
+
+## Release rules
+
+- Do not claim data is live when it is delayed or reference-only.
+- Do not publish unsupported insurance premiums, claim ratios or bond yields.
+- Keep private pages out of search indexing.
+- Keep user portfolio and alert data scoped to the current account/session.
+- Show a clear financial-information disclaimer on every financial module.

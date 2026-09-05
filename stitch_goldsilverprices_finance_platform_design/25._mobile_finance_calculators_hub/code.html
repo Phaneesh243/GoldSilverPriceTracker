@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Financial Calculators - GoldSilverPrices</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#233143",
+                        "inverse-surface": "#d4e4fa",
+                        "on-surface": "#d4e4fa",
+                        "on-tertiary": "#253145",
+                        "surface-bright": "#2c3a4c",
+                        "on-tertiary-fixed": "#0f1c2f",
+                        "on-primary": "#293043",
+                        "on-background": "#d4e4fa",
+                        "inverse-primary": "#575e72",
+                        "tertiary-fixed": "#d7e3fe",
+                        "secondary-container": "#c29800",
+                        "on-primary-fixed": "#141b2d",
+                        "on-tertiary-container": "#727e96",
+                        "tertiary-container": "#061327",
+                        "background": "#051424",
+                        "surface-container": "#122131",
+                        "surface-dim": "#051424",
+                        "primary": "#bfc6de",
+                        "on-tertiary-fixed-variant": "#3b475d",
+                        "secondary": "#efc138",
+                        "primary-fixed": "#dbe2fa",
+                        "on-secondary-fixed-variant": "#594400",
+                        "on-secondary-fixed": "#241a00",
+                        "on-error": "#690005",
+                        "on-surface-variant": "#c6c6cd",
+                        "on-primary-fixed-variant": "#3f475a",
+                        "surface": "#051424",
+                        "surface-tint": "#bfc6de",
+                        "surface-container-high": "#1c2b3c",
+                        "primary-fixed-dim": "#bfc6de",
+                        "on-secondary": "#3d2e00",
+                        "secondary-fixed-dim": "#efc138",
+                        "error": "#ffb4ab",
+                        "error-container": "#93000a",
+                        "outline-variant": "#45464c",
+                        "secondary-fixed": "#ffdf91",
+                        "tertiary-fixed-dim": "#bbc7e1",
+                        "primary-container": "#0b1324",
+                        "outline": "#909097",
+                        "on-secondary-container": "#433300",
+                        "surface-container-highest": "#273647",
+                        "surface-variant": "#273647",
+                        "surface-container-lowest": "#010f1f",
+                        "tertiary": "#bbc7e1",
+                        "on-primary-container": "#767e93",
+                        "surface-container-low": "#0d1c2d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "unit-lg": "24px",
+                        "margin-tablet": "24px",
+                        "unit-md": "16px",
+                        "unit-xl": "48px",
+                        "unit-xs": "4px",
+                        "unit-sm": "8px",
+                        "margin-desktop": "40px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-sm": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom range slider styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #efc138;
+            cursor: pointer;
+            margin-top: -10px;
+            box-shadow: 0 0 10px rgba(239, 193, 56, 0.5);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #273647;
+            border-radius: 2px;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-24 md:pb-0">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface dark:bg-surface border-b border-outline-variant flat no shadows flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 w-full md:hidden">
+<div class="flex items-center gap-unit-md">
+<span class="font-headline-md text-headline-md text-secondary dark:text-secondary">GoldSilverPrices</span>
+</div>
+<div class="flex items-center gap-unit-md">
+<button class="text-on-surface-variant hover:bg-surface-container-high p-2 rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-high p-2 rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- SideNavBar (Desktop) -->
+<aside class="hidden md:flex flex-col h-full py-unit-lg bg-surface-container dark:bg-surface-container fixed left-0 top-0 h-full w-[280px] border-r border-outline-variant flat no shadows z-40">
+<div class="px-unit-lg mb-unit-xl">
+<div class="font-headline-md text-headline-md text-secondary dark:text-secondary mb-1">GoldSilverPrices</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Premium Finance</div>
+</div>
+<nav class="flex-1 overflow-y-auto">
+<ul class="space-y-1">
+<li><a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-label-md text-label-md" href="#"><span class="material-symbols-outlined" data-icon="payments">payments</span>Metals</a></li>
+<li><a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-label-md text-label-md" href="#"><span class="material-symbols-outlined" data-icon="trending_up">trending_up</span>Stocks</a></li>
+<li><a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-label-md text-label-md" href="#"><span class="material-symbols-outlined" data-icon="currency_bitcoin">currency_bitcoin</span>Crypto</a></li>
+<li><a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-label-md text-label-md" href="#"><span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>Mutual Funds</a></li>
+<li><a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-label-md text-label-md" href="#"><span class="material-symbols-outlined" data-icon="description">description</span>Bonds</a></li>
+<li><a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-label-md text-label-md" href="#"><span class="material-symbols-outlined" data-icon="security">security</span>Insurance</a></li>
+<li><a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-label-md text-label-md" href="#"><span class="material-symbols-outlined" data-icon="currency_exchange">currency_exchange</span>Currencies</a></li>
+<li><a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-label-md text-label-md" href="#"><span class="material-symbols-outlined" data-icon="newspaper">newspaper</span>News</a></li>
+<li><a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-label-md text-label-md" href="#"><span class="material-symbols-outlined" data-icon="pie_chart">pie_chart</span>Portfolio</a></li>
+<li><a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-label-md text-label-md" href="#"><span class="material-symbols-outlined" data-icon="visibility">visibility</span>Watchlist</a></li>
+</ul>
+</nav>
+<div class="px-4 py-6 mt-auto border-t border-outline-variant">
+<button class="w-full bg-secondary text-on-secondary py-3 rounded-lg font-label-md text-label-md font-bold mb-4 hover:bg-secondary-fixed transition-colors">Create Alert</button>
+<ul class="space-y-1">
+<li><a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-label-md text-label-md" href="#"><span class="material-symbols-outlined" data-icon="notifications_active">notifications_active</span>Alerts</a></li>
+<li><a class="flex items-center gap-3 text-secondary font-bold border-l-4 border-secondary bg-surface-container-high px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-label-md text-label-md" href="#"><span class="material-symbols-outlined" data-icon="calculate" data-weight="fill" style="font-variation-settings: 'FILL' 1;">calculate</span>Calculators</a></li>
+<li><a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-label-md text-label-md" href="#"><span class="material-symbols-outlined" data-icon="settings">settings</span>Settings</a></li>
+</ul>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="md:ml-[280px] pt-16 md:pt-0 min-h-screen px-margin-mobile md:px-margin-desktop py-unit-xl">
+<div class="max-w-3xl mx-auto">
+<header class="mb-unit-xl">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">Financial Calculators</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Plan your financial future with precision.</p>
+</header>
+<!-- Calculator Tabs -->
+<div class="flex overflow-x-auto hide-scrollbar gap-unit-md mb-unit-lg pb-2 border-b border-surface-container-high">
+<button class="whitespace-nowrap px-4 py-2 font-label-md text-label-md text-secondary border-b-2 border-secondary">SIP Calculator</button>
+<button class="whitespace-nowrap px-4 py-2 font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">EMI Calculator</button>
+<button class="whitespace-nowrap px-4 py-2 font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">Retirement</button>
+<button class="whitespace-nowrap px-4 py-2 font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">Lumpsum</button>
+</div>
+<!-- Active Calculator: SIP -->
+<div class="bg-surface-container rounded-xl border border-outline-variant overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.2)]">
+<!-- Result Section (Top, High Impact) -->
+<div class="p-unit-lg bg-surface-container-high border-b border-outline-variant flex flex-col items-center justify-center text-center relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-b from-secondary/5 to-transparent pointer-events-none"></div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-2 relative z-10">Estimated Total Value</p>
+<div class="font-headline-xl text-headline-xl text-secondary mb-1 relative z-10">$1,450,200</div>
+<p class="font-body-sm text-body-sm text-tertiary relative z-10">Wealth gained: <span class="text-primary-fixed">+$950,200</span></p>
+</div>
+<!-- Input Section -->
+<div class="p-unit-lg space-y-unit-lg">
+<!-- Monthly Investment -->
+<div>
+<div class="flex justify-between items-center mb-4">
+<label class="font-label-md text-label-md text-on-surface">Monthly Investment</label>
+<div class="bg-surface border border-outline-variant rounded px-3 py-1 flex items-center">
+<span class="text-on-surface-variant mr-1">$</span>
+<input class="bg-transparent text-on-surface font-body-md text-body-md w-24 text-right focus:outline-none border-none p-0" type="number" value="1000"/>
+</div>
+</div>
+<input max="10000" min="100" step="100" type="range" value="1000"/>
+<div class="flex justify-between text-on-surface-variant font-body-sm text-body-sm mt-2">
+<span>$100</span>
+<span>$10,000+</span>
+</div>
+</div>
+<!-- Expected Return Rate -->
+<div>
+<div class="flex justify-between items-center mb-4">
+<label class="font-label-md text-label-md text-on-surface">Expected Return Rate</label>
+<div class="bg-surface border border-outline-variant rounded px-3 py-1 flex items-center">
+<input class="bg-transparent text-on-surface font-body-md text-body-md w-16 text-right focus:outline-none border-none p-0" type="number" value="12"/>
+<span class="text-on-surface-variant ml-1">%</span>
+</div>
+</div>
+<input max="30" min="1" step="0.5" type="range" value="12"/>
+<div class="flex justify-between text-on-surface-variant font-body-sm text-body-sm mt-2">
+<span>1%</span>
+<span>30%</span>
+</div>
+</div>
+<!-- Time Period -->
+<div>
+<div class="flex justify-between items-center mb-4">
+<label class="font-label-md text-label-md text-on-surface">Time Period</label>
+<div class="bg-surface border border-outline-variant rounded px-3 py-1 flex items-center">
+<input class="bg-transparent text-on-surface font-body-md text-body-md w-16 text-right focus:outline-none border-none p-0" type="number" value="20"/>
+<span class="text-on-surface-variant ml-1">Yr</span>
+</div>
+</div>
+<input max="40" min="1" step="1" type="range" value="20"/>
+<div class="flex justify-between text-on-surface-variant font-body-sm text-body-sm mt-2">
+<span>1 Yr</span>
+<span>40 Yr</span>
+</div>
+</div>
+</div>
+<div class="p-unit-lg bg-surface-container-low border-t border-outline-variant">
+<button class="w-full bg-secondary text-on-secondary py-4 rounded-lg font-label-md text-label-md font-bold hover:bg-secondary-fixed transition-colors shadow-lg">Save Calculation</button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-outline-variant shadow-lg fixed bottom-0 left-0 w-full flex justify-around items-center h-16 pb-safe bg-surface-container">
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-surface-container-high scale-95 active:scale-90 transition-transform w-full h-full" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="insert_chart">insert_chart</span>
+<span class="font-label-md text-label-md text-[10px]">Markets</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-surface-container-high scale-95 active:scale-90 transition-transform w-full h-full" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="notifications_active">notifications_active</span>
+<span class="font-label-md text-label-md text-[10px]">Alerts</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-surface-container-high scale-95 active:scale-90 transition-transform w-full h-full" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="pie_chart">pie_chart</span>
+<span class="font-label-md text-label-md text-[10px]">Portfolio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary font-bold active:bg-surface-container-high scale-95 active:scale-90 transition-transform w-full h-full relative" href="#">
+<div class="absolute inset-0 bg-secondary/10 rounded-full scale-[1.5] opacity-50"></div>
+<span class="material-symbols-outlined mb-1 relative z-10" data-icon="calculate" data-weight="fill" style="font-variation-settings: 'FILL' 1;">calculate</span>
+<span class="font-label-md text-label-md text-[10px] relative z-10">Calculators</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-surface-container-high scale-95 active:scale-90 transition-transform w-full h-full" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="visibility">visibility</span>
+<span class="font-label-md text-label-md text-[10px]">Watchlist</span>
+</a>
+</nav>
+</body></html>

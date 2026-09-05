@@ -1,0 +1,225 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>GoldSilverPrices - Mobile Search Results</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "error-container": "#93000a",
+                        "secondary": "#efc138",
+                        "on-surface-variant": "#c6c6cd",
+                        "on-secondary-fixed-variant": "#594400",
+                        "on-primary-container": "#767e93",
+                        "surface-tint": "#bfc6de",
+                        "on-primary-fixed-variant": "#3f475a",
+                        "on-secondary": "#3d2e00",
+                        "on-error": "#690005",
+                        "inverse-on-surface": "#233143",
+                        "surface-variant": "#273647",
+                        "secondary-container": "#c29800",
+                        "on-tertiary-fixed": "#0f1c2f",
+                        "on-primary-fixed": "#141b2d",
+                        "outline": "#909097",
+                        "tertiary-container": "#061327",
+                        "on-error-container": "#ffdad6",
+                        "error": "#ffb4ab",
+                        "surface-dim": "#051424",
+                        "surface-container-lowest": "#010f1f",
+                        "surface-container": "#122131",
+                        "on-tertiary-fixed-variant": "#3b475d",
+                        "on-secondary-container": "#433300",
+                        "surface-container-low": "#0d1c2d",
+                        "on-surface": "#d4e4fa",
+                        "surface-bright": "#2c3a4c",
+                        "tertiary-fixed": "#d7e3fe",
+                        "on-tertiary-container": "#727e96",
+                        "primary-fixed": "#dbe2fa",
+                        "surface-container-high": "#1c2b3c",
+                        "on-secondary-fixed": "#241a00",
+                        "background": "#051424",
+                        "on-tertiary": "#253145",
+                        "primary-fixed-dim": "#bfc6de",
+                        "inverse-primary": "#575e72",
+                        "primary-container": "#0b1324",
+                        "tertiary-fixed-dim": "#bbc7e1",
+                        "primary": "#bfc6de",
+                        "surface": "#051424",
+                        "inverse-surface": "#d4e4fa",
+                        "tertiary": "#bbc7e1",
+                        "on-primary": "#293043",
+                        "outline-variant": "#45464c",
+                        "surface-container-highest": "#273647",
+                        "secondary-fixed-dim": "#efc138",
+                        "on-background": "#d4e4fa",
+                        "secondary-fixed": "#ffdf91"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "unit-lg": "24px",
+                        "gutter": "24px",
+                        "margin-desktop": "40px",
+                        "container-max": "1440px",
+                        "unit-md": "16px",
+                        "margin-tablet": "24px",
+                        "margin-mobile": "16px",
+                        "unit-xl": "48px",
+                        "unit-sm": "8px",
+                        "unit-xs": "4px"
+                    },
+                    fontFamily: {
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"]
+                    },
+                    fontSize: {
+                        "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen font-body-md flex flex-col md:hidden">
+<!-- Top Navigation Area - Specific for Search -->
+<header class="bg-surface sticky top-0 z-50 shadow-sm border-b border-surface-variant pb-unit-sm">
+<div class="px-margin-mobile pt-unit-md pb-unit-sm flex items-center gap-unit-md">
+<button class="text-on-surface-variant active:scale-95 transition-transform">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex-1 relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">search</span>
+<input class="w-full bg-surface-container rounded-full py-2 pl-10 pr-10 text-on-surface font-body-md border border-outline-variant focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors" placeholder="Search markets, news, alerts..." type="text" value="Gold">
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+</div>
+<!-- Filter Chips -->
+<div class="px-margin-mobile py-unit-sm overflow-x-auto no-scrollbar flex gap-unit-sm">
+<button class="px-4 py-1.5 rounded-full border border-secondary bg-secondary text-on-secondary font-label-md whitespace-nowrap transition-colors">All</button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-md whitespace-nowrap active:bg-surface-variant transition-colors">Metals</button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-md whitespace-nowrap active:bg-surface-variant transition-colors">Stocks</button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-md whitespace-nowrap active:bg-surface-variant transition-colors">Crypto</button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-md whitespace-nowrap active:bg-surface-variant transition-colors">News</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 px-margin-mobile py-margin-mobile flex flex-col gap-unit-lg overflow-y-auto">
+<!-- Results Section (Simulated State) -->
+<section class="flex flex-col gap-unit-sm">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-unit-xs">Results for "Gold"</h2>
+<!-- Compact Result Card 1 -->
+<div class="bg-surface-container rounded-lg p-unit-md border border-surface-variant active:bg-surface-variant transition-colors cursor-pointer flex items-center justify-between">
+<div class="flex items-center gap-unit-md">
+<div class="w-10 h-10 rounded-full bg-surface flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">payments</span>
+</div>
+<div>
+<h3 class="font-headline-md text-body-lg text-on-surface leading-tight">XAU/USD</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Gold Spot Price</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-body-lg text-secondary">$2,345.60</p>
+<p class="font-label-md text-label-md text-error flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+                        0.42%
+                    </p>
+</div>
+</div>
+<!-- Compact Result Card 2 -->
+<div class="bg-surface-container rounded-lg p-unit-md border border-surface-variant active:bg-surface-variant transition-colors cursor-pointer flex items-center justify-between">
+<div class="flex items-center gap-unit-md">
+<div class="w-10 h-10 rounded-full bg-surface flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+</div>
+<div>
+<h3 class="font-headline-md text-body-lg text-on-surface leading-tight">GOLD</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Barrick Gold Corp.</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-body-lg text-on-surface">$16.82</p>
+<p class="font-label-md text-label-md text-[#4ade80] flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+                        1.24%
+                    </p>
+</div>
+</div>
+<!-- Compact Result Card 3 (News) -->
+<div class="bg-surface-container rounded-lg p-unit-md border border-surface-variant active:bg-surface-variant transition-colors cursor-pointer flex flex-col gap-unit-sm">
+<div class="flex items-start gap-unit-md">
+<span class="material-symbols-outlined text-on-surface-variant mt-1" style="font-variation-settings: 'FILL' 1;">newspaper</span>
+<div>
+<h3 class="font-headline-md text-body-md text-on-surface line-clamp-2">Central Banks Continue Record Gold Accumulation in Q3</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">2 hours ago • Market Insight</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Divider -->
+<div class="h-px w-full bg-surface-variant my-unit-sm"></div>
+<!-- Recent Searches Section -->
+<section class="flex flex-col gap-unit-sm">
+<div class="flex justify-between items-center mb-unit-xs">
+<h2 class="font-headline-md text-body-lg text-on-surface">Recent Searches</h2>
+<button class="font-label-md text-label-md text-secondary hover:text-secondary-fixed">Clear</button>
+</div>
+<ul class="flex flex-col">
+<li class="flex items-center gap-unit-md py-unit-sm border-b border-surface-variant/50 active:bg-surface-variant/30 px-2 rounded-md transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-on-surface-variant">history</span>
+<span class="font-body-md text-body-md text-on-surface flex-1">Silver ETF</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm transform -rotate-45">arrow_upward</span>
+</li>
+<li class="flex items-center gap-unit-md py-unit-sm border-b border-surface-variant/50 active:bg-surface-variant/30 px-2 rounded-md transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-on-surface-variant">history</span>
+<span class="font-body-md text-body-md text-on-surface flex-1">Inflation rates</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm transform -rotate-45">arrow_upward</span>
+</li>
+<li class="flex items-center gap-unit-md py-unit-sm active:bg-surface-variant/30 px-2 rounded-md transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-on-surface-variant">history</span>
+<span class="font-body-md text-body-md text-on-surface flex-1">BTC/USD</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm transform -rotate-45">arrow_upward</span>
+</li>
+</ul>
+</section>
+</main>
+</body></html>
