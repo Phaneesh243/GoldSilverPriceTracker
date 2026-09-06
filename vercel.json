@@ -1,35 +1,35 @@
 {
-  "framework": "nextjs",
-  "regions": ["bom1"],
-  "functions": {
-    "app/api/**/*.ts": {
-      "maxDuration": 30
-    }
-  },
-  "crons": [
-    {
-      "path": "/api/cron/send-price-updates?slot=morning",
-      "schedule": "30 3 * * 1-5"
-    },
-    {
-      "path": "/api/cron/send-price-updates?slot=midday",
-      "schedule": "30 7 * * 1-5"
-    },
-    {
-      "path": "/api/cron/send-price-updates?slot=close",
-      "schedule": "15 10 * * 1-5"
-    },
-    {
-      "path": "/api/cron/send-price-updates?slot=evening",
-      "schedule": "30 13 * * 1-5"
-    },
-    {
-      "path": "/api/cron/big-move",
-      "schedule": "30 3 * * 1-5"
-    },
-    {
-      "path": "/api/cron/check-user-alerts",
-      "schedule": "*/15 * * * 1-5"
-    }
-  ]
+"framework": "nextjs",
+"regions": ["bom1"],
+"functions": {
+"app/api/**/*.ts": {
+"maxDuration": 30
+}
+},
+"crons": [
+{
+"path": "/api/cron/send-price-updates?slot=morning",
+"schedule": "30 3 * * 1-5"
+},
+{
+"path": "/api/cron/send-price-updates?slot=midday",
+"schedule": "30 7 * * 1-5"
+},
+{
+"path": "/api/cron/send-price-updates?slot=close",
+"schedule": "15 10 * * 1-5"
+},
+{
+"path": "/api/cron/send-price-updates?slot=evening",
+"schedule": "30 13 * * 1-5"
+},
+{
+"path": "/api/cron/big-move",
+"schedule": "30 3 * * 1-5"
+},
+{
+"path": "/api/cron/check-user-alerts",
+"schedule": "0 9 * * 1-5"
+}
+]
 }
