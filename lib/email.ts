@@ -12,6 +12,7 @@ type EmailInput = {
   text: string;
   html: string;
   idempotencyKey?: string;
+  headers?: Record<string, string>;
 };
 
 function validateRecipient(email: string) {
@@ -43,13 +44,13 @@ export async function sendAlertEmail(input: EmailInput) {
       subject: input.subject,
       text: input.text,
       html: input.html,
+      headers: input.headers,
     }),
     signal: AbortSignal.timeout(8000),
   });
 
   if (!response.ok) {
-    const detail = (await response.text()).slice(0, 240);
-    throw new Error(`Email provider responded with ${response.status}. ${detail}`);
+    throw new Error(`Email provider responded with ${response.status}.`);
   }
 
   return (await response.json()) as { id?: string };

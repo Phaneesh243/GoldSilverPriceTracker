@@ -6,7 +6,6 @@ import Breadcrumbs from "./Breadcrumbs";
 import MetalCalculator from "./MetalCalculator";
 import MetalPriceChart from "./MetalPriceChart";
 import MetalNewsClient from "./MetalNewsClient";
-import { PriceAlertClient } from "./MultiMetalCards";
 import { AssetActionButtons } from "./WatchlistAlertsClient";
 import { formatCurrency } from "../../lib/country-data";
 import { getMetalHistory, getMetalPrice } from "../../lib/metal-prices";
@@ -230,7 +229,6 @@ export default async function MetalDetailPage({ metalKey }: { metalKey: MetalKey
         </div>
       </section>
 
-      <PriceAlertClient />
       <AdSlot id={`${metalKey}-before-news`} />
 
       <section className="metal-section-card metal-news-card">

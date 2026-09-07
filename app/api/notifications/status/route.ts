@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { notificationsConfigured } from "../../../../lib/push-notifications";
+import { marketJobsConfigured } from "../../../../lib/market-jobs";
+import { notificationsConfigured } from "../../../../lib/notification-transport";
 import { redis } from "../../../../lib/redis";
 import { emailAlertsConfigured } from "../../../../lib/email";
 
@@ -13,6 +14,7 @@ export async function GET() {
 
   return NextResponse.json(
     {
+      data: { marketUpdatesConfigured: marketJobsConfigured() },
       configured: hasRedis && hasPublicKey && hasPrivateKey && hasEmail && notificationsConfigured(),
       redis: hasRedis,
       // The public key is safe to expose to browsers; the private key is never returned.

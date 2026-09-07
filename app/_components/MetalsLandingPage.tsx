@@ -48,7 +48,7 @@ export default async function MetalsLandingPage() {
       <section className="metals-feature-grid">
         <Link href="/historical-prices"><ChartNoAxesCombined size={22} /><b>Historical charts</b><span>Review verified daily movement and range performance.</span></Link>
         <Link href="/calculators/gold"><Calculator size={22} /><b>Metal calculators</b><span>Estimate value by weight, purity, premium and charges.</span></Link>
-        <Link href="/alerts"><Bell size={22} /><b>Price alerts</b><span>Get notified when a metal reaches your target.</span></Link>
+        <Link href="/notifications"><Bell size={22} /><b>Market updates</b><span>Gold and silver in two fixed daily editions.</span></Link>
         <Link href="/metal-comparison"><BarChart3 size={22} /><b>Compare metals</b><span>Compare units, current rates and investor context.</span></Link>
       </section>
 

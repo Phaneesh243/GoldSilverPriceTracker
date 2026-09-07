@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
+
+import { invalidateAccountData, useAccountResource } from "../_hooks/useAccountResource";
 
 type AuthUser = {
   email: string | null;
@@ -13,40 +15,24 @@ type AuthUser = {
 
 export default function AuthMenu({ onOpen, refreshToken = 0 }: { onOpen: (mode: "login" | "register") => void; refreshToken?: number }) {
   const router = useRouter();
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [loading, setLoading] = useState(true);
+  const account = useAccountResource<{ user: AuthUser }>("/api/auth/me");
+  const user = account.data?.user && !account.data.user.anonymous ? account.data.user : null;
+  const loading = account.loading;
   const initials = useMemo(() => {
     const label = user?.displayName || user?.username || user?.email || "User";
     return label.slice(0, 2).toUpperCase();
   }, [user]);
 
-  useEffect(() => {
-    let active = true;
-    setLoading(true);
-    fetch("/api/auth/me", { cache: "no-store" })
-      .then(async (response) => {
-        if (!response.ok) return null;
-        return (await response.json()) as { data?: { user?: AuthUser } };
-      })
-      .then((payload) => {
-        if (!active) return;
-        const nextUser = payload?.data?.user;
-        setUser(nextUser && !nextUser.anonymous ? nextUser : null);
-      })
-      .catch(() => {
-        if (active) setUser(null);
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [refreshToken]);
+  useEffect(() => { if (refreshToken) invalidateAccountData(); }, [refreshToken]);
 
   async function signOut() {
-    await fetch("/api/auth/logout", { method: "POST" });
-    setUser(null);
+    const response = await fetch("/api/auth/logout", { method: "POST" });
+    if (!response.ok) { window.alert("Sign out failed. Please try again."); return; }
+    // Avoid showing a previous account's browser notifications on a shared device.
+    const registration = await navigator.serviceWorker?.getRegistration();
+    const subscription = await registration?.pushManager.getSubscription();
+    await subscription?.unsubscribe().catch(() => false);
+    invalidateAccountData();
     router.push("/");
     router.refresh();
   }

@@ -1,27 +1,5 @@
-import { currentStorageUser, errorResponse, ok, readBody } from "../../../../../lib/storage-route";
-import { removeAlert, updateAlert } from "../../../../../lib/storage";
-
-export const runtime = "nodejs";
-
-type Context = { params: Promise<{ id: string }> };
-
-export async function PATCH(request: Request, context: Context) {
-  try {
-    const user = await currentStorageUser();
-    const { id } = await context.params;
-    return ok(await updateAlert(user.id, id, await readBody(request)));
-  } catch (error) {
-    return errorResponse(error);
-  }
+// Retired deliberately: legacy deployments and bookmarks must never send custom alerts.
+function retired() {
+  return Response.json({ ok: false, error: "Custom price alerts have been retired. Manage fixed market updates at /notifications." }, { status: 410, headers: { "Cache-Control": "no-store" } });
 }
-
-export async function DELETE(_request: Request, context: Context) {
-  try {
-    const user = await currentStorageUser();
-    const { id } = await context.params;
-    await removeAlert(user.id, id);
-    return ok({ deleted: true });
-  } catch (error) {
-    return errorResponse(error);
-  }
-}
+export { retired as GET, retired as POST, retired as PATCH, retired as DELETE };

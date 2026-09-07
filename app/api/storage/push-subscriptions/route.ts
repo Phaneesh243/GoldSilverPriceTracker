@@ -1,12 +1,12 @@
-import { currentStorageUser, errorResponse, ok, readBody } from "../../../../lib/storage-route";
+import { requireAccount, errorResponse, ok, readBody } from "../../../../lib/storage-route";
 import { listPushSubscriptions, removePushSubscription, savePushSubscription } from "../../../../lib/storage";
 
 export const runtime = "nodejs";
 
 export async function GET() {
   try {
-    const user = await currentStorageUser();
-    return ok(await listPushSubscriptions(user.id));
+    const user = await requireAccount();
+    return ok((await listPushSubscriptions(user.id)).map(({ id, endpoint, platform, createdAt }) => ({ id, endpoint, platform, createdAt })));
   } catch (error) {
     return errorResponse(error);
   }
@@ -14,7 +14,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const user = await currentStorageUser();
+    const user = await requireAccount();
     const body = await readBody(request);
     const subscription = (body.subscription && typeof body.subscription === "object" ? body.subscription : body) as Record<string, unknown>;
     const keys = (subscription.keys && typeof subscription.keys === "object" ? subscription.keys : {}) as Record<string, unknown>;
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    const user = await currentStorageUser();
+    const user = await requireAccount();
     const body = await readBody(request);
     const id = String(body.id || "");
     if (!id) return errorResponse(new Error("Push subscription id is required."));

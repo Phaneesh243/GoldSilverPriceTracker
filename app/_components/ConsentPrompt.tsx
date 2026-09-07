@@ -1,176 +1,57 @@
 "use client";
-
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Bell, Mail, X } from "lucide-react";
-
-const CONSENT_KEY = "gsp-consent-v1";
-const NOTIFICATION_KEY = "gsp-notification-choice-v1";
-const NOTIFICATION_CHANGED_EVENT = "gsp-notifications-changed";
+import { X } from "lucide-react";
+import type { UserSettings } from "../../lib/storage";
+import { invitationEligible, INVITATION_DELAY_MS } from "../../lib/notification-opt-in";
+import { useAccountResource } from "../_hooks/useAccountResource";
+import { CONSENT_UPDATED, consentKey, useNotificationOptIn } from "../_hooks/useNotificationOptIn";
 export const REQUEST_NOTIFICATIONS_EVENT = "gsp-request-notifications";
-
-function urlBase64ToUint8Array(value: string) {
-  const padding = "=".repeat((4 - (value.length % 4)) % 4);
-  const base64 = (value + padding).replace(/-/g, "+").replace(/_/g, "/");
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-
-  for (let index = 0; index < rawData.length; index += 1) {
-    outputArray[index] = rawData.charCodeAt(index);
-  }
-
-  return outputArray;
-}
-
-async function showSuccessNotification(registration: ServiceWorkerRegistration) {
-  await registration.showNotification("GoldSilverPrices notifications enabled", {
-    body: "You will receive gold and silver price updates when alerts are available.",
-    icon: "/favicon.ico",
-    badge: "/favicon.ico",
-    tag: "gsp-notifications-enabled",
-    data: { url: "/", source: "consent-success" },
-  });
-}
-
-async function registerPushSubscription() {
-  if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
-    return { ok: false, message: "Push notifications are not supported in this browser." };
-  }
-
-  // Keep the runtime endpoint as the source of truth, with the public build
-  // value as a fallback when a browser has an older cached route response.
-  let publicKey: string | null = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || null;
-  try {
-    const statusResponse = await fetch("/api/notifications/status", { cache: "no-store" });
-    if (statusResponse.ok) {
-      const status = (await statusResponse.json()) as { vapidPublicKey?: unknown };
-      publicKey = typeof status.vapidPublicKey === "string" ? status.vapidPublicKey : null;
-    }
-  } catch {
-    // Keep the user-facing message below when the status endpoint is unavailable.
-  }
-
-  if (!publicKey) {
-    return { ok: false, message: "Notification permission saved. Push notifications are not configured on this server yet." };
-  }
-
-  await navigator.serviceWorker.register("/sw.js");
-  const registration = await navigator.serviceWorker.ready;
-  const existing = await registration.pushManager.getSubscription();
-  const subscription =
-    existing ??
-    (await registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(publicKey),
-    }));
-
-  const response = await fetch("/api/notifications/subscribe", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({
-      subscription: subscription.toJSON(),
-      city: "mumbai",
-      purity: "22K",
-    }),
-  });
-
-  if (!response.ok) {
-    let message = "Permission saved. Server subscription storage is not configured yet.";
-    try {
-      const payload = (await response.json()) as { message?: string; error?: string };
-      message = payload.message || payload.error || message;
-    } catch {
-      // Keep the safe generic message.
-    }
-    return { ok: false, message };
-  }
-
-  window.localStorage.setItem(NOTIFICATION_KEY, "granted");
-  window.dispatchEvent(new CustomEvent(NOTIFICATION_CHANGED_EVENT));
-  try {
-    await showSuccessNotification(registration);
-  } catch {
-    // The push subscription is still valid even if the local test notification is suppressed.
-  }
-
-  return { ok: true, message: "Notifications are enabled for live market updates." };
-}
-
 export default function ConsentPrompt() {
+  const pathname = usePathname();
+  const account = useAccountResource<{ user: { id: string; emailVerified: boolean } | null }>("/api/auth/me");
+  const settings = useAccountResource<UserSettings>("/api/storage/settings");
+  const user = account.data?.user;
+  const optIn = useNotificationOptIn(user);
   const [visible, setVisible] = useState(false);
-  const [message, setMessage] = useState("");
-  const [busy, setBusy] = useState(false);
-
-  useEffect(() => {
-    function showNotificationPrompt() {
-      setMessage("");
-      setVisible(true);
-    }
-
-    window.addEventListener(REQUEST_NOTIFICATIONS_EVENT, showNotificationPrompt);
-    const timer = window.localStorage.getItem(CONSENT_KEY) ? undefined : window.setTimeout(() => setVisible(true), 5000);
-
-    return () => {
-      window.removeEventListener(REQUEST_NOTIFICATIONS_EVENT, showNotificationPrompt);
-      if (timer) window.clearTimeout(timer);
-    };
-  }, []);
-
-  async function allowNotifications() {
-    setBusy(true);
-    window.localStorage.setItem(CONSENT_KEY, "accepted");
-
-    try {
-      if (!("Notification" in window)) {
-        setMessage("This browser does not support notifications.");
-        return;
-      }
-
-      const permission = await Notification.requestPermission();
-      window.localStorage.setItem(NOTIFICATION_KEY, permission);
-
-      if (permission !== "granted") {
-        setMessage("Notifications were not enabled. You can allow them later in browser settings.");
-        return;
-      }
-
-      const result = await registerPushSubscription();
-      setMessage(result.message);
-    } catch {
-      setMessage("Could not enable notifications right now. Please try again later.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
+  const [dismissedAt, setDismissedAt] = useState(0);
+  const userId = user?.id || "guest";
+  const subscribed = settings.data?.notifications.marketUpdates === true;
+  const excluded = pathname === "/login" || pathname === "/register" || pathname.startsWith("/notifications/verify");
   function close() {
-    window.localStorage.setItem(CONSENT_KEY, "dismissed");
-    setVisible(false);
+    const now = Date.now();
+    setVisible(false); setDismissedAt(now);
+    try { sessionStorage.setItem(`${consentKey(userId)}:due`, String(now + INVITATION_DELAY_MS)); } catch { /* private browsing */ }
   }
-
-  if (!visible) {
-    return null;
-  }
-
-  return (
-    <div className="consent-panel" role="dialog" aria-label="Market alert preferences" aria-live="polite">
-      <button className="consent-close" onClick={close} aria-label="Close consent message">
-        <X size={16} />
-      </button>
-      <div className="consent-icons" aria-hidden="true">
-        <Mail size={18} />
-        <Bell size={18} />
-      </div>
-      <div>
-        <strong>Get provider-backed market alerts</strong>
-        <p>Allow browser alerts for price rules and market updates. Email alerts remain a separate choice in Notification settings. You can disable either channel at any time.</p>
-        {message ? <small>{message}</small> : null}
-      </div>
-      <div className="consent-actions">
-        <button onClick={close}>Not now</button>
-        <button className="primary" onClick={allowNotifications} disabled={busy}>
-          {busy ? "Enabling..." : "Allow alerts"}
-        </button>
-      </div>
-    </div>
-  );
+  useEffect(() => {
+    if (excluded || account.loading || settings.loading || optIn.busy) return;
+    const key = consentKey(userId);
+    let dueAt = dismissedAt ? dismissedAt + INVITATION_DELAY_MS : Date.now() + 5000;
+    try { dueAt = Number(sessionStorage.getItem(`${key}:due`)) || dueAt; } catch { /* private browsing */ }
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const check = () => {
+      clearTimeout(timer);
+      let accepted = subscribed;
+      try { if (subscribed) localStorage.setItem(key, "accepted"); accepted ||= localStorage.getItem(key) === "accepted"; } catch { /* private browsing */ }
+      const blocked = "Notification" in window && Notification.permission === "denied";
+      if (accepted || blocked) { setVisible(false); return; }
+      if (invitationEligible(accepted, blocked, document.visibilityState === "visible", dueAt, Date.now())) setVisible(true);
+      else { setVisible(false); if (document.visibilityState === "visible") timer = setTimeout(check, Math.max(0, dueAt - Date.now())); }
+    };
+    const manual = () => { if (document.visibilityState === "visible") setVisible(true); };
+    check();
+    document.addEventListener("visibilitychange", check);
+    window.addEventListener(CONSENT_UPDATED, check);
+    window.addEventListener("storage", check);
+    window.addEventListener(REQUEST_NOTIFICATIONS_EVENT, manual);
+    return () => { clearTimeout(timer); document.removeEventListener("visibilitychange", check); window.removeEventListener(CONSENT_UPDATED, check); window.removeEventListener("storage", check); window.removeEventListener(REQUEST_NOTIFICATIONS_EVENT, manual); };
+  }, [userId, subscribed, excluded, dismissedAt, account.loading, settings.loading, optIn.busy]);
+  if (!visible || excluded || account.loading) return null;
+  return <aside className="consent-panel simple-market-consent" aria-label="Optional market updates" onKeyDown={(event) => { if (event.key === "Escape" && !optIn.busy) close(); }}>
+    <button disabled={optIn.busy} className="consent-close" aria-label="Dismiss market updates invitation" onClick={close}><X size={16} /></button>
+    <div><strong>Get daily market updates</strong><p>Allow browser, email and in-app updates at 09:15 and 15:30 IST on regular Indian trading days. Unsubscribe from the bell anytime.</p>{!user ? <p>Sign in to save your choice.</p> : !user.emailVerified ? <p>Email delivery needs a verification link from your inbox.</p> : null}</div>
+    {optIn.message ? <p role="status">{optIn.message}</p> : null}
+    <div className="consent-actions"><button disabled={optIn.busy} onClick={close}>Not now</button>{user ? <button className="primary-button" disabled={optIn.busy} onClick={async () => { const accepted = await optIn.allow(() => setVisible(false)); if (!accepted && "Notification" in window && Notification.permission === "default") close(); }}>{optIn.busy ? "Allowing..." : "Allow"}</button> : <Link className="primary-button" href={`/login?next=${encodeURIComponent(pathname)}`} onClick={close}>Sign in to allow</Link>}</div>
+  </aside>;
 }

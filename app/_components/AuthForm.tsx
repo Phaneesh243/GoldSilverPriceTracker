@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { invalidateAccountData } from "../_hooks/useAccountResource";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -37,6 +38,7 @@ export default function AuthForm({ mode, embedded = false, onSuccess, onSwitchMo
       });
       const payload = (await response.json()) as { ok?: boolean; error?: string };
       if (!response.ok || !payload.ok) throw new Error(payload.error || "Authentication failed.");
+      invalidateAccountData();
       if (onSuccess) onSuccess();
       else router.push("/");
       router.refresh();
@@ -51,7 +53,7 @@ export default function AuthForm({ mode, embedded = false, onSuccess, onSwitchMo
     <section className="auth-card glass-panel">
         <span className="finance-eyebrow">GoldSilverPrices</span>
         <h1 id="auth-modal-title">{mode === "login" ? "Welcome back" : "Create your account"}</h1>
-        <p>{mode === "login" ? "Sign in to sync your watchlist, portfolio and alerts." : "Save your watchlist, transactions, portfolio and alerts across devices."}</p>
+        <p>{mode === "login" ? "Sign in to sync your watchlist, portfolio and market updates." : "Save your watchlist, transactions, portfolio and market updates across devices."}</p>
         <form className="auth-form" onSubmit={submit}>
           <label><span>Email</span><input autoComplete="email" onChange={(event) => setEmail(event.target.value)} required type="email" value={email} /></label>
           {mode === "register" ? <>

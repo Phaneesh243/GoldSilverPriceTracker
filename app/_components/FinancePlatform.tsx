@@ -1,20 +1,22 @@
 "use client";
 
+import "./market-notifications.css";
+
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import AuthMenu from "./AuthMenu";
+import { useTheme } from "../_hooks/useTheme";
 import AuthModal from "./AuthModal";
 import AdSlot from "./AdSlot";
 import NotificationCenter from "./NotificationCenter";
 import CurrencyDashboard from "./CurrencyDashboard";
-import { AlertsManager, WatchlistManager } from "./WatchlistAlertsClient";
+import { WatchlistManager } from "./WatchlistAlertsClient";
 import {
   ArrowDownRight,
   ArrowUpRight,
   BarChart3,
-  Bell,
   Bitcoin,
   Bookmark,
   Calculator,
@@ -57,7 +59,7 @@ type FinanceScreen =
   | "watchlist"
   | "portfolio"
   | "add-transaction"
-  | "alerts"
+  | "notifications"
   | "calculators"
   | "search";
 
@@ -98,13 +100,13 @@ const pageMeta: Record<FinanceScreen, { eyebrow: string; title: string; subtitle
   home: {
     eyebrow: "Market Intelligence",
     title: "Your complete finance command center.",
-    subtitle: "Track metals, stocks, crypto, funds, bonds, insurance, currencies and alerts from one premium dashboard.",
+    subtitle: "Track metals, stocks, crypto, funds, bonds, insurance, currencies and market updates from one premium dashboard.",
     section: "Metals",
   },
   metals: {
     eyebrow: "Live Metals",
     title: "Metal prices today in India.",
-    subtitle: "Track verified Gold, Silver, Platinum and Copper prices with charts, calculators, news and alerts.",
+    subtitle: "Track verified Gold, Silver, Platinum and Copper prices with charts, calculators, news and market updates.",
     section: "Metals",
   },
   stocks: {
@@ -191,11 +193,11 @@ const pageMeta: Record<FinanceScreen, { eyebrow: string; title: string; subtitle
     subtitle: "Record buy, sell, dividend, SIP and transfer entries with clean validation-ready fields.",
     section: "Portfolio",
   },
-  alerts: {
-    eyebrow: "Alerts",
-    title: "Price alerts dashboard.",
-    subtitle: "Create and monitor alerts for metals, stocks, crypto, funds and currencies.",
-    section: "Alerts",
+  notifications: {
+    eyebrow: "Market updates",
+    title: "Your market updates.",
+    subtitle: "Two fixed editions at 09:15 and 15:30 IST on regular Indian trading days.",
+    section: "Market updates",
   },
   calculators: {
     eyebrow: "Finance Tools",
@@ -206,7 +208,7 @@ const pageMeta: Record<FinanceScreen, { eyebrow: string; title: string; subtitle
   search: {
     eyebrow: "Search",
     title: "Search results.",
-    subtitle: "Results across assets, articles, calculators, alerts and portfolio tools.",
+    subtitle: "Results across assets, articles, calculators, market updates and portfolio tools.",
     section: "Search",
   },
 };
@@ -267,7 +269,7 @@ const allocation = [
   ["Cash", "6%", "#94a3b8"],
 ];
 
-const shellAdScreens = new Set<FinanceScreen>(["home", "portfolio", "add-transaction", "alerts", "watchlist", "search"]);
+const shellAdScreens = new Set<FinanceScreen>(["home", "portfolio", "add-transaction", "watchlist", "search"]);
 const shellAdPaths = new Set([
   "/stocks",
   "/stocks/top-10",
@@ -287,15 +289,11 @@ function FinancePlatformContent({ screen, children }: { screen: FinanceScreen; c
   const router = useRouter();
   const searchParams = useSearchParams();
   const [mobileMenu, setMobileMenu] = useState(false);
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const { theme, toggleTheme } = useTheme();
   const [authMode, setAuthMode] = useState<"login" | "register" | null>(null);
   const [authRefreshToken, setAuthRefreshToken] = useState(0);
   const drawerCloseRef = useRef<HTMLButtonElement>(null);
   const meta = pageMeta[screen];
-  useEffect(() => {
-    const storedTheme = window.localStorage.getItem("gsp-theme");
-    if (storedTheme === "light" || storedTheme === "dark") setTheme(storedTheme);
-  }, []);
   useEffect(() => {
     const requestedMode = searchParams.get("auth");
     if (pathname === "/" && (requestedMode === "login" || requestedMode === "register")) setAuthMode(requestedMode);
@@ -320,16 +318,10 @@ function FinancePlatformContent({ screen, children }: { screen: FinanceScreen; c
     if (searchParams.get("auth")) router.replace(pathname);
   }
 
-  function toggleTheme() {
-    const nextTheme = theme === "dark" ? "light" : "dark";
-    setTheme(nextTheme);
-    window.localStorage.setItem("gsp-theme", nextTheme);
-    document.documentElement.dataset.theme = nextTheme;
-  }
   const bottomActive = useMemo(() => {
     if (["portfolio", "add-transaction", "watchlist"].includes(screen)) return "Portfolio";
     if (["news", "article"].includes(screen)) return "News";
-    if (screen === "alerts") return "Alerts";
+    if (screen === "notifications") return "";
     return "Markets";
   }, [screen]);
 
@@ -345,7 +337,6 @@ function FinancePlatformContent({ screen, children }: { screen: FinanceScreen; c
         <div className="finance-side-footer">
           <Link href="/watchlist"><Star size={20} />Watchlist</Link>
           <Link href="/portfolio"><PieChart size={20} />Portfolio</Link>
-          <Link href="/alerts"><Bell size={20} />Alerts</Link>
         </div>
       </aside>
 
@@ -356,7 +347,7 @@ function FinancePlatformContent({ screen, children }: { screen: FinanceScreen; c
           </button>
           <Link className="mobile-brand" href="/">Gold<span>Silver</span>Prices</Link>
           <div className="finance-actions">
-            <button className="icon-action" type="button" aria-label="Toggle theme" onClick={toggleTheme}>
+            <button className="icon-action" type="button" aria-label="Toggle theme" title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`} aria-pressed={theme === "dark"} onClick={toggleTheme}>
               {theme === "dark" ? <Moon size={20} /> : <Sun size={20} />}
             </button>
             <NotificationCenter />
@@ -374,6 +365,8 @@ function FinancePlatformContent({ screen, children }: { screen: FinanceScreen; c
               {navItems.map((item) => (
                 <NavLink key={item.label} item={item} active={item.match.includes(screen)} onClick={() => setMobileMenu(false)} />
               ))}
+              <Link href="/watchlist" onClick={() => setMobileMenu(false)}><Star size={20} />Watchlist</Link>
+              <Link href="/portfolio" onClick={() => setMobileMenu(false)}><PieChart size={20} />Portfolio</Link>
             </div>
           </div>
         ) : null}
@@ -386,10 +379,10 @@ function FinancePlatformContent({ screen, children }: { screen: FinanceScreen; c
                 <h1>{meta.title}</h1>
                 <p>{meta.subtitle}</p>
               </div>
-              <div className="hero-command">
+              {screen !== "notifications" ? <div className="hero-command">
                 <span>{meta.section}</span>
                 <Link href="/watchlist">Add to watchlist <ChevronRight size={16} /></Link>
-              </div>
+              </div> : null}
             </section>
           ) : null}
           {shellAdScreens.has(screen) || shellAdPaths.has(pathname) || screen === "currencies" ? <AdSlot id={`${screen}-shell-after-hero`} module={meta.section.toLowerCase().replaceAll(" ", "-")} placement={screen === "home" ? "top" : "after-hero"} label={`${meta.section} advertisement`} /> : null}
@@ -408,14 +401,13 @@ function FinancePlatformContent({ screen, children }: { screen: FinanceScreen; c
           ["Markets", "/", BarChart3],
           ["News", "/news", Newspaper],
           ["Portfolio", "/portfolio", PieChart],
-          ["Alerts", "/alerts", Bell],
-          ["Menu", "/calculators", Menu],
         ].map(([label, href, Icon]) => (
           <Link key={label as string} className={bottomActive === label ? "active" : ""} href={href as string}>
             <Icon size={22} />
             <span>{label as string}</span>
           </Link>
         ))}
+        <button className="finance-bottom-menu" type="button" aria-expanded={mobileMenu} aria-controls="finance-mobile-drawer" onClick={() => setMobileMenu(true)}><Menu size={22} /><span>Menu</span></button>
       </nav>
     </div>
   );
@@ -458,7 +450,7 @@ function renderScreen(screen: FinanceScreen, pathname: string) {
   if (screen === "article") return <ArticleScreen />;
   if (screen === "portfolio") return <PortfolioScreen />;
   if (screen === "add-transaction") return <TransactionScreen />;
-  if (screen === "alerts") return <AlertsScreen />;
+  if (screen === "notifications") return null;
   if (screen === "calculators") return <CalculatorsScreen />;
   if (screen === "search") return <SearchScreen />;
   if (screen === "insurance-compare") return <InsuranceCompareScreen />;
@@ -651,7 +643,7 @@ function DetailScreen({ kind }: { kind: "stock" | "fund" }) {
         <MarketChart title={isStock ? "AAPL performance" : "NAV movement"} />
         <section className="glass-panel split-panel">
           <div><span className="finance-eyebrow">Key Metrics</span><MetricGrid items={isStock ? [["Market Cap", "$2.8T"], ["P/E Ratio", "29.4"], ["Dividend Yield", "0.54%"], ["52W High", "$198.23"]] : [["3Y Return", "18.4%"], ["Expense Ratio", "0.74%"], ["AUM", "$4.8B"], ["Risk", "Moderate"]]} /></div>
-          <div><span className="finance-eyebrow">Actions</span><div className="action-stack"><Link href="/portfolio/add-transaction">Add transaction</Link><Link href="/alerts">Set alert</Link><Link href="/watchlist">Add to watchlist</Link></div></div>
+          <div><span className="finance-eyebrow">Actions</span><div className="action-stack"><Link href="/portfolio/add-transaction">Add transaction</Link><Link href="/notifications">Market updates</Link><Link href="/watchlist">Add to watchlist</Link></div></div>
         </section>
       </section>
       <aside className="finance-right-rail"><WatchlistPanel /><MoversPanel /></aside>
@@ -688,9 +680,7 @@ function TransactionScreen() {
   );
 }
 
-function AlertsScreen() {
-  return <AlertsManager />;
-}
+
 
 function CalculatorsScreen() {
   return (
@@ -755,13 +745,8 @@ function ArticleScreen() {
   );
 }
 
-function AlertsPreview({ large = false }: { large?: boolean }) {
-  return (
-    <section className={large ? "glass-panel alerts-preview large" : "glass-panel alerts-preview"}>
-      <div className="panel-head compact"><h2>Active Alerts</h2><Bell size={18} /></div>
-      {["Gold above $2,400", "BTC below $62,000", "AAPL moves 3%", "USD/INR above 84"].map((alert) => <div className="alert-row" key={alert}><Bell size={16} /><span>{alert}</span><small>On</small></div>)}
-    </section>
-  );
+function AlertsPreview() {
+  return <section className="glass-panel form-panel"><h2>Market updates</h2><p>Two provider-backed editions per regular trading day. No custom price rules.</p><Link href="/notifications">Manage subscription</Link></section>;
 }
 
 function MetricGrid({ items }: { items: string[][] }) {

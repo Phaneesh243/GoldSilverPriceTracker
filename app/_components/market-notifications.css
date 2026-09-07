@@ -1,0 +1,29 @@
+.market-notifications-page { padding: clamp(16px, 3vw, 28px); min-width: 0; }
+.market-notifications-page .notification-center-list { max-height: none; }
+.market-notifications-page .notification-settings { max-width: 760px; }
+.notification-center-panel { display: block; bottom: auto; height: auto; max-height: min(780px, calc(100dvh - 100px)); overflow-y: auto; }
+.notification-item-main { min-width: 0; overflow-wrap: anywhere; }
+.notification-item-main p { line-height: 1.6; margin-block: 8px; }
+.notification-setting-row { gap: 12px; flex-wrap: wrap; }
+.notification-setting-row button { min-height: 44px; }
+.watchlist-manager .form-actions { gap: 12px; flex-wrap: wrap; }
+.watchlist-manager input, .watchlist-manager select, .watchlist-manager textarea { min-height: 44px; max-width: 100%; min-width: 0; }
+.watchlist-manager textarea { width: 100%; min-height: 90px; resize: vertical; border: 1px solid var(--fp-border); border-radius: 10px; background: var(--fp-panel-2); color: var(--fp-text); padding: 12px; font: inherit; }
+.saved-asset-row p { white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (max-width: 600px) {
+  .notification-center-panel { position: fixed; top: 68px; right: 8px; bottom: auto; left: 8px; width: auto; max-width: none; height: auto; max-height: calc(100dvh - 148px - env(safe-area-inset-bottom)); }
+  .notification-settings label { min-height: 44px; }
+  .notification-item-actions button, .saved-asset-actions .icon-action { min-width: 44px; min-height: 44px; }
+}
+.notification-settings { max-height: none; overflow: visible; }
+.notification-settings > button { margin: 4px 8px 4px 0; min-height: 44px; }
+.simple-market-consent { display: flex; flex-direction: column; gap: 12px; }
+.simple-market-consent .consent-actions { margin: 0; }
+.simple-market-consent .consent-close { width: 44px; height: 44px; }
+.simple-market-consent strong { padding-right: 40px; }
+.simple-market-consent .consent-actions > * { min-height: 44px; }
+.simple-market-consent .consent-actions .primary-button { background: var(--gold); color: #132030; }
+.notification-archive { margin-top: 20px; padding: 16px; border-top: 1px solid var(--fp-border); }
+.notification-archive article { margin-top: 16px; }
+.notification-archive summary { cursor: pointer; min-height: 44px; }
+.finance-bottom-menu { display: grid; place-items: center; gap: 4px; min-height: 44px; border: 0; background: transparent; color: var(--fp-muted); font: inherit; font-size: 10px; cursor: pointer; }

@@ -28,11 +28,11 @@ export async function fetchLiveStockQuote(slug: string, ticker: string): Promise
       const closes = result?.indicators?.quote?.[0]?.close || [];
       const lastClose = [...closes].reverse().find((value): value is number => typeof value === "number" && Number.isFinite(value));
       const price = typeof meta?.regularMarketPrice === "number" ? meta.regularMarketPrice : lastClose;
-      if (typeof price !== "number" || !Number.isFinite(price)) continue;
+      if (typeof price !== "number" || !Number.isFinite(price) || typeof meta.regularMarketTime !== "number") continue;
       const previousClose = typeof meta.previousClose === "number" ? meta.previousClose : typeof meta.chartPreviousClose === "number" ? meta.chartPreviousClose : null;
       const change = previousClose === null ? null : price - previousClose;
       const changePercent = previousClose && change !== null ? (change / previousClose) * 100 : null;
-      return { slug, ticker, price, previousClose, change, changePercent, currency: meta.currency || "INR", exchange: suffix === ".NS" ? "NSE" : "BSE", timestamp: typeof meta.regularMarketTime === "number" ? new Date(meta.regularMarketTime * 1000).toISOString() : new Date().toISOString(), source: "Yahoo Finance chart" };
+      return { slug, ticker, price, previousClose, change, changePercent, currency: meta.currency || "INR", exchange: suffix === ".NS" ? "NSE" : "BSE", timestamp: new Date(meta.regularMarketTime * 1000).toISOString(), source: "Yahoo Finance chart" };
     } catch {
       // Try BSE after NSE before declaring the quote unavailable.
     }

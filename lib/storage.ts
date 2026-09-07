@@ -13,7 +13,6 @@ const ACCOUNT_INDEX_KEY = `${STORAGE_VERSION}:accounts`;
 
 const MAX_WATCHLIST_ITEMS = 50;
 const MAX_TRANSACTIONS = 5000;
-const MAX_ALERTS = 20;
 const MAX_NOTIFICATIONS = 200;
 const MAX_ACTIVITY = 200;
 const MAX_CALCULATIONS = 100;
@@ -26,7 +25,6 @@ export type AccountStatus = "active" | "disabled";
 export type ThemePreference = "light" | "dark" | "system";
 export type AssetType = "metal" | "stock" | "crypto" | "fund" | "bond" | "currency" | "other";
 export type TransactionSide = "buy" | "sell" | "dividend" | "deposit" | "withdrawal" | "fee";
-export type AlertDirection = "above" | "below" | "movement";
 
 export type UserProfile = {
   id: string;
@@ -50,18 +48,9 @@ export type UserSettings = {
   language: string;
   defaultMetal: MetalKey;
   notifications: {
-    priceAlerts: boolean;
     browserPush: boolean;
     emailAlerts: boolean;
     marketUpdates: boolean;
-    marketDigest: boolean;
-    morningDigest: boolean;
-    middayDigest: boolean;
-    marketCloseDigest: boolean;
-    eveningDigest: boolean;
-    news: boolean;
-    providerOutages: boolean;
-    dailyDigest: boolean;
   };
   updatedAt: number;
 };
@@ -74,6 +63,7 @@ export type WatchlistItem = {
   assetType: AssetType;
   route?: string;
   market?: string;
+  notes?: string;
   addedAt: number;
   updatedAt: number;
 };
@@ -117,26 +107,6 @@ export type PortfolioSummary = {
   updatedAt: number;
 };
 
-export type UserAlert = {
-  id: string;
-  assetKey: string;
-  symbol: string;
-  name: string | null;
-  assetType: AssetType;
-  direction: AlertDirection;
-  targetPrice: number | null;
-  movementPercent: number | null;
-  city: string;
-  currency: string;
-  enabled: boolean;
-  lastTriggeredAt: number | null;
-  lastConditionMet: boolean;
-  lastProvider: string | null;
-  lastQuoteAt: string | null;
-  lastValue: number | null;
-  createdAt: number;
-  updatedAt: number;
-};
 
 export type UserNotification = {
   id: string;
@@ -210,6 +180,7 @@ export type PushSubscriptionRecord = {
   p256dh: string;
   auth: string;
   platform: string | null;
+  sessionHash?: string;
   createdAt: number;
   lastUsedAt: number;
 };
@@ -257,11 +228,6 @@ function positiveNumber(value: unknown, label: string, allowZero = false) {
     throw new StorageValidationError(`${label} must be a valid ${allowZero ? "non-negative" : "positive"} number.`);
   }
   return number;
-}
-
-function optionalPositiveNumber(value: unknown, label: string) {
-  if (value === null || value === undefined || value === "") return null;
-  return positiveNumber(value, label);
 }
 
 function parseJson<T>(raw: unknown): T | null {
@@ -312,18 +278,9 @@ function defaultSettings(): UserSettings {
     language: "en",
     defaultMetal: "gold",
     notifications: {
-      priceAlerts: true,
       browserPush: false,
       emailAlerts: false,
       marketUpdates: false,
-      marketDigest: false,
-      morningDigest: false,
-      middayDigest: false,
-      marketCloseDigest: false,
-      eveningDigest: false,
-      news: false,
-      providerOutages: false,
-      dailyDigest: false,
     },
     updatedAt: now(),
   };
@@ -356,7 +313,10 @@ export async function getProfile(userId: string) {
 
 export async function ensureStorageUser(userId: string, anonymous = true): Promise<StorageUser> {
   const existing = await getProfile(userId);
-  if (existing) return { id: userId, anonymous: existing.anonymous, profile: existing };
+  if (existing) {
+    if (anonymous && !existing.anonymous) throw new StorageValidationError("Invalid anonymous identity.");
+    return { id: userId, anonymous: existing.anonymous, profile: existing };
+  }
   const profile = await saveProfile(defaultProfile(userId, anonymous));
   await requireRedis().set(`${STORAGE_VERSION}:user:${userId}:settings`, JSON.stringify(defaultSettings()));
   return { id: userId, anonymous, profile };
@@ -365,9 +325,9 @@ export async function ensureStorageUser(userId: string, anonymous = true): Promi
 export async function getOrCreateStorageUser() {
   const cookieStore = await cookies();
   const existingId = cookieStore.get(STORAGE_COOKIE)?.value;
-  const userId = existingId && /^[a-zA-Z0-9_-]{8,160}$/.test(existingId) ? existingId : `anon_${randomUUID()}`;
+  const userId = existingId && /^anon_[0-9a-f-]{36}$/.test(existingId) ? existingId : `anon_${randomUUID()}`;
   const user = await ensureStorageUser(userId, true);
-  if (!existingId) {
+  if (existingId !== userId) {
     cookieStore.set(STORAGE_COOKIE, userId, {
       httpOnly: true,
       sameSite: "lax",
@@ -381,15 +341,14 @@ export async function getOrCreateStorageUser() {
 
 export async function getUserSettings(userId: string) {
   const stored = parseJson<UserSettings>(await requireRedis().get(collectionKey(userId, "settings")));
-  const legacyAlertOptIn = stored?.notifications?.priceAlerts === true;
   return {
     ...defaultSettings(),
     ...(stored || {}),
     notifications: {
       ...defaultSettings().notifications,
-      ...(stored?.notifications || {}),
-      browserPush: stored?.notifications?.browserPush ?? legacyAlertOptIn,
-      emailAlerts: stored?.notifications?.emailAlerts ?? legacyAlertOptIn,
+      marketUpdates: stored?.notifications?.marketUpdates === true,
+      browserPush: stored?.notifications?.browserPush === true,
+      emailAlerts: stored?.notifications?.emailAlerts === true,
     },
   };
 }
@@ -411,6 +370,11 @@ export async function updateUserProfile(userId: string, input: { displayName?: u
 
 export async function updateUserSettings(userId: string, input: Partial<UserSettings>) {
   const current = await getUserSettings(userId);
+  const allowed = ["marketUpdates", "browserPush", "emailAlerts"];
+  for (const [key, value] of Object.entries(input.notifications || {})) {
+    if (!allowed.includes(key) || typeof value !== "boolean") throw new StorageValidationError("Only fixed market update channel preferences are supported.");
+  }
+  if (input.notifications?.emailAlerts === true && !(await getProfile(userId))?.emailVerified) throw new StorageValidationError("Verify your account email first.");
   const next: UserSettings = {
     ...current,
     ...input,
@@ -438,21 +402,31 @@ export async function upsertWatchlist(userId: string, input: Partial<WatchlistIt
   if (!symbol || !name) throw new StorageValidationError("Watchlist symbol and name are required.");
   const assetKey = cleanLower(input.assetKey, symbol.toLowerCase());
   const current = await listWatchlist(userId);
-  const existing = current.find((item) => item.assetKey === assetKey || item.symbol === symbol);
+  const existing = input.id ? current.find((item) => item.id === input.id) : current.find((item) => item.assetKey === assetKey && (item.market || "") === (input.market || ""));
+  if (input.id && !existing) throw new StorageValidationError("Watchlist item not found.");
+  if (existing && input.id && (existing.assetKey !== assetKey || existing.market !== (input.market || undefined))) throw new StorageValidationError("Remove the saved asset before replacing it.");
+  if (!["metal", "stock", "crypto", "fund", "bond", "currency", "other"].includes(input.assetType || "other")) throw new StorageValidationError("Invalid asset type.");
+  if (input.route && (!input.route.startsWith("/") || input.route.startsWith("//") || input.route.includes("\\"))) throw new StorageValidationError("Invalid detail route.");
   if (!existing && current.length >= MAX_WATCHLIST_ITEMS) throw new StorageValidationError(`Watchlist limit is ${MAX_WATCHLIST_ITEMS} items.`);
   const timestamp = now();
   const item: WatchlistItem = {
-    id: existing?.id || itemId(input.id || assetKey, "watch"),
+    id: existing?.id || `watch_${createHash("sha256").update(`${assetKey}|${input.market || ""}`).digest("hex").slice(0, 32)}`,
     assetKey,
     symbol,
     name,
     assetType: (input.assetType || "other") as AssetType,
     route: clean(input.route) || undefined,
     market: clean(input.market) || undefined,
+    notes: input.notes === undefined ? existing?.notes : clean(input.notes).slice(0, 500),
     addedAt: existing?.addedAt || timestamp,
     updatedAt: timestamp,
   };
-  await writeHash(collectionKey(userId, "watchlist"), item.id, item);
+  const written = await requireRedis().eval(`
+    if redis.call('HEXISTS', KEYS[1], ARGV[1]) == 0 and redis.call('HLEN', KEYS[1]) >= tonumber(ARGV[3]) then return 0 end
+    redis.call('HSET', KEYS[1], ARGV[1], ARGV[2])
+    return 1
+  `, [collectionKey(userId, "watchlist")], [item.id, JSON.stringify(item), MAX_WATCHLIST_ITEMS]);
+  if (!written) throw new StorageValidationError("Watchlist limit reached.");
   await recordActivity(userId, existing ? "watchlist.updated" : "watchlist.added", { assetKey });
   return item;
 }
@@ -571,93 +545,8 @@ export async function getPortfolioSummary(userId: string) {
   return summary;
 }
 
-function normalizeAsset(input: Partial<UserAlert>) {
-  const assetKey = cleanLower(input.assetKey);
-  const symbol = clean(input.symbol).toUpperCase();
-  if (!assetKey || !symbol) throw new StorageValidationError("Alert asset key and symbol are required.");
-  return { assetKey, symbol };
-}
-
-export async function listAlerts(userId: string) {
-  return sortNewest(await readHash<UserAlert>(collectionKey(userId, "alerts")));
-}
-
-export async function createAlert(userId: string, input: Partial<UserAlert>) {
-  const { assetKey, symbol } = normalizeAsset(input);
-  const direction = input.direction;
-  if (direction !== "above" && direction !== "below" && direction !== "movement") throw new StorageValidationError("Invalid alert direction.");
-  const targetPrice = optionalPositiveNumber(input.targetPrice, "Target price");
-  const movementPercent = optionalPositiveNumber(input.movementPercent, "Movement percentage");
-  if (direction === "movement" ? movementPercent === null : targetPrice === null) throw new StorageValidationError(direction === "movement" ? "Movement percentage is required." : "Target price is required.");
-  const current = await listAlerts(userId);
-  if (current.length >= MAX_ALERTS) throw new StorageValidationError(`Alert limit is ${MAX_ALERTS} alerts.`);
-  const timestamp = now();
-  const alert: UserAlert = { id: itemId(input.id, "alert"), assetKey, symbol, name: clean(input.name) || null, assetType: (input.assetType || "other") as AssetType, direction, targetPrice: direction === "movement" ? null : targetPrice, movementPercent: direction === "movement" ? movementPercent : null, city: cleanLower(input.city, "mumbai"), currency: clean(input.currency, "INR").toUpperCase(), enabled: input.enabled !== false, lastTriggeredAt: null, lastConditionMet: false, lastProvider: null, lastQuoteAt: null, lastValue: null, createdAt: timestamp, updatedAt: timestamp };
-  await writeHash(collectionKey(userId, "alerts"), alert.id, alert);
-  await recordActivity(userId, "alert.created", { id: alert.id, assetKey });
-  return alert;
-}
-
-export async function updateAlert(userId: string, id: string, input: Partial<UserAlert>) {
-  const existing = parseJson<UserAlert>(await requireRedis().hget(collectionKey(userId, "alerts"), id));
-  if (!existing) throw new StorageValidationError("Alert not found.");
-  const direction = input.direction ?? existing.direction;
-  if (direction !== "above" && direction !== "below" && direction !== "movement") throw new StorageValidationError("Invalid alert direction.");
-  const targetPrice = direction === "movement" ? null : optionalPositiveNumber(input.targetPrice === undefined ? existing.targetPrice : input.targetPrice, "Target price");
-  const movementPercent = direction === "movement" ? optionalPositiveNumber(input.movementPercent === undefined ? existing.movementPercent : input.movementPercent, "Movement percentage") : null;
-  if (direction === "movement" ? movementPercent === null : targetPrice === null) throw new StorageValidationError(direction === "movement" ? "Movement percentage is required." : "Target price is required.");
-  const updated = { ...existing, ...input, id: existing.id, direction, targetPrice, movementPercent, assetKey: cleanLower(input.assetKey, existing.assetKey), symbol: clean(input.symbol, existing.symbol).toUpperCase(), name: input.name === undefined ? existing.name : clean(input.name) || null, updatedAt: now() };
-  await writeHash(collectionKey(userId, "alerts"), id, updated);
-  return updated;
-}
-
-export async function markAlertTriggered(userId: string, id: string, triggeredAt = now()) {
-  const r = requireRedis();
-  const existing = parseJson<UserAlert>(await r.hget(collectionKey(userId, "alerts"), id));
-  if (!existing) return null;
-  const updated: UserAlert = { ...existing, lastTriggeredAt: triggeredAt, updatedAt: triggeredAt };
-  await writeHash(collectionKey(userId, "alerts"), id, updated);
-  return updated;
-}
-
-export async function updateAlertEvaluation(userId: string, id: string, input: { conditionMet: boolean; provider: string; quoteAt: string; value: number; triggeredAt?: number }) {
-  const r = requireRedis();
-  const existing = parseJson<UserAlert>(await r.hget(collectionKey(userId, "alerts"), id));
-  if (!existing) return null;
-  const updated: UserAlert = {
-    ...existing,
-    lastConditionMet: input.conditionMet,
-    lastProvider: input.provider,
-    lastQuoteAt: input.quoteAt,
-    lastValue: input.value,
-    lastTriggeredAt: input.triggeredAt ?? existing.lastTriggeredAt,
-    updatedAt: now(),
-  };
-  await writeHash(collectionKey(userId, "alerts"), id, updated);
-  return updated;
-}
-
-export async function removeAlert(userId: string, id: string) {
-  await requireRedis().hdel(collectionKey(userId, "alerts"), id);
-  await recordActivity(userId, "alert.removed", { id });
-}
-
 export async function listNotifications(userId: string) {
   return sortNewest(await readHash<UserNotification>(collectionKey(userId, "notifications"))).slice(0, MAX_NOTIFICATIONS);
-}
-
-export async function createNotification(userId: string, input: Omit<Partial<UserNotification>, "id" | "createdAt">) {
-  const title = clean(input.title);
-  const message = clean(input.message);
-  if (!title || !message) throw new StorageValidationError("Notification title and message are required.");
-  const notification: UserNotification = { id: `notification_${randomUUID()}`, type: input.type || "system", title: title.slice(0, 160), message: message.slice(0, 1000), url: clean(input.url) || null, assetKey: cleanLower(input.assetKey) || null, read: input.read === true, createdAt: now(), expiresAt: input.expiresAt || null, delivery: input.delivery || null };
-  const items = await listNotifications(userId);
-  if (items.length >= MAX_NOTIFICATIONS) {
-    const oldest = items[items.length - 1];
-    if (oldest) await requireRedis().hdel(collectionKey(userId, "notifications"), oldest.id);
-  }
-  await writeHash(collectionKey(userId, "notifications"), notification.id, notification);
-  return notification;
 }
 
 export async function markNotificationRead(userId: string, id: string, read = true) {
@@ -683,10 +572,23 @@ export function pushSubscriptionId(endpoint: string) {
 
 export async function savePushSubscription(userId: string, input: { endpoint: string; p256dh: string; auth: string; platform?: string }) {
   if (!input.endpoint.startsWith("https://") || !input.p256dh || !input.auth) throw new StorageValidationError("Invalid push subscription.");
+  const endpoint = new URL(input.endpoint);
+  if (endpoint.port || endpoint.username || endpoint.password || !["fcm.googleapis.com", "updates.push.services.mozilla.com", "web.push.apple.com", "notify.windows.com"].some((host) => endpoint.hostname === host || endpoint.hostname.endsWith("." + host))) throw new StorageValidationError("Unsupported push service endpoint.");
+  const token = (await cookies()).get(SESSION_COOKIE)?.value;
+  const session = token ? await getSession(token) : null;
+  if (!token || session?.userId !== userId) throw new StorageValidationError("An active account session is required.");
   const id = pushSubscriptionId(input.endpoint);
+  if ((await listPushSubscriptions(userId)).length >= 5 && !(await requireRedis().hexists(collectionKey(userId, "push-subscriptions"), id))) throw new StorageValidationError("Up to five browsers are supported. Remove an old browser first.");
   const existing = parseJson<PushSubscriptionRecord>(await requireRedis().hget(collectionKey(userId, "push-subscriptions"), id));
-  const subscription: PushSubscriptionRecord = { id, endpoint: input.endpoint, p256dh: input.p256dh, auth: input.auth, platform: clean(input.platform) || null, createdAt: existing?.createdAt || now(), lastUsedAt: now() };
-  await writeHash(collectionKey(userId, "push-subscriptions"), id, subscription);
+  const subscription: PushSubscriptionRecord = { id, endpoint: input.endpoint, p256dh: input.p256dh, auth: input.auth, platform: clean(input.platform) || null, sessionHash: tokenHash(token), createdAt: existing?.createdAt || now(), lastUsedAt: now() };
+  // Atomic endpoint ownership: one physical browser cannot belong to two accounts.
+  await requireRedis().eval(`
+    local old = redis.call('GET', KEYS[1])
+    if old and old ~= ARGV[1] then redis.call('HDEL', ARGV[4] .. old .. ':push-subscriptions', ARGV[2]) end
+    redis.call('SET', KEYS[1], ARGV[1])
+    redis.call('HSET', KEYS[2], ARGV[2], ARGV[3])
+    return 1
+  `, [`gsp:v2:push-owner:${id}`, collectionKey(userId, "push-subscriptions")], [userId, id, JSON.stringify(subscription), `${STORAGE_VERSION}:user:`]);
   return subscription;
 }
 
@@ -930,7 +832,7 @@ export async function getAuthenticatedUser() {
   const session = await getSession(token);
   if (!session) return null;
   const profile = await getProfile(session.userId);
-  return profile && profile.status === "active" ? { session, profile } : null;
+  return profile && !profile.anonymous && profile.status === "active" ? { session, profile } : null;
 }
 
 export async function setSessionCookie(token: string) {
@@ -945,41 +847,14 @@ export async function clearAnonymousIdentityCookie() {
   (await cookies()).set(STORAGE_COOKIE, "", { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", maxAge: 0, path: "/" });
 }
 
-async function copyHash(sourceKey: string, targetKey: string, merge: (existing: unknown, incoming: unknown) => unknown = (_existing, incoming) => incoming) {
-  const source = (await requireRedis().hgetall<Record<string, unknown>>(sourceKey)) || {};
-  for (const [key, value] of Object.entries(source)) {
-    const existing = await requireRedis().hget(targetKey, key);
-    await requireRedis().hset(targetKey, { [key]: JSON.stringify(merge(parseJson(existing), parseJson(value))) });
-  }
-}
-
-export async function migrateAnonymousData(anonymousId: string, accountId: string) {
-  if (!anonymousId || anonymousId === accountId) return;
-  for (const collection of ["watchlist", "alerts", "notifications", "push-subscriptions", "calculations", "calculator-presets", "saved-news"]) {
-    await copyHash(collectionKey(anonymousId, collection), collectionKey(accountId, collection));
-  }
-  const transactions = await readHash<PortfolioTransaction>(collectionKey(anonymousId, "transactions"));
-  const accountTransactions = await listTransactions(accountId);
-  const existingRequestIds = new Set(accountTransactions.map((item) => item.clientRequestId).filter(Boolean));
-  for (const transaction of transactions) {
-    if (!transaction.clientRequestId || !existingRequestIds.has(transaction.clientRequestId)) await writeHash(collectionKey(accountId, "transactions"), transaction.id, transaction);
-  }
-  const anonymousSettings = parseJson<UserSettings>(await requireRedis().get(collectionKey(anonymousId, "settings")));
-  if (anonymousSettings) await requireRedis().set(collectionKey(accountId, "settings"), JSON.stringify(anonymousSettings));
-  await recordActivity(accountId, "anonymous-data.migrated", { anonymousId });
-  await requireRedis().expire(`${STORAGE_VERSION}:profile:${anonymousId}`, 60 * 60 * 24 * 30);
-  for (const collection of ["settings", "watchlist", "alerts", "notifications", "push-subscriptions", "transactions", "transactions:idempotency", "activity", "calculations", "calculator-presets", "saved-news", "news-preferences"]) {
-    await requireRedis().expire(collectionKey(anonymousId, collection), 60 * 60 * 24 * 30);
-  }
-}
+// Anonymous data is deliberately not imported on authentication. Legacy records are preserved.
 
 export async function getStorageSnapshot(userId: string) {
-  const [profile, settings, watchlist, transactions, alerts, notifications, calculations, calculatorPresets, savedNews, newsPreferences, summary] = await Promise.all([
+  const [profile, settings, watchlist, transactions, notifications, calculations, calculatorPresets, savedNews, newsPreferences, summary] = await Promise.all([
     getProfile(userId),
     getUserSettings(userId),
     listWatchlist(userId),
     listTransactions(userId),
-    listAlerts(userId),
     listNotifications(userId),
     listCalculations(userId),
     listCalculatorPresets(userId),
@@ -1000,7 +875,7 @@ export async function getStorageSnapshot(userId: string) {
         updatedAt: profile.updatedAt,
       }
     : null;
-  return { profile: safeProfile, settings, watchlist, transactions, alerts, notifications, calculations, calculatorPresets, savedNews, newsPreferences, portfolio: summary };
+  return { profile: safeProfile, settings, watchlist, transactions, notifications, calculations, calculatorPresets, savedNews, newsPreferences, portfolio: summary };
 }
 
 export function requestIpHash(request: Request) {
@@ -1014,4 +889,31 @@ export async function withinAuthRateLimit(request: Request, scope: "register" | 
   const count = await r.incr(key);
   if (count === 1) await r.expire(key, 15 * 60);
   return count <= (scope === "login" ? 10 : 5);
+}
+export async function isPushSubscriptionActive(userId: string, record: PushSubscriptionRecord) {
+  if (!record.sessionHash || await requireRedis().get(`gsp:v2:push-owner:${record.id}`) !== userId) return false;
+  const session = parseJson<{ userId: string; expiresAt: number }>(await requireRedis().get(sessionKey(record.sessionHash)));
+  return session?.userId === userId && session.expiresAt > now();
+}
+export async function verifyAccountEmail(userId: string, email: string) {
+  const profile = await getProfile(userId);
+  if (!profile || profile.anonymous || profile.email !== email || profile.status !== "active") throw new StorageValidationError("Account email has changed.");
+  await saveProfile({ ...profile, emailVerified: true, updatedAt: now() });
+}
+export async function createMarketNotification(userId: string, edition: string, title: string, message: string, createdAt: number) {
+  const key = collectionKey(userId, "notifications");
+  const notification: UserNotification = { id: `market_${edition}`, type: "market", title, message: message.slice(0, 12000), url: "/notifications", assetKey: null, read: false, createdAt, expiresAt: null, delivery: { inApp: "sent", email: "skipped", push: "skipped" } };
+  // Inbox insertion and completion marker are atomic, including after user deletion.
+  await requireRedis().eval(`
+    if redis.call('HGET', KEYS[2], 'inApp') == 'sent' then return 0 end
+    redis.call('HSETNX', KEYS[1], ARGV[1], ARGV[2])
+    redis.call('HSET', KEYS[2], 'inApp', 'sent')
+    redis.call('EXPIRE', KEYS[2], 2592000)
+    return 1
+  `, [key, `gsp:v2:edition:${edition}:${userId}:delivery`], [notification.id, JSON.stringify(notification)]);
+  const items = await listNotifications(userId);
+  if (items.length >= MAX_NOTIFICATIONS) {
+    const all = sortNewest(await readHash<UserNotification>(key));
+    for (const item of all.slice(MAX_NOTIFICATIONS)) await requireRedis().hdel(key, item.id);
+  }
 }

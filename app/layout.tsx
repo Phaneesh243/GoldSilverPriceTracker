@@ -48,6 +48,7 @@ export const viewport: Viewport = {
 };
 
 const themeScript = `
+document.documentElement.dataset.theme = "dark";
 try {
   var theme = window.localStorage.getItem("gsp-theme");
   if (theme === "dark" || theme === "light") {

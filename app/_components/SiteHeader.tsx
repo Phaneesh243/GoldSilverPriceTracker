@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTheme } from "../_hooks/useTheme";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -56,7 +57,7 @@ export default function SiteHeader({ citySlug = "mumbai" }: { citySlug?: string 
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState<"prices" | "tools" | "more" | null>(null);
   const [countryDropdownOpen, setCountryDropdownOpen] = useState(false);
@@ -75,11 +76,6 @@ export default function SiteHeader({ citySlug = "mumbai" }: { citySlug?: string 
   );
 
   useEffect(() => {
-    const saved = window.localStorage.getItem("gsp-theme");
-    const next = saved === "dark" || saved === "light" ? saved : "light";
-    // Hydration guard: localStorage is intentionally read only after the client mounts.
-    setTheme(next);
-    document.documentElement.dataset.theme = next;
     setMounted(true);
   }, []);
 
@@ -115,12 +111,6 @@ export default function SiteHeader({ citySlug = "mumbai" }: { citySlug?: string 
     router.push(`/gold-price/${nextCity}${query ? `?${query}` : ""}`);
   }
 
-  function toggleTheme() {
-    const next = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    document.documentElement.dataset.theme = next;
-    window.localStorage.setItem("gsp-theme", next);
-  }
 
   function toggleMobileMenu() {
     setMobileMenuOpen((open) => !open);

@@ -1,97 +1,130 @@
 import "server-only";
-
+import { randomUUID } from "node:crypto";
 import { fetchCryptoMarkets } from "./crypto-market-provider";
 import { currencyPairs } from "./currencies";
 import { getCurrencyRates } from "./currency-prices";
-import { emailAlertsConfigured, sendAlertEmail } from "./email";
 import { getAllMetalPrices } from "./metal-prices";
 import { redis } from "./redis";
 import { fetchLiveStockQuotes } from "./stock-quotes";
-import { createNotification, getProfile, getUserSettings, listAccountIds } from "./storage";
-import { sendUserPush } from "./user-alerts";
+import { createMarketNotification, getProfile, getUserSettings, listAccountIds, listPushSubscriptions } from "./storage";
+import { sendDeviceUpdate } from "./notification-transport";
+import { emailAlertsConfigured, sendAlertEmail } from "./email";
+import { reserveEmailQuota, unsubscribeUrl } from "./notification-email";
+import { enqueueMarketJob } from "./market-jobs";
+import { editionWindow, indiaDate, quoteAvailability, regularTradingDay, type MarketEdition } from "./market-schedule";
 
-export type MarketDigestSlot = "morning" | "midday" | "close" | "evening";
+type Snapshot = { id: string; edition: MarketEdition; date: string; title: string; message: string; generatedAt: number; expiresAt: number; recipients: string[] };
+const TTL = 30 * 86400;
+const key = (id: string) => `gsp:v2:edition:${id}`;
+const money = (value: number) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 2 }).format(value);
+const escape = (text: string) => text.replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]!);
 
-function indiaDate() {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+async function lock<T>(name: string, work: () => Promise<T>) {
+  if (!redis) throw new Error("Redis is required.");
+  const token = randomUUID();
+  if (!await redis.set(name, token, { nx: true, ex: 35 })) throw new Error("Job is already running; retry later.");
+  try { return await work(); }
+  finally { await redis.eval("if redis.call('GET', KEYS[1]) == ARGV[1] then return redis.call('DEL', KEYS[1]) else return 0 end", [name], [token]); }
 }
-
-function isIndiaWeekday() {
-  const day = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Kolkata", weekday: "short" }).format(new Date());
-  return day !== "Sat" && day !== "Sun";
+function row(label: string, value: number | null | undefined, source: string, asOf: string | null | undefined, maxAge: number, unit = "") {
+  const status = quoteAvailability(value, asOf, maxAge);
+  return `${label}: ${status === "unavailable" || status === "timestamp-unavailable" ? "Unavailable" : money(value!)}${unit ? " " + unit : ""} — ${status}; source: ${source}; as of: ${asOf || "not supplied"}`;
 }
-
-function inr(value: number) {
-  return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 2 }).format(value);
-}
-
-function percent(value: number | null) {
-  return typeof value === "number" && Number.isFinite(value) ? `${value >= 0 ? "+" : ""}${value.toFixed(2)}%` : "change unavailable";
-}
-
-function slotEnabled(slot: MarketDigestSlot, preferences: Awaited<ReturnType<typeof getUserSettings>>["notifications"]) {
-  return slot === "morning" ? preferences.morningDigest : slot === "midday" ? preferences.middayDigest : slot === "close" ? preferences.marketCloseDigest : preferences.eveningDigest;
-}
-
-async function reserveEmailQuota() {
-  if (!redis) return true;
-  const limit = Math.max(1, Number(process.env.RESEND_DAILY_LIMIT || 90));
-  const key = `gsp:v1:resend-quota:${indiaDate()}`;
-  const count = await redis.incr(key);
-  if (count === 1) await redis.expire(key, 48 * 60 * 60);
-  return count <= limit;
-}
-
-async function reserveDigest(userId: string, slot: MarketDigestSlot) {
-  if (!redis) return true;
-  return Boolean(await redis.set(`gsp:v1:digest:${indiaDate()}:${slot}:${userId}`, "1", { nx: true, ex: 72 * 60 * 60 }));
-}
-
-export async function sendMarketDigest(slot: MarketDigestSlot) {
-  if (!isIndiaWeekday() && slot !== "evening") return { slot, skipped: "weekend", users: 0, sent: 0, failed: 0, unavailable: 0 };
-  const generatedAt = new Date().toISOString();
-  const [metalsResult, stocksResult, cryptoResult, currencyResult] = await Promise.allSettled([
-    getAllMetalPrices("mumbai", "IN"),
-    fetchLiveStockQuotes(),
-    fetchCryptoMarkets(["bitcoin", "ethereum"]),
-    getCurrencyRates(currencyPairs.filter((pair) => pair.symbol === "USD/INR" || pair.symbol === "EUR/INR").slice(0, 2)),
+async function snapshot(edition: MarketEdition, date: string): Promise<Snapshot> {
+  const id = `${date}:${edition}`;
+  const stored = await redis!.get<Snapshot>(key(id));
+  if (stored) return stored;
+  const [metals, stocks, crypto, fx] = await Promise.allSettled([
+    getAllMetalPrices("mumbai", "IN"), fetchLiveStockQuotes(["reliance", "tcs", "hdfc-bank", "icici-bank", "infosys"]),
+    fetchCryptoMarkets(["bitcoin", "ethereum"]), getCurrencyRates(currencyPairs.filter((pair) => ["USD/INR", "EUR/INR"].includes(pair.symbol))),
   ]);
-
-  const metals = metalsResult.status === "fulfilled" ? metalsResult.value.metals.filter((item) => item.status === "available" && typeof item.price === "number") : [];
-  const stocks = stocksResult.status === "fulfilled" ? stocksResult.value.filter((item) => Number.isFinite(item.price)).sort((a, b) => Math.abs(b.changePercent || 0) - Math.abs(a.changePercent || 0)).slice(0, 5) : [];
-  const crypto = cryptoResult.status === "fulfilled" ? cryptoResult.value.filter((item) => typeof item.current_price === "number") : [];
-  const currencies = currencyResult.status === "fulfilled" ? currencyResult.value.filter((item) => item.status === "available" && typeof item.rate === "number") : [];
-  if (!metals.length && !stocks.length && !crypto.length && !currencies.length) return { slot, skipped: "all-providers-unavailable", users: 0, sent: 0, failed: 0, unavailable: 4 };
-
-  const metalText = metals.length ? metals.map((item) => `${item.name}: ${inr(item.price!)} (${percent(item.changePercentage)})`).join("; ") : "Metals: unavailable";
-  const stockText = stocks.length ? `Stock movers: ${stocks.map((item) => `${item.ticker} ${inr(item.price)} (${percent(item.changePercent)})`).join(", ")}` : "Indian stocks: unavailable";
-  const cryptoText = crypto.length ? `Crypto: ${crypto.map((item) => `${item.symbol.toUpperCase()} ${inr(item.current_price!)} (${percent(item.price_change_percentage_24h)})`).join(", ")}` : "Crypto: unavailable";
-  const currencyText = currencies.length ? `FX: ${currencies.map((item) => `${item.pair.symbol} ${item.rate!.toLocaleString("en-IN", { maximumFractionDigits: 4 })}`).join(", ")}` : "Currencies: unavailable";
-  const title = `${slot === "close" ? "Market close" : slot[0].toUpperCase() + slot.slice(1)} market update`;
-  const message = [metalText, stockText, cryptoText, currencyText].join(" · ").slice(0, 950);
-  const accountIds = await listAccountIds();
-  const totals = { slot, users: accountIds.length, sent: 0, skipped: 0, failed: 0, inApp: 0, push: 0, email: 0, unavailable: [metals, stocks, crypto, currencies].filter((items) => !items.length).length, generatedAt };
-
-  for (const userId of accountIds) {
-    try {
-      const [settings, profile] = await Promise.all([getUserSettings(userId), getProfile(userId)]);
-      if (!settings.notifications.marketDigest || !slotEnabled(slot, settings.notifications) || !(await reserveDigest(userId, slot))) { totals.skipped += 1; continue; }
-      const push = settings.notifications.browserPush ? await sendUserPush(userId, title, message, "/", `market-digest-${slot}-${indiaDate()}`) : { sent: 0, removed: 0 };
-      totals.push += push.sent;
-      let emailSent = false;
-      if (settings.notifications.emailAlerts && profile?.email && !profile.anonymous && profile.emailVerified && emailAlertsConfigured() && await reserveEmailQuota()) {
-        const rows = [metalText, stockText, cryptoText, currencyText].map((row) => `<li style="margin:0 0 10px">${row.replace(/[&<>]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[character]!)}</li>`).join("");
-        await sendAlertEmail({ to: profile.email, subject: title, text: `${message}\n\nGenerated: ${generatedAt}\nManage preferences: ${(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000")}/alerts`, html: `<div style="max-width:640px;margin:auto;font-family:Arial,sans-serif;color:#172033"><h1 style="font-size:24px">${title}</h1><p>Only currently available provider-backed values are included.</p><ul style="padding-left:20px">${rows}</ul><p style="font-size:12px;color:#64748b">Generated ${generatedAt}. Sources: Goodreturns/Gold API, Yahoo Finance chart, CoinGecko, Frankfurter.</p><p><a href="${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/alerts">Manage notification preferences</a></p></div>`, idempotencyKey: `gsp-digest-${userId}-${indiaDate()}-${slot}` });
-        emailSent = true;
-        totals.email += 1;
-      }
-      await createNotification(userId, { type: "market", title, message, url: "/", delivery: { inApp: "sent", push: push.sent ? "sent" : settings.notifications.browserPush ? "failed" : "skipped", email: emailSent ? "sent" : settings.notifications.emailAlerts ? "failed" : "skipped" } });
-      totals.inApp += 1;
-      totals.sent += 1;
-    } catch (error) {
-      totals.failed += 1;
-      console.error("Market digest delivery failed", { userId, slot, error });
+  const lines: string[] = [];
+  if (metals.status === "fulfilled") {
+    for (const metal of metals.value.metals) {
+      if (!["gold", "silver"].includes(metal.key)) continue;
+      if (metal.key === "gold" && metal.variants?.length) for (const variant of metal.variants.filter((item) => ["22K", "24K"].includes(item.label))) lines.push(row(`Gold ${variant.label}, Mumbai`, variant.price, metal.source, metal.updatedAt, 24 * 3600_000, metal.unitLabel));
+      else lines.push(row(`${metal.name}, Mumbai${metal.key === "silver" ? " (purity not supplied by feed)" : " (purity unavailable)"}`, metal.price, metal.source, metal.updatedAt, 24 * 3600_000, metal.unitLabel));
     }
-  }
-  return totals;
+  } else lines.push("Gold and silver (Mumbai): unavailable — city-price provider failed.");
+  if (stocks.status === "fulfilled" && stocks.value.length) for (const stock of stocks.value) lines.push(row(`${stock.ticker} (${stock.exchange})`, stock.price, stock.source, stock.timestamp, 20 * 60_000));
+  else lines.push("Indian stock quotes: unavailable — Yahoo Finance chart.");
+  if (crypto.status === "fulfilled" && crypto.value.length) for (const coin of crypto.value) lines.push(row(coin.symbol.toUpperCase(), coin.current_price, "CoinGecko", coin.last_updated, 10 * 60_000));
+  else lines.push("BTC / ETH: unavailable — CoinGecko.");
+  if (fx.status === "fulfilled" && fx.value.length) for (const pair of fx.value) lines.push(row(pair.pair.symbol, pair.rate, pair.source, pair.timestamp, 72 * 3600_000, "reference rate"));
+  else lines.push("INR currency reference rates: unavailable — Frankfurter.");
+  lines.push("Mutual fund NAVs, bond yields and insurance quotes are not included: no verified digest feed is configured.");
+  lines.push("These are provider-reported/reference values, not exchange-guaranteed real-time prices. Opening editions may contain previous-session quotes. Metals and crypto do not follow equity trading hours.");
+  const value: Snapshot = { id, edition, date, title: edition === "open" ? "Market opening edition · 09:15 IST" : "Market closing edition · 15:30 IST", message: lines.join("\n\n"), generatedAt: Date.now(), expiresAt: editionWindow(edition, date).expiresAt, recipients: await listAccountIds() };
+  await redis!.set(key(id), value, { nx: true, ex: TTL });
+  return (await redis!.get<Snapshot>(key(id)))!;
+}
+export async function dispatchMarketEdition(edition: MarketEdition, date = indiaDate(), start = 0) {
+  if (!redis) throw new Error("Redis is required.");
+  if (!editionWindow(edition, date).allowed) return { skipped: regularTradingDay(date).reason === "regular-session" ? "outside-delivery-window" : regularTradingDay(date).reason };
+  const id = `${date}:${edition}`;
+  return lock(`${key(id)}:dispatch-lock`, async () => {
+    const existed = await redis!.exists(key(id));
+    const saved = await snapshot(edition, date);
+    if (!existed) {
+      await enqueueMarketJob("/api/jobs/market-updates", { edition, date, start: 0 }, `${id}:page:0`);
+      return { edition: id, snapshotSaved: true };
+    }
+    // Resume from the durable cursor after a function timeout or scheduler retry.
+    const cursor = Math.max(start, await redis!.get<number>(`${key(id)}:cursor`) || 0);
+    const end = Math.min(cursor + 5, saved.recipients.length);
+    for (let index = cursor; index < end; index++) {
+      const userId = saved.recipients[index];
+      const [profile, settings] = await Promise.all([getProfile(userId), getUserSettings(userId)]);
+      if (profile && !profile.anonymous && profile.status === "active" && settings.notifications.marketUpdates) await enqueueMarketJob("/api/jobs/market-updates/deliver", { edition, date, userId }, `${id}:${userId}`, true);
+      await redis!.set(`${key(id)}:cursor`, index + 1, { ex: TTL });
+    }
+    if (end < saved.recipients.length) await enqueueMarketJob("/api/jobs/market-updates", { edition, date, start: end }, `${id}:page:${end}`);
+    await redis!.set("gsp:v2:market-jobs:last-dispatch", { id, cursor: end, recipients: saved.recipients.length, at: Date.now() }, { ex: TTL });
+    return { edition: id, queuedThrough: end, recipients: saved.recipients.length };
+  });
+}
+export async function deliverMarketEdition(edition: MarketEdition, date: string, userId: string) {
+  if (!redis) throw new Error("Redis is required.");
+  const id = `${date}:${edition}`;
+  const saved = await redis.get<Snapshot>(key(id));
+  if (!saved || Date.now() >= saved.expiresAt) return { skipped: "expired-or-missing-edition" };
+  if (!saved.recipients.includes(userId)) return { skipped: "not-in-edition" };
+  return lock(`${key(id)}:${userId}:lock`, async () => {
+    const [profile, settings] = await Promise.all([getProfile(userId), getUserSettings(userId)]);
+    if (!profile || profile.anonymous || profile.status !== "active" || !settings.notifications.marketUpdates) return { skipped: "unsubscribed" };
+    const deliveryKey = `${key(id)}:${userId}:delivery`;
+    const state = await redis!.hgetall<Record<string, string>>(deliveryKey) || {};
+    const mark = async (channel: string, status: string) => { await redis!.hset(deliveryKey, { [channel]: status }); await redis!.expire(deliveryKey, TTL); };
+    // In-app delivery always happens before external services, and survives their failure.
+    if (!state.inApp) { await createMarketNotification(userId, id, saved.title, saved.message, saved.generatedAt); await mark("inApp", "sent"); }
+    const failures: string[] = [];
+    if (settings.notifications.browserPush) {
+      const devices = await listPushSubscriptions(userId);
+      await Promise.all(devices.map(async (device) => {
+        const channel = `push:${device.id}`;
+        if (state[channel] === "sent" || state[channel] === "skipped") return;
+        try {
+          if (!(await getUserSettings(userId)).notifications.marketUpdates) return;
+          const result = await sendDeviceUpdate(userId, device, { title: saved.title, body: "Your stocks, gold, silver, crypto and currency summary is ready. Open to see sources and timestamps.", tag: `gsp-${id}`, expiresAt: saved.expiresAt });
+          await mark(channel, result);
+        } catch { await mark(channel, "failed"); failures.push(channel); }
+      }));
+    }
+    if (settings.notifications.emailAlerts && profile.emailVerified && profile.email && state.email !== "sent" && state.email !== "quota-skipped") {
+      try {
+        if (!emailAlertsConfigured()) throw new Error("Email service is not configured.");
+        if (await reserveEmailQuota(`edition:${id}:${userId}`)) {
+          const latest = await getUserSettings(userId);
+          if (latest.notifications.marketUpdates && latest.notifications.emailAlerts) {
+            const unsubscribe = unsubscribeUrl(userId);
+            await sendAlertEmail({ to: profile.email, subject: saved.title, text: `${saved.message}\n\nUnsubscribe from email: ${unsubscribe}`, html: `<h1>${escape(saved.title)}</h1><p style="white-space:pre-line">${escape(saved.message)}</p><p><a href="${escape(unsubscribe)}">Unsubscribe from email editions</a></p>`, idempotencyKey: `gsp-v2-${id}-${userId}`, headers: { "List-Unsubscribe": `<${unsubscribe}>`, "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" } });
+            await mark("email", "sent");
+          }
+        } else await mark("email", "quota-skipped");
+      } catch { await mark("email", "failed"); failures.push("email"); }
+    }
+    await redis!.set("gsp:v2:market-jobs:last-delivery", { id, at: Date.now(), failedChannels: failures.length }, { ex: TTL });
+    if (failures.length) throw new Error("Some delivery channels failed; retry required.");
+    return { delivered: id };
+  });
 }

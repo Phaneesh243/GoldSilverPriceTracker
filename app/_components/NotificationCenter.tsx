@@ -1,176 +1,96 @@
 "use client";
-
-import { Bell, Check, ExternalLink, Trash2, X } from "lucide-react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Bell, Check, Trash2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import NotificationToggle from "./NotificationToggle";
+import type { UserNotification, UserSettings } from "../../lib/storage";
+import { accountRequest, invalidateAccountData, useAccountResource } from "../_hooks/useAccountResource";
+import { CONSENT_UPDATED, noticeKey, rememberConsent, useNotificationOptIn, browserPermission, subscribeThisBrowser } from "../_hooks/useNotificationOptIn";
 
 export const NOTIFICATIONS_UPDATED_EVENT = "gsp-notifications-updated";
-
-type UserNotification = {
-  id: string;
-  title: string;
-  message: string;
-  url: string | null;
-  read: boolean;
-  createdAt: number;
-  delivery?: { inApp: "sent" | "failed"; push: "sent" | "failed" | "skipped"; email: "sent" | "failed" | "skipped" } | null;
-};
-
-type NotificationPreferences = {
-  priceAlerts: boolean;
-  browserPush: boolean;
-  emailAlerts: boolean;
-  marketDigest: boolean;
-  morningDigest: boolean;
-  middayDigest: boolean;
-  marketCloseDigest: boolean;
-  eveningDigest: boolean;
-};
-
-async function requestJson(url: string, init?: RequestInit) {
-  const response = await fetch(url, { ...init, cache: "no-store" });
-  if (!response.ok) throw new Error("Notifications are temporarily unavailable.");
-  const payload = (await response.json()) as { data?: UserNotification[] | UserNotification };
-  return payload.data;
-}
-
-function formatTime(timestamp: number) {
-  return new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeStyle: "short" }).format(timestamp);
-}
-
-export default function NotificationCenter() {
-  const router = useRouter();
-  const containerRef = useRef<HTMLSpanElement>(null);
+export default function NotificationCenter({ expanded = false }: { expanded?: boolean }) {
+  const root = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
-  const [items, setItems] = useState<UserNotification[]>([]);
-  const [error, setError] = useState("");
-  const [preferences, setPreferences] = useState<NotificationPreferences | null>(null);
+  const [message, setMessage] = useState("");
+  const [busy, setBusy] = useState(false);
+  const readiness = useAccountResource<{ marketUpdatesConfigured: boolean }>("/api/notifications/status");
+  const inbox = useAccountResource<UserNotification[]>("/api/storage/notifications");
+  const settings = useAccountResource<UserSettings>("/api/storage/settings");
+  const account = useAccountResource<{ user: { id: string; emailVerified: boolean } | null }>("/api/auth/me");
+  const optIn = useNotificationOptIn(account.data?.user);
+  const [deliveryNotice, setDeliveryNotice] = useState("");
+  const userId = account.data?.user?.id;
+  useEffect(() => {
+    const update = () => { try { setDeliveryNotice(userId ? localStorage.getItem(noticeKey(userId)) || "" : ""); } catch { setDeliveryNotice(""); } };
+    update(); window.addEventListener(CONSENT_UPDATED, update); window.addEventListener("storage", update);
+    return () => { window.removeEventListener(CONSENT_UPDATED, update); window.removeEventListener("storage", update); };
+  }, [userId]);
+  const items = (inbox.data || []).filter((item) => item.type !== "alert");
+  const archived = (inbox.data || []).filter((item) => item.type === "alert");
   const unread = items.filter((item) => !item.read).length;
-
-  async function load() {
-    try {
-      const data = await requestJson("/api/storage/notifications");
-      if (Array.isArray(data)) setItems(data);
-      setError("");
-    } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : "Notifications are temporarily unavailable.");
-    }
-  }
-
-  async function loadPreferences() {
-    const response = await fetch("/api/storage/settings", { cache: "no-store" });
-    if (!response.ok) return;
-    const payload = await response.json() as { data?: { notifications?: NotificationPreferences } };
-    if (payload.data?.notifications) setPreferences(payload.data.notifications);
-  }
-
+  const preferences = settings.data?.notifications;
   useEffect(() => {
-    void load();
-    void loadPreferences();
-    const refresh = () => { if (document.visibilityState === "visible") void load(); };
-    const interval = window.setInterval(refresh, 30_000);
-    const onVisible = () => { if (document.visibilityState === "visible") void load(); };
-    window.addEventListener(NOTIFICATIONS_UPDATED_EVENT, refresh);
-    document.addEventListener("visibilitychange", onVisible);
-    return () => {
-      window.clearInterval(interval);
-      window.removeEventListener(NOTIFICATIONS_UPDATED_EVENT, refresh);
-      document.removeEventListener("visibilitychange", onVisible);
-    };
+    const outside = (event: MouseEvent) => { if (!root.current?.contains(event.target as Node)) setOpen(false); };
+    const escape = (event: KeyboardEvent) => { if (event.key === "Escape") { setOpen(false); trigger.current?.focus(); } };
+    document.addEventListener("mousedown", outside); document.addEventListener("keydown", escape);
+    return () => { document.removeEventListener("mousedown", outside); document.removeEventListener("keydown", escape); };
   }, []);
-
-  useEffect(() => {
-    function closeOnOutside(event: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) setOpen(false);
-    }
-    function closeOnEscape(event: KeyboardEvent) { if (event.key === "Escape") setOpen(false); }
-    document.addEventListener("mousedown", closeOnOutside);
-    document.addEventListener("keydown", closeOnEscape);
-    return () => { document.removeEventListener("mousedown", closeOnOutside); document.removeEventListener("keydown", closeOnEscape); };
-  }, []);
-
-  async function updatePreference(key: keyof NotificationPreferences, value: boolean) {
-    setPreferences((current) => current ? { ...current, [key]: value } : current);
-    const response = await fetch("/api/storage/settings", { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ notifications: { [key]: value, ...(key === "marketDigest" ? { dailyDigest: value } : {}) } }) });
-    if (!response.ok) { setError("Notification preferences could not be saved."); void loadPreferences(); }
+  async function mutate(url: string, method: string, body?: unknown) {
+    setBusy(true); setMessage("");
+    try { await accountRequest(url, { method, headers: { "content-type": "application/json" }, body: body === undefined ? undefined : JSON.stringify(body) }); invalidateAccountData(); }
+    catch (error) { setMessage(error instanceof Error ? error.message : "Unable to save."); }
+    finally { setBusy(false); }
   }
-
-  async function markRead(id: string) {
+  async function verify() {
+    setBusy(true);
+    try { await accountRequest("/api/notifications/email-verification", { method: "POST" }); setMessage("Verification email requested. Check your inbox and spam folder."); }
+    catch (error) { setMessage(error instanceof Error ? error.message : "Unable to send verification."); }
+    finally { setBusy(false); }
+  }
+  async function unsubscribe() {
+    setBusy(true); setMessage("");
     try {
-      await requestJson(`/api/storage/notifications/${id}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ read: true }) });
-      setItems((current) => current.map((item) => (item.id === id ? { ...item, read: true } : item)));
-    } catch (updateError) {
-      setError(updateError instanceof Error ? updateError.message : "Could not update notification.");
-    }
+      await accountRequest("/api/storage/settings", { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ notifications: { marketUpdates: false, browserPush: false, emailAlerts: false } }) });
+      if (userId) rememberConsent(userId, "Unsubscribed from all market updates.");
+      invalidateAccountData();
+    } catch (error) { setMessage(error instanceof Error ? error.message : "Unable to unsubscribe."); }
+    finally { setBusy(false); }
   }
-
-  async function remove(id: string) {
+  async function retryBrowser() {
+    setBusy(true); setMessage("");
     try {
-      await requestJson(`/api/storage/notifications/${id}`, { method: "DELETE" });
-      setItems((current) => current.filter((item) => item.id !== id));
-    } catch (removeError) {
-      setError(removeError instanceof Error ? removeError.message : "Could not remove notification.");
-    }
+      if (await browserPermission() !== "granted") throw new Error("Allow notifications in this site's browser permissions first.");
+      await subscribeThisBrowser();
+      await accountRequest("/api/storage/settings", { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ notifications: { browserPush: true } }) });
+      if (userId) rememberConsent(userId, "Browser notifications enabled.");
+      invalidateAccountData();
+    } catch (error) { setMessage(error instanceof Error ? error.message : "Browser setup failed. Please retry."); }
+    finally { setBusy(false); }
   }
-
-  async function markAllRead() {
-    await Promise.all(items.filter((item) => !item.read).map((item) => markRead(item.id)));
-  }
-
-  async function openNotification(item: UserNotification) {
-    if (!item.read) await markRead(item.id);
-    setOpen(false);
-    if (item.url) router.push(item.url);
-  }
-
-  return (
-    <span className="notification-center" ref={containerRef}>
-      <button className="icon-action notification-center-trigger" type="button" aria-label={unread ? `${unread} unread notifications` : "Notifications"} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen((value) => !value)}>
-        <Bell size={20} />
-        {unread ? <span className="notification-count" aria-hidden="true">{unread > 99 ? "99+" : unread}</span> : null}
-      </button>
-      {open ? (
-        <div className="notification-center-panel" role="dialog" aria-label="In-app notifications">
-          <div className="notification-center-head">
-            <div><span className="finance-eyebrow">IN-APP ALERTS</span><strong>Notifications</strong></div>
-            <div className="notification-center-head-actions">
-              {unread ? <button type="button" className="notification-text-button" onClick={() => void markAllRead()}><Check size={14} />Mark all read</button> : null}
-              <button type="button" className="notification-close" aria-label="Close notifications" onClick={() => setOpen(false)}><X size={16} /></button>
-            </div>
-          </div>
-          {error ? <p className="notification-center-error" role="status">{error}</p> : null}
-          <div className="notification-center-list">
-            {!items.length && !error ? <p className="notification-center-empty">No alerts yet. Enabled price rules will appear here when a live provider condition is met.</p> : null}
-            {items.map((item) => (
-              <article key={item.id} className={`notification-item${item.read ? "" : " unread"}`}>
-                <button type="button" className="notification-item-main" onClick={() => void openNotification(item)}>
-                  <span className="notification-item-title">{item.title}</span>
-                  <span>{item.message}</span>
-                  <small>{formatTime(item.createdAt)}{item.url ? <><ExternalLink size={12} />Open details</> : null}</small>
-                  {item.delivery ? <span className="notification-delivery" aria-label="Delivery status"><em>In app</em>{item.delivery.push === "sent" ? <em>Push</em> : null}{item.delivery.email === "sent" ? <em>Email</em> : null}</span> : null}
-                </button>
-                <div className="notification-item-actions">
-                  {!item.read ? <button type="button" aria-label="Mark notification as read" title="Mark as read" onClick={() => void markRead(item.id)}><Check size={14} /></button> : null}
-                  <button type="button" aria-label="Delete notification" title="Delete" onClick={() => void remove(item.id)}><Trash2 size={14} /></button>
-                </div>
-              </article>
-            ))}
-          </div>
-          <div className="notification-settings" aria-label="Notification settings">
-            <strong>Notification settings</strong>
-            <NotificationToggle variant="panel" />
-            {preferences ? <>
-              <label><span>Price alerts<small>Rules you create on the Alerts page</small></span><input type="checkbox" checked={preferences.priceAlerts} onChange={(event) => void updatePreference("priceAlerts", event.target.checked)} /></label>
-              <label><span>Email alerts<small>Uses your verified signed-in account email</small></span><input type="checkbox" checked={preferences.emailAlerts} onChange={(event) => void updatePreference("emailAlerts", event.target.checked)} /></label>
-              <label><span>Market digest<small>Provider-backed market summaries only</small></span><input type="checkbox" checked={preferences.marketDigest} onChange={(event) => void updatePreference("marketDigest", event.target.checked)} /></label>
-              {preferences.marketDigest ? <div className="notification-digest-slots">
-                {([['morningDigest', 'Morning'], ['middayDigest', 'Midday'], ['marketCloseDigest', 'Market close'], ['eveningDigest', 'Evening']] as const).map(([key, label]) => <label key={key}><span>{label}</span><input type="checkbox" checked={preferences[key]} onChange={(event) => void updatePreference(key, event.target.checked)} /></label>)}
-              </div> : null}
-            </> : <small>Sign in or wait while preferences load.</small>}
-          </div>
+  return <div className={expanded ? "market-notifications-page glass-panel" : "notification-center"} ref={root}>
+    {!expanded ? <button ref={trigger} className="icon-action notification-center-trigger" aria-label={unread ? `${unread} unread notifications` : "Notifications"} aria-expanded={open} onClick={() => setOpen(!open)}><Bell size={20} />{unread ? <span className="notification-count">{unread > 99 ? "99+" : unread}</span> : null}</button> : null}
+    {expanded || open ? <section className={expanded ? "" : "notification-center-panel"} aria-label="Market updates">
+      <div className="notification-center-head"><h2>Market updates</h2>{!expanded ? <button aria-label="Close notifications" onClick={() => { setOpen(false); trigger.current?.focus(); }}><X size={18} /></button> : null}</div>
+      {inbox.unauthorized ? <p>Sign in for personal notifications. <Link href="/login">Sign in</Link></p> : <>
+        <div className="notification-settings">
+          <p>Two fixed editions: 09:15 and 15:30 IST on regular Indian trading days. Stocks, metals, crypto and INR currency rates, where available. Market-open/close labels refer to Indian equities, not crypto or retail metals.</p>
+          {readiness.data?.marketUpdatesConfigured === false ? <p role="status">Scheduled delivery setup is pending on this deployment. You can save preferences, but editions will not be sent until it is activated.</p> : null}
+          <p>No custom price thresholds or individual asset notifications. Free feeds can be delayed.</p>
+          {preferences ? <>
+            <p>{preferences.marketUpdates ? "Daily market updates are enabled." : "Allow browser, email and in-app market updates with one choice."}</p>
+            <button className={preferences.marketUpdates ? "outline-button" : "primary-button"} disabled={busy || optIn.busy} onClick={() => { setMessage(""); if (preferences.marketUpdates) void unsubscribe(); else void optIn.allow(); }}>{busy || optIn.busy ? "Saving..." : preferences.marketUpdates ? "Unsubscribe" : "Allow"}</button>
+            {preferences.marketUpdates && (!preferences.browserPush || deliveryNotice.includes("Browser setup failed")) ? <button className="outline-button" disabled={busy || optIn.busy} onClick={() => void retryBrowser()}>Retry browser</button> : null}
+            {preferences.marketUpdates && !account.data?.user?.emailVerified ? <button className="outline-button" disabled={busy || optIn.busy} onClick={() => void verify()}>Resend verification email</button> : null}
+            {preferences.marketUpdates && account.data?.user?.emailVerified && !preferences.emailAlerts ? <button className="outline-button" disabled={busy || optIn.busy} onClick={() => void mutate("/api/storage/settings", "PATCH", { notifications: { emailAlerts: true } })}>Allow email</button> : null}
+            {deliveryNotice ? <p role="status">{deliveryNotice}</p> : null}
+          </> : null}
         </div>
-      ) : null}
-    </span>
-  );
+        <div className="notification-center-list">
+          {inbox.loading ? <p role="status">Loading notifications...</p> : inbox.error ? <p role="alert">{inbox.error} <button onClick={() => void inbox.refresh()}>Retry</button></p> : !items.length ? <p>No market updates yet. Subscribe to receive the next scheduled edition.</p> : items.map((item) => <article key={item.id} className={`notification-item${item.read ? "" : " unread"}`}><div className="notification-item-main"><strong>{item.title}</strong><p style={{ whiteSpace: "pre-line" }}>{item.message}</p><small>{new Date(item.createdAt).toLocaleString("en-IN")}</small>{item.url ? <Link href={item.url}>Read details</Link> : null}</div><div className="notification-item-actions">{!item.read ? <button disabled={busy} aria-label={`Mark ${item.title} read`} onClick={() => void mutate(`/api/storage/notifications/${item.id}`, "PATCH", { read: true })}><Check size={16} /></button> : null}<button disabled={busy} aria-label={`Delete ${item.title}`} onClick={() => void mutate(`/api/storage/notifications/${item.id}`, "DELETE")}><Trash2 size={16} /></button></div></article>)}
+        </div>
+        {expanded && archived.length ? <details className="notification-archive"><summary>Archived price notifications ({archived.length})</summary><p>Historical records only. Custom price rules have been retired.</p>{archived.map((item) => <article key={item.id}><strong>{item.title}</strong><p>{item.message}</p><small>{new Date(item.createdAt).toLocaleString("en-IN")}</small></article>)}</details> : null}
+      </>}
+      {message || !deliveryNotice && optIn.message || settings.error && !settings.unauthorized ? <p role="status">{message || (!deliveryNotice ? optIn.message : "") || settings.error}</p> : null}
+    </section> : null}
+  </div>;
 }
