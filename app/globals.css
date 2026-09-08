@@ -1152,6 +1152,13 @@ html[data-theme="light"] .finance-platform .tool-grid a {
   }
 }
 
+.mobile-brand-short { display: none; }
+.finance-topbar .icon-action,
+.finance-topbar .mobile-icon {
+  min-width: 44px;
+  min-height: 44px;
+}
+
 @media (max-width: 720px) {
   .finance-platform {
     background: var(--fp-bg);
@@ -2074,6 +2081,7 @@ html[data-theme="light"] .finance-platform .tool-grid a {
 
 .finance-sidebar {
   width: var(--finance-sidebar-width);
+  height: 100dvh;
   max-height: 100dvh;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -2199,7 +2207,7 @@ html[data-theme="light"] .finance-platform .tool-grid a {
   padding-bottom: max(18px, env(safe-area-inset-bottom));
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1099px) {
   .finance-sidebar {
     display: none;
   }
@@ -9205,7 +9213,8 @@ html[data-theme="light"] .finance-platform .news-card {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 36px;
+    min-height: 44px;
+    min-width: 44px;
   }
 
   .mobile-brand {

@@ -3,6 +3,7 @@ import { createHash, randomBytes, randomUUID, scrypt as nodeScrypt, timingSafeEq
 import { promisify } from "node:util";
 import { redis } from "./redis";
 import type { MetalKey } from "./metals";
+import { metalTools, validateSavedInputs } from "./metals-calculators";
 
 const scrypt = promisify(nodeScrypt);
 
@@ -661,10 +662,15 @@ export async function createCalculatorPreset(userId: string, input: Record<strin
   const name = clean(input.name).slice(0, 80);
   const calculatorType = cleanLower(input.calculatorType).slice(0, 80);
   if (!name || !calculatorType) throw new StorageValidationError("Preset name and calculator type are required.");
+  let validatedInputs = calculationRecord(input.inputs, "Preset inputs");
+  if (Object.hasOwn(metalTools, calculatorType)) {
+    try { validatedInputs = validateSavedInputs(calculatorType, input.inputs); }
+    catch { throw new StorageValidationError("Invalid metals estimate inputs."); }
+  }
   const current = await listCalculatorPresets(userId);
   if (current.length >= MAX_CALCULATOR_PRESETS) throw new StorageValidationError(`Preset limit is ${MAX_CALCULATOR_PRESETS} records.`);
   const timestamp = now();
-  const preset: CalculatorPreset = { id: itemId(input.id, "preset"), name, calculatorType, inputs: calculationRecord(input.inputs, "Preset inputs"), createdAt: timestamp, updatedAt: timestamp };
+  const preset: CalculatorPreset = { id: itemId(input.id, "preset"), name, calculatorType, inputs: validatedInputs, createdAt: timestamp, updatedAt: timestamp };
   await writeHash(collectionKey(userId, "calculator-presets"), preset.id, preset);
   await recordActivity(userId, "calculator-preset.created", { id: preset.id, calculatorType });
   return preset;

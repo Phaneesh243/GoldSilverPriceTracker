@@ -4,10 +4,10 @@ import FinancePlatform from "../../_components/FinancePlatform";
 
 export const metadata: Metadata = {
   title: "Gold Calculator",
-  description: "Estimate gold value from the latest India price, weight and making-charge percentage.",
+  description: "Calculate from your own metal quotation with transparent formulas and no paid data requirement.",
   alternates: { canonical: "/calculators/gold" },
 };
 
 export default function Page() {
-  return <FinancePlatform screen="calculators"><CalculatorPage kind="gold" /></FinancePlatform>;
+  return <FinancePlatform screen="calculators" customHeading={{ title: metadata.title as string, subtitle: "Manual estimates with explicit inputs, charges and limitations." }}><CalculatorPage kind="gold" /></FinancePlatform>;
 }

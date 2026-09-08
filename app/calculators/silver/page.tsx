@@ -4,10 +4,10 @@ import FinancePlatform from "../../_components/FinancePlatform";
 
 export const metadata: Metadata = {
   title: "Silver Calculator",
-  description: "Estimate silver value from the latest India price, weight and premium percentage.",
+  description: "Calculate from your own metal quotation with transparent formulas and no paid data requirement.",
   alternates: { canonical: "/calculators/silver" },
 };
 
 export default function Page() {
-  return <FinancePlatform screen="calculators"><CalculatorPage kind="silver" /></FinancePlatform>;
+  return <FinancePlatform screen="calculators" customHeading={{ title: metadata.title as string, subtitle: "Manual estimates with explicit inputs, charges and limitations." }}><CalculatorPage kind="silver" /></FinancePlatform>;
 }

@@ -42,10 +42,9 @@ async function snapshot(edition: MarketEdition, date: string): Promise<Snapshot>
   if (metals.status === "fulfilled") {
     for (const metal of metals.value.metals) {
       if (!["gold", "silver"].includes(metal.key)) continue;
-      if (metal.key === "gold" && metal.variants?.length) for (const variant of metal.variants.filter((item) => ["22K", "24K"].includes(item.label))) lines.push(row(`Gold ${variant.label}, Mumbai`, variant.price, metal.source, metal.updatedAt, 24 * 3600_000, metal.unitLabel));
-      else lines.push(row(`${metal.name}, Mumbai${metal.key === "silver" ? " (purity not supplied by feed)" : " (purity unavailable)"}`, metal.price, metal.source, metal.updatedAt, 24 * 3600_000, metal.unitLabel));
+      lines.push(row(`${metal.name} (${metal.basis || "reference"}; not a city quotation)`, metal.freshness === "fresh" ? metal.price : null, metal.source, metal.observedAt, 20 * 60000, metal.unitLabel) + (metal.provenance ? `; FX date: ${metal.provenance.fxDate}` : ""));
     }
-  } else lines.push("Gold and silver (Mumbai): unavailable — city-price provider failed.");
+  } else lines.push("Gold and silver references: unavailable — provider failed or is disabled.");
   if (stocks.status === "fulfilled" && stocks.value.length) for (const stock of stocks.value) lines.push(row(`${stock.ticker} (${stock.exchange})`, stock.price, stock.source, stock.timestamp, 20 * 60_000));
   else lines.push("Indian stock quotes: unavailable — Yahoo Finance chart.");
   if (crypto.status === "fulfilled" && crypto.value.length) for (const coin of crypto.value) lines.push(row(coin.symbol.toUpperCase(), coin.current_price, "CoinGecko", coin.last_updated, 10 * 60_000));

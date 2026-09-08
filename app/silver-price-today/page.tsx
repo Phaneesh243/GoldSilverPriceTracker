@@ -3,7 +3,7 @@ import MetalDetailPage from "../_components/MetalDetailPage";
 
 export const metadata: Metadata = {
   title: "Silver Price Today in India",
-  description: "Live silver price today in India per gram, 10 grams and kilogram with last 10 days trend, news, calculator and alerts.",
+  description: "Metal reference availability, source timestamps, manual calculators and buying information. Not a local retail quotation.",
   alternates: { canonical: "/silver-price-today" },
 };
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import InfoPage from "../_components/InfoPage";
+import MetalPageShell from "../_components/MetalPageShell";
 import MetalComparisonClient from "../_components/MetalComparisonClient";
 
 export const metadata: Metadata = {
@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <InfoPage title="Metal Comparison" description="Compare precious and industrial metals before you invest, buy jewellery, or track commodity movement.">
+    <MetalPageShell title="Metal comparison" description="Compare reference availability, units and sources. A lower unit price is not an investment recommendation.">
       <MetalComparisonClient />
-    </InfoPage>
+    </MetalPageShell>
   );
 }

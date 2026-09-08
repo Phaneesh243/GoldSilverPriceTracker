@@ -104,7 +104,7 @@ const pageMeta: Record<FinanceScreen, { eyebrow: string; title: string; subtitle
     section: "Metals",
   },
   metals: {
-    eyebrow: "Live Metals",
+    eyebrow: "India metals",
     title: "Metal prices today in India.",
     subtitle: "Track verified Gold, Silver, Platinum and Copper prices with charts, calculators, news and market updates.",
     section: "Metals",
@@ -284,38 +284,54 @@ const shellAdPaths = new Set([
   "/news/preferences",
 ]);
 
-function FinancePlatformContent({ screen, children }: { screen: FinanceScreen; children?: React.ReactNode }) {
+function AuthIntent({ onMode }: { onMode: (mode: "login" | "register") => void }) {
+  const requested = useSearchParams().get("auth");
+  useEffect(() => { if (requested === "login" || requested === "register") onMode(requested); }, [requested, onMode]);
+  return null;
+}
+function FinancePlatformContent({ screen, children, customHeading }: { screen: FinanceScreen; children?: React.ReactNode; customHeading?: { title: string; subtitle: string } }) {
   const pathname = usePathname();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [mobileMenu, setMobileMenu] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const [authMode, setAuthMode] = useState<"login" | "register" | null>(null);
   const [authRefreshToken, setAuthRefreshToken] = useState(0);
   const drawerCloseRef = useRef<HTMLButtonElement>(null);
-  const meta = pageMeta[screen];
-  useEffect(() => {
-    const requestedMode = searchParams.get("auth");
-    if (pathname === "/" && (requestedMode === "login" || requestedMode === "register")) setAuthMode(requestedMode);
-  }, [pathname, searchParams]);
+  const meta = { ...pageMeta[screen], ...customHeading };
   useEffect(() => {
     if (!mobileMenu) return;
     const previousOverflow = document.body.style.overflow;
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const background = Array.from(document.querySelectorAll<HTMLElement>(".finance-sidebar, .finance-topbar, .finance-main, .finance-footer, .finance-bottom-nav"));
+    const oldInert = background.map(el => el.inert);
+    background.forEach(el => { el.inert = true; });
     document.body.style.overflow = "hidden";
     drawerCloseRef.current?.focus();
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setMobileMenu(false);
+      if (event.key === "Tab") {
+        const focusable = Array.from(document.querySelectorAll<HTMLElement>("#finance-mobile-drawer a[href], #finance-mobile-drawer button:not([disabled])")).filter(el => el.getClientRects().length);
+        const first = focusable[0], last = focusable.at(-1);
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+      }
     };
     document.addEventListener("keydown", handleKeyDown);
+    const desktop = window.matchMedia("(min-width: 1100px)");
+    const closeAtDesktop = () => { if (desktop.matches) setMobileMenu(false); };
+    desktop.addEventListener("change", closeAtDesktop);
     return () => {
       document.body.style.overflow = previousOverflow;
+      background.forEach((el, i) => { el.inert = oldInert[i]; });
+      previousFocus?.focus();
       document.removeEventListener("keydown", handleKeyDown);
+      desktop.removeEventListener("change", closeAtDesktop);
     };
   }, [mobileMenu]);
 
   function closeAuth() {
     setAuthMode(null);
-    if (searchParams.get("auth")) router.replace(pathname);
+    if (new URLSearchParams(window.location.search).get("auth")) router.replace(pathname);
   }
 
   const bottomActive = useMemo(() => {
@@ -326,7 +342,8 @@ function FinancePlatformContent({ screen, children }: { screen: FinanceScreen; c
   }, [screen]);
 
   return (
-    <div className="finance-platform" data-finance-theme={theme}>
+    <div className="finance-platform" data-finance-theme={theme} data-screen={screen}>
+      {pathname === "/" ? <Suspense fallback={null}><AuthIntent onMode={setAuthMode} /></Suspense> : null}
       <aside className="finance-sidebar" aria-label="Finance navigation">
         <Brand />
         <nav className="finance-side-links">
@@ -345,7 +362,7 @@ function FinancePlatformContent({ screen, children }: { screen: FinanceScreen; c
           <button className="mobile-icon" type="button" aria-label="Open menu" aria-expanded={mobileMenu} aria-controls="finance-mobile-drawer" onClick={() => setMobileMenu(true)}>
             <Menu size={23} />
           </button>
-          <Link className="mobile-brand" href="/">Gold<span>Silver</span>Prices</Link>
+          <Link className="mobile-brand" href="/" aria-label="GoldSilverPrices home"><span className="mobile-brand-name">Gold<span>Silver</span>Prices</span><span className="mobile-brand-short" aria-hidden="true">GSP</span></Link>
           <div className="finance-actions">
             <button className="icon-action" type="button" aria-label="Toggle theme" title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`} aria-pressed={theme === "dark"} onClick={toggleTheme}>
               {theme === "dark" ? <Moon size={20} /> : <Sun size={20} />}
@@ -413,10 +430,10 @@ function FinancePlatformContent({ screen, children }: { screen: FinanceScreen; c
   );
 }
 
-export default function FinancePlatform({ screen, children }: { screen: FinanceScreen; children?: React.ReactNode }) {
+export default function FinancePlatform({ screen, children, customHeading }: { screen: FinanceScreen; children?: React.ReactNode; customHeading?: { title: string; subtitle: string } }) {
   return (
     <Suspense fallback={<div className="finance-platform" aria-busy="true" /> }>
-      <FinancePlatformContent screen={screen}>{children}</FinancePlatformContent>
+      <FinancePlatformContent screen={screen} customHeading={customHeading}>{children}</FinancePlatformContent>
     </Suspense>
   );
 }

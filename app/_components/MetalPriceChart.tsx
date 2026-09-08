@@ -26,13 +26,18 @@ export default function MetalPriceChart({ metal, countryCode = "IN", color }: { 
   const [range, setRange] = useState<Range>("10d");
   const [points, setPoints] = useState<Point[]>([]);
   const [status, setStatus] = useState<"loading" | "ready" | "unavailable">("loading");
+  const [message, setMessage] = useState("");
+  const [source, setSource] = useState("");
 
   useEffect(() => {
     const controller = new AbortController();
     setStatus("loading");
     fetch(`/api/metals/history?metal=${metal}&period=${range}&country=${countryCode}`, { signal: controller.signal })
       .then((response) => (response.ok ? response.json() : null))
-      .then((payload: { status?: string; data?: Point[] } | null) => {
+      .then((payload: { status?: string; data?: Point[]; source?: string; message?: string; actualFrom?: string; actualTo?: string; currency?: string; unit?: string } | null) => {
+        if (controller.signal.aborted) return;
+        setSource(payload?.source || "Source not supplied");
+        setMessage(payload?.message || `Actual coverage: ${payload?.actualFrom || "unknown"} to ${payload?.actualTo || "unknown"}. ${payload?.currency || ""} per ${payload?.unit || "unit"}.`);
         const next = payload?.data ?? [];
         setPoints(next);
         setStatus(payload?.status === "available" && next.length > 1 ? "ready" : "unavailable");
@@ -105,7 +110,7 @@ export default function MetalPriceChart({ metal, countryCode = "IN", color }: { 
                 formatter={(value) => [formatCurrency(Number(value), countryCode, digits), "Price"]}
                 labelFormatter={(label) => String(label)}
               />
-              <Area dataKey="close" type="monotone" stroke={color} strokeWidth={3} fill={`url(#${metal}-chart-gradient)`} dot={false} />
+              <Area dataKey="close" type="linear" connectNulls={false} isAnimationActive={false} stroke={color} strokeWidth={3} fill={`url(#${metal}-chart-gradient)`} dot={false} />
             </AreaChart>
           </ResponsiveContainer>
         ) : (
@@ -115,6 +120,8 @@ export default function MetalPriceChart({ metal, countryCode = "IN", color }: { 
         )}
       </div>
       <p className="chart-caption">Prices are displayed with the provider&apos;s available frequency. No synthetic history is created.</p>
+      <p className="metals-note">{source} · {message}</p>
+      {points.length > 0 ? <details><summary>Accessible history table</summary><div className="metals-table" role="region" aria-label="Historical observations" tabIndex={0}><table><caption>Actual provider observations; no interpolated rows.</caption><thead><tr><th>Date</th><th>Reference value</th></tr></thead><tbody>{points.map(p => <tr key={String(p.date)}><td>{displayDate(p.date)}</td><td>{p.close.toLocaleString("en-IN", { maximumFractionDigits: 2 })}</td></tr>)}</tbody></table></div></details> : null}
     </section>
   );
 }

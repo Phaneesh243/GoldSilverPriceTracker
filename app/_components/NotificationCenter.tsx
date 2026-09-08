@@ -77,10 +77,10 @@ export default function NotificationCenter({ expanded = false }: { expanded?: bo
           {readiness.data?.marketUpdatesConfigured === false ? <p role="status">Scheduled delivery setup is pending on this deployment. You can save preferences, but editions will not be sent until it is activated.</p> : null}
           <p>No custom price thresholds or individual asset notifications. Free feeds can be delayed.</p>
           {preferences ? <>
-            <p>{preferences.marketUpdates ? "Daily market updates are enabled." : "Allow browser, email and in-app market updates with one choice."}</p>
+            <p>{preferences.marketUpdates ? "Daily market updates are enabled." : "Allow browser and in-app updates. Email requires a separate choice."}</p>
             <button className={preferences.marketUpdates ? "outline-button" : "primary-button"} disabled={busy || optIn.busy} onClick={() => { setMessage(""); if (preferences.marketUpdates) void unsubscribe(); else void optIn.allow(); }}>{busy || optIn.busy ? "Saving..." : preferences.marketUpdates ? "Unsubscribe" : "Allow"}</button>
             {preferences.marketUpdates && (!preferences.browserPush || deliveryNotice.includes("Browser setup failed")) ? <button className="outline-button" disabled={busy || optIn.busy} onClick={() => void retryBrowser()}>Retry browser</button> : null}
-            {preferences.marketUpdates && !account.data?.user?.emailVerified ? <button className="outline-button" disabled={busy || optIn.busy} onClick={() => void verify()}>Resend verification email</button> : null}
+            {preferences.marketUpdates && !account.data?.user?.emailVerified ? <button className="outline-button" disabled={busy || optIn.busy} onClick={() => void verify()}>Request email verification</button> : null}
             {preferences.marketUpdates && account.data?.user?.emailVerified && !preferences.emailAlerts ? <button className="outline-button" disabled={busy || optIn.busy} onClick={() => void mutate("/api/storage/settings", "PATCH", { notifications: { emailAlerts: true } })}>Allow email</button> : null}
             {deliveryNotice ? <p role="status">{deliveryNotice}</p> : null}
           </> : null}

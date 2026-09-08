@@ -1,0 +1,67 @@
+.finance-platform[data-screen=metals]{--fp-bg:#101820;--fp-bg-deep:#0c131a;--fp-panel:#19242f;--fp-panel-2:#131e28;--fp-border:#33424f;--fp-text:#edf1f5;--fp-muted:#abb9c5;--fp-accent:#efc86c;background:radial-gradient(ellipse at top right,#b68b2520,transparent 55%),var(--fp-bg)}
+html[data-theme=light] .finance-platform[data-screen=metals]{--fp-bg:#f7f7f4;--fp-bg-deep:#f0f1ed;--fp-panel:#fff;--fp-panel-2:#f5f6f3;--fp-border:#dce0dc;--fp-text:#23303a;--fp-muted:#56636f;--fp-accent:#8a620d;background:radial-gradient(ellipse at top right,#d6ad3e12,transparent 55%),var(--fp-bg)}
+.finance-platform[data-screen=metals],.metals-module,.metals-workspace{font-family:"Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.finance-platform[data-screen=metals] .finance-hero h1{font-family:inherit;font-size:clamp(1.75rem,1.3rem + 1.8vw,2.7rem);font-weight:700;letter-spacing:-.035em;line-height:1.15;max-width:25ch}
+.finance-platform[data-screen=metals] .finance-hero p{font-family:inherit;font-size:clamp(.95rem,.9rem + .2vw,1.05rem);line-height:1.6;max-width:65ch}
+.finance-platform[data-screen=metals] .finance-hero{gap:20px;margin-bottom:28px;align-items:center}
+.finance-platform[data-screen=metals] .hero-command{background:transparent;border:0;padding:0;min-width:0;width:auto;flex:0 1 auto}
+.finance-platform[data-screen=metals] .hero-command>span{display:none}
+.finance-platform[data-screen=metals] .hero-command>a{border-radius:9px;padding:12px 16px;min-height:44px;background:#efc86c;color:#292314;font-size:.85rem;white-space:normal}
+.finance-platform[data-screen=metals] .finance-side-links a,.finance-platform[data-screen=metals] .finance-side-footer a,.finance-platform[data-screen=metals] .drawer-panel>a{font-weight:650;transition:background-color .2s ease,color .2s ease}
+html[data-theme=light] .finance-platform[data-screen=metals] .finance-side-links a.active,html[data-theme=light] .finance-platform[data-screen=metals] .drawer-panel>a.active{background:#f4e9ca;color:#77530a}
+html[data-theme=light] .finance-platform[data-screen=metals] .finance-side-links a:hover,html[data-theme=light] .finance-platform[data-screen=metals] .finance-side-footer a:hover{background:#ebece7;color:#23303a}
+.metals-module,.metals-workspace,.metals-quotes{min-width:0;display:grid;gap:16px;color:var(--fp-text,var(--ink));font-size:.9375rem;line-height:1.55}
+.metals-module *, .metals-workspace *{box-sizing:border-box;min-width:0}
+.metals-module p,.metals-workspace p{margin:0}
+.metals-module h2,.metals-workspace h2{font-family:inherit;font-weight:650;font-size:clamp(1.1rem,1rem + .3vw,1.35rem);letter-spacing:-.02em;line-height:1.35;margin:0}
+.metals-module h3{font-family:inherit;font-size:1rem;font-weight:650;margin:0;line-height:1.4}
+.metals-module>section:not(.metals-quotes){display:grid;gap:14px}
+.metals-module p,.metals-workspace p{color:var(--fp-muted,var(--muted))}
+.metals-section-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.metals-card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px}
+.metals-quotes{container-type:inline-size}.metals-quotes>.metals-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.metals-quotes .metals-quote-card:only-child{grid-column:1/-1}
+@container(max-width:599px){.metals-quotes>.metals-card-grid{grid-template-columns:minmax(0,1fr)}}
+@container(min-width:960px){.metals-quotes>.metals-card-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.metals-quote-card,.metals-guide-card,.metals-results,.metals-disclosure,.metals-workspace{border:1px solid var(--fp-border,var(--line));border-radius:12px;background:var(--fp-panel,var(--panel));padding:clamp(14px,1.4vw,20px)}
+.metals-quote-card{--metal-accent:#e7c16b;display:flex;align-items:stretch;flex-direction:column;gap:10px;border-top:2px solid var(--metal-accent);background:linear-gradient(135deg,color-mix(in srgb,var(--metal-accent) 7%,transparent),transparent 70%),var(--fp-panel);transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;animation:metals-enter .35s ease both}
+.metals-quote-card[data-metal=silver]{--metal-accent:#a5bacd;animation-delay:40ms}.metals-quote-card[data-metal=copper]{--metal-accent:#d9a080;animation-delay:120ms}.metals-quote-card[data-metal=platinum]{--metal-accent:#b6b1d6;animation-delay:80ms}
+.metals-quote-heading{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.metals-quote-heading h3{flex:1}.metals-symbol{display:grid;place-items:center;flex:0 0 34px;height:34px;border-radius:9px;background:color-mix(in srgb,var(--metal-accent) 18%,var(--fp-panel));color:var(--fp-text);font-size:.85rem;font-weight:700}
+.metals-price{display:block;font-size:clamp(1.45rem,1.1rem + .7vw,1.85rem);font-weight:650;letter-spacing:-.035em;line-height:1.25;font-variant-numeric:tabular-nums}
+.metals-quote-value{display:grid;gap:3px;padding-block:3px}.metals-quote-value .metals-note{font-size:.75rem}.metals-quote-card[data-availability=unavailable] .metals-price,.metals-quote-card[data-availability=unknown] .metals-price{font-size:1.25rem;color:var(--fp-muted)}
+.metals-status{font-size:.6875rem;font-weight:600;border:1px solid var(--fp-border,var(--line));padding:2px 7px;border-radius:20px;color:var(--fp-muted);white-space:nowrap}
+.metals-quote-card[data-availability=fresh] .metals-status{color:#80d8b4;background:#2f95651a;border-color:#38836b}.metals-quote-card[data-availability=stale] .metals-status{color:#efc86c;border-color:#826f41}
+html[data-theme=light] .metals-quote-card[data-availability=fresh] .metals-status{color:#146449;background:#ecf8f0;border-color:#b4d7c3}html[data-theme=light] .metals-quote-card[data-availability=stale] .metals-status{color:#795300;border-color:#c5ac76}
+.metals-note,.metals-provenance{font-size:.8125rem;color:var(--fp-muted,var(--muted))}
+.metals-quote-source{display:grid;gap:2px;font-size:.75rem;color:var(--fp-muted);overflow-wrap:anywhere}
+.metals-quote-footer{margin-top:auto;border-top:1px solid var(--fp-border);padding-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.metals-quote-details{flex:1;font-size:.8125rem}.metals-quote-details summary{min-height:44px;min-width:44px;cursor:pointer;align-content:center;color:var(--fp-muted)}.metals-quote-details[open]{flex-basis:100%;padding-bottom:8px}.metals-quote-details p{margin-bottom:10px}
+.metals-quote-card .asset-actions.compact .outline-button{min-height:44px;font-family:inherit;font-weight:600;font-size:.75rem;padding:6px 10px}
+.metals-refresh{display:inline-flex;gap:8px;align-items:center;justify-content:center;font-size:.8125rem!important}.metals-spinning{animation:metals-spin 1s linear infinite}
+.metals-sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.metals-skeleton{border:1px solid var(--fp-border);border-radius:12px;padding:20px;display:grid;gap:20px;min-height:220px;background:var(--fp-panel)}.metals-skeleton span{height:20px;width:70%;border-radius:5px;background:var(--fp-panel-2);animation:metals-pulse 1.5s ease-in-out infinite}.metals-skeleton span:nth-child(2){width:50%;height:34px}
+@keyframes metals-enter{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}@keyframes metals-spin{to{transform:rotate(360deg)}}@keyframes metals-pulse{50%{opacity:.4}}
+.metals-provenance{margin:0;width:100%;display:grid;gap:8px}.metals-provenance div{display:grid;gap:2px}.metals-provenance dd{margin:0;overflow-wrap:anywhere}.metals-provenance dt{font-weight:700}
+.metals-module a,.metals-workspace a{color:inherit;text-underline-offset:4px}.metals-module a:hover,.metals-workspace a:hover{text-decoration:underline}
+.metals-module button,.metals-workspace button{min-height:44px;padding:9px 14px;border:1px solid var(--fp-border,var(--line));border-radius:9px;background:var(--fp-panel-2,var(--surface));color:inherit;font:inherit;cursor:pointer;white-space:normal}
+.metals-module .asset-actions>a{min-height:44px;min-width:44px;display:inline-flex;align-items:center}
+.metals-workspace button.primary-button{background:#efc431;color:#152033;font-weight:700}.metals-workspace button:disabled{opacity:.55;cursor:not-allowed}
+.metals-calculator-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:24px;align-items:start}.metals-calculator-layout form{display:grid;gap:18px}
+.metals-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.metals-fields label{display:grid;gap:6px;align-content:start;font-size:.95rem}
+.metals-fields input{width:100%;min-height:46px;border:1px solid var(--fp-border,var(--line));border-radius:8px;background:var(--fp-panel-2,var(--surface));color:inherit;font:inherit;font-size:16px;padding:10px}
+.metals-actions{display:flex;gap:10px;flex-wrap:wrap}.metals-results dl{margin:16px 0;display:grid;gap:12px}.metals-results dl>div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;border-bottom:1px solid var(--fp-border,var(--line));padding-bottom:10px}.metals-results dd{text-align:right;margin:0;font-weight:700;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.metals-saved{list-style:none;padding:0;display:grid;gap:8px}.metals-saved li{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.metals-saved li>span{flex:1 1 180px}
+.metals-error{color:var(--fp-text,var(--ink));border-left:3px solid #e36b77;padding:10px;background:var(--fp-panel-2,var(--surface))}
+.metals-guide-card{display:grid;gap:8px;text-decoration:none;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}.metals-guide-card p{font-size:.875rem}.metals-guide-card>span{font-size:.8125rem;font-weight:600;color:var(--fp-accent);margin-top:4px}.metals-article{max-width:78ch;display:grid;gap:24px}.metals-article section{display:grid;gap:10px}.metals-article li{margin-bottom:8px}
+.metals-fields input::placeholder{color:var(--fp-muted);opacity:.85;font-size:.875rem}.metals-fields input,.metals-module button,.metals-workspace button{transition:border-color .2s ease,background-color .2s ease,box-shadow .2s ease}.metals-fields input:focus{border-color:var(--fp-accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--fp-accent) 15%,transparent)}
+@media(hover:hover){.metals-quote-card:hover,.metals-guide-card:hover{transform:translateY(-2px);border-color:var(--fp-accent);box-shadow:0 8px 24px #0000000d}.metals-module button:hover:not(:disabled),.metals-workspace button:hover:not(:disabled){border-color:var(--fp-accent)}}
+.metals-table{overflow-x:auto;max-width:100%;border:1px solid var(--fp-border,var(--line));border-radius:12px}.metals-table table{width:100%;border-collapse:collapse;min-width:520px}.metals-table th,.metals-table td{text-align:left;padding:12px;border-bottom:1px solid var(--fp-border,var(--line))}.metals-table caption{text-align:left;padding:12px}
+.metals-module :focus-visible,.metals-workspace :focus-visible{outline:3px solid #579bdd;outline-offset:3px}
+.metals-module .metal-chart-canvas{height:clamp(240px,34vw,360px);width:100%;min-width:0}
+.metals-ad-slot{display:block;min-height:280px;width:100%;max-width:100%;contain:layout;margin-block:24px;overflow:hidden}.metals-ad-slot>span{display:block;font-size:12px;text-align:center;margin-bottom:12px}.metals-ad-slot[data-ad-state=unfilled] ins,.metals-ad-slot[data-ad-state=error] ins{visibility:hidden}
+@media(min-width:1280px){.metals-ad-slot{min-height:300px}}
+@media(max-width:1099px){.metals-calculator-layout{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:639px){.metals-fields{grid-template-columns:minmax(0,1fr)}.metals-actions>*{flex:1 1 140px}.metals-module,.metals-workspace{gap:16px}.metals-module .metals-card-grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:389px){.finance-topbar .mobile-brand-name{display:none}.finance-topbar .mobile-brand-short{display:inline}.finance-topbar .mobile-brand{min-width:44px;min-height:44px;align-items:center}}
+@media(prefers-reduced-motion:reduce){.metals-module *,.metals-workspace *{animation:none!important;transition:none!important;scroll-behavior:auto!important}.metals-quote-card:hover,.metals-guide-card:hover{transform:none}}
+@media print{.finance-sidebar,.finance-topbar,.finance-bottom-nav,.ad-slot,.consent-panel,.metals-actions,.metals-saved,button{display:none!important}.finance-shell{margin:0!important;width:100%!important}.finance-main{padding:0!important}.metals-module,.metals-workspace,.metals-results{background:white!important;color:black!important;break-inside:avoid}.metals-calculator-layout{display:block}}

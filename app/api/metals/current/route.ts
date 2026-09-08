@@ -16,6 +16,7 @@ export async function GET(request: Request) {
   const city = searchParams.get("city") || "mumbai";
   const country = searchParams.get("country") || "IN";
   const metal = searchParams.get("metal");
+  if (country !== "IN" || (searchParams.has("city") && !/^[a-z-]{1,60}$/.test(city))) return NextResponse.json({ error: "Unsupported country or city parameter." }, { status: 400 });
 
   try {
     if (metal) {
@@ -29,11 +30,11 @@ export async function GET(request: Request) {
 
     const prices = await getAllMetalPrices(city, country);
     return NextResponse.json(prices, { headers: CACHE_HEADERS });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       {
         error: "Metal prices are temporarily unavailable.",
-        message: error instanceof Error ? error.message : "Unknown error",
+        message: "Please try again later; manual calculators remain available.",
       },
       { status: 503 },
     );

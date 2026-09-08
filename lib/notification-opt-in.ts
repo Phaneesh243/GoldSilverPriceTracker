@@ -17,15 +17,12 @@ export async function allowMarketUpdates(emailVerified: boolean, ports: OptInPor
   } else {
     message = permission === "denied" ? "Browser notifications are blocked. Change this site's browser permissions to enable them." : "Push is not supported here. In-app and eligible email updates are still available.";
   }
-  await ports.save({ marketUpdates: true, ...(browserPush ? { browserPush: true } : {}), ...(emailVerified ? { emailAlerts: true } : {}) });
+  await ports.save({ marketUpdates: true, ...(browserPush ? { browserPush: true } : {}) });
   ports.onSaved?.();
-  if (!emailVerified) {
-    try { await ports.verifyEmail(); message += " Check your inbox to verify and allow email updates."; }
-    catch { message += " Email verification could not be sent. Retry from the notification bell."; }
-  }
-  return { accepted: true, message: message.trim() || "Browser, email and in-app market updates are enabled." };
+  message += emailVerified ? " Email remains a separate choice: use Allow email in the bell." : " Email remains a separate choice: request verification from the bell.";
+  return { accepted: true, message: message.trim() || "Browser and in-app market updates are enabled." };
 }
-export const INVITATION_DELAY_MS = 60_000;
+export const INVITATION_DELAY_MS = 7 * 24 * 3600_000;
 export function invitationEligible(accepted: boolean, blocked: boolean, visible: boolean, dueAt: number, now: number) {
   return !accepted && !blocked && visible && now >= dueAt;
 }

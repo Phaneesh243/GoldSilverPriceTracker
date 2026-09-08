@@ -3,7 +3,7 @@ import MetalDetailPage from "../_components/MetalDetailPage";
 
 export const metadata: Metadata = {
   title: "Gold Price Today in India",
-  description: "Live gold price today in India with 24K, 22K, 18K rates, last 10 days trend, news, calculator and price alerts.",
+  description: "Metal reference availability, source timestamps, manual calculators and buying information. Not a local retail quotation.",
   alternates: { canonical: "/gold-price-today" },
 };
 

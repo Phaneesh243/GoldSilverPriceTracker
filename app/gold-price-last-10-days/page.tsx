@@ -3,7 +3,8 @@ import Last10DaysPage from "../_components/Last10DaysPage";
 
 export const metadata: Metadata = {
   title: "Gold Price Last 10 Days in India",
-  description: "Gold price last 10 days in India with daily close, change and trend table.",
+  description: "Historical coverage and source availability. Numeric history is disabled pending provider verification.",
+  robots: { index: false, follow: true },
   alternates: { canonical: "/gold-price-last-10-days" },
 };
 

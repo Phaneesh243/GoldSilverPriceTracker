@@ -21,6 +21,7 @@ export async function GET(request: Request) {
 
   const country = searchParams.get("country") || "IN";
   const period = searchParams.get("period") || "10d";
+  if (country !== "IN" || !["1d", "7d", "10d", "30d", "1y"].includes(period)) return NextResponse.json({ error: "Unsupported country or historical range." }, { status: 400 });
   const history = await getMetalHistory(metal, country, period);
 
   return NextResponse.json(history, { headers: CACHE_HEADERS });

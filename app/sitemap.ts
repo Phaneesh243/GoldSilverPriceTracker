@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
-import { cityRates } from "../lib/market-data";
+import { metalsGuides } from "../lib/metals-guides";
+import { metalTools } from "../lib/metals-calculators";
 import { currencyPairs } from "../lib/currencies";
 import { insuranceCategories, insuranceProviders } from "../lib/insurance";
 import { fundCategories, mutualFunds } from "../lib/mutual-funds";
@@ -104,13 +105,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/stocks/sebi",
     "/stocks/learn",
     "/stocks/calculators",
-    "/historical-prices",
     "/about",
     "/disclaimer",
     "/privacy",
     "/contact",
   ];
-  const cityPages = cityRates.map((city) => `/gold-price/${city.slug}`);
+  const cityPages: string[] = []; // Unverified city quotations stay crawlable but noindex.
   const currencyPages = currencyPairs.map((pair) => `/currencies/${pair.slug}`);
   const insuranceCategoryPages = insuranceCategories.map((category) => category.route);
   const insuranceProviderPages = insuranceProviders.map((provider) => `/insurance/providers/${provider.slug}`);
@@ -120,7 +120,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const cryptoPages = cryptoAssets.map((asset) => `/crypto/${asset.slug}`);
   const stockPages = indianStocks.map((stock) => `/stocks/${stock.slug}`);
 
-  const paths = [...new Set([...corePages, ...cityPages, ...currencyPages, ...insuranceCategoryPages, ...insuranceProviderPages, ...fundCategoryPages, ...fundPages, ...cryptoCategoryPages, ...cryptoPages, ...stockPages])];
+  const paths = [...new Set([...corePages, ...cityPages, ...currencyPages, ...insuranceCategoryPages, ...insuranceProviderPages, ...fundCategoryPages, ...fundPages, ...cryptoCategoryPages, ...cryptoPages, ...stockPages, "/metals/learn", "/metals/calculators", ...Object.keys(metalsGuides).map(slug => `/metals/learn/${slug}`), ...Object.keys(metalTools).map(slug => `/calculators/${slug}`)])].filter(path => !path.endsWith("-price-last-10-days"));
   return paths.map((path) => ({
     url: base + path,
     changeFrequency: path === "/" || path.startsWith("/gold-price/") ? "hourly" as const : "weekly" as const,

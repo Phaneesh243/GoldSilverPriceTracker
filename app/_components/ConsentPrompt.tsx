@@ -22,13 +22,13 @@ export default function ConsentPrompt() {
   function close() {
     const now = Date.now();
     setVisible(false); setDismissedAt(now);
-    try { sessionStorage.setItem(`${consentKey(userId)}:due`, String(now + INVITATION_DELAY_MS)); } catch { /* private browsing */ }
+    try { localStorage.setItem(`${consentKey(userId)}:due`, String(now + INVITATION_DELAY_MS)); } catch { /* private browsing */ }
   }
   useEffect(() => {
     if (excluded || account.loading || settings.loading || optIn.busy) return;
     const key = consentKey(userId);
     let dueAt = dismissedAt ? dismissedAt + INVITATION_DELAY_MS : Date.now() + 5000;
-    try { dueAt = Number(sessionStorage.getItem(`${key}:due`)) || dueAt; } catch { /* private browsing */ }
+    try { dueAt = Number(localStorage.getItem(`${key}:due`)) || dueAt; } catch { /* private browsing */ }
     let timer: ReturnType<typeof setTimeout> | undefined;
     const check = () => {
       clearTimeout(timer);
@@ -50,7 +50,7 @@ export default function ConsentPrompt() {
   if (!visible || excluded || account.loading) return null;
   return <aside className="consent-panel simple-market-consent" aria-label="Optional market updates" onKeyDown={(event) => { if (event.key === "Escape" && !optIn.busy) close(); }}>
     <button disabled={optIn.busy} className="consent-close" aria-label="Dismiss market updates invitation" onClick={close}><X size={16} /></button>
-    <div><strong>Get daily market updates</strong><p>Allow browser, email and in-app updates at 09:15 and 15:30 IST on regular Indian trading days. Unsubscribe from the bell anytime.</p>{!user ? <p>Sign in to save your choice.</p> : !user.emailVerified ? <p>Email delivery needs a verification link from your inbox.</p> : null}</div>
+    <div><strong>Get daily market updates</strong><p>Allow browser and in-app updates at 09:15 and 15:30 IST on regular Indian trading days. Email is a separate optional choice in the bell. Unsubscribe anytime.</p>{!user ? <p>Sign in to save your choice.</p> : null}</div>
     {optIn.message ? <p role="status">{optIn.message}</p> : null}
     <div className="consent-actions"><button disabled={optIn.busy} onClick={close}>Not now</button>{user ? <button className="primary-button" disabled={optIn.busy} onClick={async () => { const accepted = await optIn.allow(() => setVisible(false)); if (!accepted && "Notification" in window && Notification.permission === "default") close(); }}>{optIn.busy ? "Allowing..." : "Allow"}</button> : <Link className="primary-button" href={`/login?next=${encodeURIComponent(pathname)}`} onClick={close}>Sign in to allow</Link>}</div>
   </aside>;

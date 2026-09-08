@@ -3,7 +3,8 @@ import Last10DaysPage from "../_components/Last10DaysPage";
 
 export const metadata: Metadata = {
   title: "Platinum Price Last 10 Days in India",
-  description: "Platinum price last 10 days page with current live price and honest historical availability status.",
+  description: "Historical coverage and source availability. Numeric history is disabled pending provider verification.",
+  robots: { index: false, follow: true },
   alternates: { canonical: "/platinum-price-last-10-days" },
 };
 

@@ -25,7 +25,7 @@ export type AssetActionDescriptor = {
 
 
 const assetCatalog: AssetActionDescriptor[] = [
-  ...metals.map((item) => ({ assetKey: item.key, symbol: item.symbol, name: item.name, assetType: "metal" as const, route: item.route, market: "India metals" })),
+  ...metals.map((item) => ({ assetKey: item.key, symbol: item.symbol, name: item.name, assetType: "metal" as const, route: item.route, market: "Fine-metal reference, not retail" })),
   ...indianStocks.map((item) => ({ assetKey: `stock:${item.slug}`, symbol: item.symbol, name: item.name, assetType: "stock" as const, route: `/stocks/${item.slug}`, market: item.exchange })),
   ...cryptoAssets.map((item) => ({ assetKey: `crypto:${item.slug}`, symbol: item.symbol, name: item.name, assetType: "crypto" as const, route: `/crypto/${item.slug}`, market: "Crypto" })),
   ...mutualFunds.map((item) => ({ assetKey: `fund:${item.slug}`, symbol: item.slug, name: item.name, assetType: "fund" as const, route: `/mutual-funds/${item.slug}`, market: item.amc })),

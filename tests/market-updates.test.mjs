@@ -122,19 +122,19 @@ function consentPorts(permission = "granted") {
     onSaved: () => { calls.push("close-popup"); },
   } };
 }
-test("one Allow enables all eligible channels and closes without verification for verified email", async () => {
+test("browser Allow never opts a verified email into a separate channel", async () => {
   const { calls, ports } = consentPorts();
   const pending = optIn.allowMarketUpdates(true, ports);
   assert.deepEqual(calls, ["permission"], "native permission must start synchronously in the click");
   assert.equal((await pending).accepted, true);
-  assert.deepEqual(calls, ["permission", "browser", { marketUpdates: true, browserPush: true, emailAlerts: true }, "close-popup"]);
+  assert.deepEqual(calls, ["permission", "browser", { marketUpdates: true, browserPush: true }, "close-popup"]);
 });
-test("unverified email is never subscribed and popup closes before the verification request", async () => {
+test("unverified email requires an explicit separate request", async () => {
   const { calls, ports } = consentPorts();
   const result = await optIn.allowMarketUpdates(false, ports);
   assert.equal(result.accepted, true);
-  assert.deepEqual(calls, ["permission", "browser", { marketUpdates: true, browserPush: true }, "close-popup", "verify-email"]);
-  assert.match(result.message, /verify/);
+  assert.deepEqual(calls, ["permission", "browser", { marketUpdates: true, browserPush: true }, "close-popup"]);
+  assert.match(result.message, /separate choice/);
 });
 test("dismissing native permission saves nothing and may be invited again", async () => {
   const { calls, ports } = consentPorts("default");
@@ -145,7 +145,7 @@ test("blocked and unsupported push never register a browser but retain consent f
   for (const permission of ["denied", "unsupported"]) {
     const { calls, ports } = consentPorts(permission);
     assert.equal((await optIn.allowMarketUpdates(true, ports)).accepted, true);
-    assert.deepEqual(calls, ["permission", { marketUpdates: true, emailAlerts: true }, "close-popup"]);
+    assert.deepEqual(calls, ["permission", { marketUpdates: true }, "close-popup"]);
   }
 });
 test("failed push setup does not falsely mark browser enabled; verification failure is recoverable", async () => {
@@ -156,7 +156,7 @@ test("failed push setup does not falsely mark browser enabled; verification fail
   assert.equal(result.accepted, true);
   assert.deepEqual(calls, ["permission", { marketUpdates: true }, "close-popup"]);
   assert.match(result.message, /Retry browser/);
-  assert.match(result.message, /verification could not be sent/);
+  assert.match(result.message, /separate choice/);
 });
 test("failed preference save never closes popup or starts verification", async () => {
   const { calls, ports } = consentPorts();
@@ -164,11 +164,11 @@ test("failed preference save never closes popup or starts verification", async (
   await assert.rejects(optIn.allowMarketUpdates(false, ports), /Save failed/);
   assert.deepEqual(calls, ["permission", "browser"]);
 });
-test("one-minute repeat is gated by visibility, accepted consent and browser block", () => {
+test("seven-day dismissal cooldown is gated by visibility and consent", () => {
   const due = 1000 + optIn.INVITATION_DELAY_MS;
-  assert.equal(due, 61000);
-  assert.equal(optIn.invitationEligible(false, false, true, due, 60999), false);
-  assert.equal(optIn.invitationEligible(false, false, true, due, 61000), true);
+  assert.equal(due, 604801000);
+  assert.equal(optIn.invitationEligible(false, false, true, due, due - 1), false);
+  assert.equal(optIn.invitationEligible(false, false, true, due, due), true);
   assert.equal(optIn.invitationEligible(false, false, false, due, 90000), false);
   assert.equal(optIn.invitationEligible(true, false, true, due, 90000), false);
   assert.equal(optIn.invitationEligible(false, true, true, due, 90000), false);
@@ -177,6 +177,8 @@ const schedule = await import("../lib/market-schedule.ts");
 const email = await import("../lib/notification-email.ts");
 const digest = await import("../lib/market-digest.ts");
 const watchlist = await import("../app/api/storage/watchlist/route.ts");
+const presetsApi = await import("../app/api/storage/calculator-presets/route.ts");
+const presetsDelete = await import("../app/api/storage/calculator-presets/[id]/route.ts");
 const jobRoute = await import("../app/api/jobs/market-updates/route.ts");
 const actualDate = Date;
 const fixedTime = new actualDate("2026-09-07T03:47:00Z").getTime();
@@ -205,6 +207,22 @@ async function seedEdition(userId = "usr_account_a") {
   await redis.set("gsp:v2:edition:2026-09-07:open", { id: "2026-09-07:open", date: "2026-09-07", edition: "open", title: "Test edition", message: "All providers unavailable. No numeric market data.", generatedAt: fixedTime, expiresAt: fixedTime + 3600_000, recipients: [userId] });
 }
 const asset = { assetKey: "stock:reliance", symbol: "RELIANCE", name: "Reliance Industries", assetType: "stock", market: "NSE", route: "/stocks/reliance" };
+test("metal calculator presets validate server-side and remain isolated between accounts", async () => {
+  assert.equal((await presetsApi.GET()).status, 401);
+  await account("usr_account_a");
+  const valid = { name: "Test estimate", calculatorType: "copper", inputs: { rate: "100", weight: "2", fixed: "0", tax: "0" } };
+  const response = await presetsApi.POST(new Request("http://local/api/storage/calculator-presets", { method: "POST", body: JSON.stringify(valid) }));
+  assert.equal(response.status, 201);
+  const id = (await response.json()).data.id;
+  assert.equal((await presetsApi.POST(new Request("http://local/api/storage/calculator-presets", { method: "POST", body: JSON.stringify({ ...valid, inputs: { rate: "-1" } }) }))).status, 400);
+  await account("usr_account_b");
+  assert.deepEqual((await (await presetsApi.GET()).json()).data, []);
+  await presetsDelete.DELETE(new Request("http://local"), { params: Promise.resolve({ id }) });
+  assert.equal((await storage.listCalculatorPresets("usr_account_a")).length, 1);
+  await account("usr_account_a");
+  await presetsDelete.DELETE(new Request("http://local"), { params: Promise.resolve({ id }) });
+  assert.deepEqual((await (await presetsApi.GET()).json()).data, []);
+});
 test("exactly two schedules with correct UTC conversion", () => {
   assert.deepEqual(schedule.MARKET_SCHEDULES.map((item) => item.cron), ["45 3 * * 1-5", "0 10 * * 1-5"]);
   assert.equal(schedule.editionWindow("open", "2026-09-07", fixedTime).allowed, true);

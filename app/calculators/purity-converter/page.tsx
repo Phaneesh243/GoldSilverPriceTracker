@@ -2,5 +2,5 @@ import type { Metadata } from "next";
 import CalculatorPage from "../../_components/CalculatorPage";
 import FinancePlatform from "../../_components/FinancePlatform";
 
-export const metadata: Metadata = { title: "Gold Purity Converter", description: "Convert gold weight and value between 24K, 22K and 18K purity references.", alternates: { canonical: "/calculators/purity-converter" } };
-export default function Page() { return <FinancePlatform screen="calculators"><CalculatorPage kind="purity-converter" /></FinancePlatform>; }
+export const metadata: Metadata = { title: "Gold Purity Converter", description: "Calculate from your own metal quotation with transparent formulas and no paid data requirement.", alternates: { canonical: "/calculators/purity-converter" } };
+export default function Page() { return <FinancePlatform screen="calculators" customHeading={{ title: metadata.title as string, subtitle: "Manual estimates with explicit inputs, charges and limitations." }}><CalculatorPage kind="purity-converter" /></FinancePlatform>; }

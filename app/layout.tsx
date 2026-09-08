@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import "./_components/metals-module.css";
 import ConsentPrompt from "./_components/ConsentPrompt";
 
 const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://goldsilverprices.in").replace(/\/$/, "");

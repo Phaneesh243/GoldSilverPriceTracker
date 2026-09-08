@@ -10,6 +10,8 @@
     "typecheck": "tsc --noEmit",
     "verify:release": "node scripts/verify-release.mjs",
     "test:market-updates": "node --test --test-isolation=none tests/market-updates.test.mjs",
+    "test:metals": "node --test --test-isolation=none tests/metals.test.mjs",
+    "test:metals:responsive": "node tests/metals-responsive.mjs",
     "notifications:schedules": "node scripts/setup-market-schedules.mjs"
   },
   "dependencies": {

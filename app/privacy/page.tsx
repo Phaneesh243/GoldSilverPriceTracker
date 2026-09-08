@@ -18,6 +18,11 @@ export default function Page() {
       <p>The stored record includes your browser push endpoint, cryptographic push keys, selected city and preferred gold purity. We do not use push subscriptions for unrelated marketing.</p>
       <h2>How to opt out</h2>
       <p>You can turn notifications off at any time using the notification bell in the site header or through your browser notification settings.</p>
+      <h2>Metals calculator estimates</h2>
+      <p>Calculation takes place in your browser. Saving as a guest stores a versioned estimate on this device only; clearing browser data can remove it. Signed-in saves use account-scoped storage. Guest estimates are not automatically merged into accounts. Delete individual estimates with the calculator&apos;s Delete control. The Copy tool link action excludes your inputs and identity.</p>
+      <h2>Advertising</h2>
+      <p>Advertising is disabled unless the publisher configures an approved provider and consent integration. When enabled, the consent interface must disclose that provider&apos;s processing and allow withdrawal. Calculator inputs, invoice values and watchlists must not be sent to analytics or advertising providers.</p>
+      <p>Privacy and correction requests: <a href="mailto:phaneesh19@gmail.com">phaneesh19@gmail.com</a>.</p>
     </InfoPage>
   );
 }

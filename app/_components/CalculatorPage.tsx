@@ -1,7 +1,10 @@
+import { metalsAdPlacements } from "../../lib/metals-ads";
 import Link from "next/link";
 import AdSlot from "./AdSlot";
 import Breadcrumbs from "./Breadcrumbs";
 import CalculatorWorkspace from "./CalculatorWorkspace";
+import MetalsCalculatorWorkspace from "./MetalsCalculatorWorkspace";
+import { metalTools } from "../../lib/metals-calculators";
 import { getCalculatorTitle, type CalculatorKind } from "../../lib/calculators";
 
 export default function CalculatorPage({ kind }: { kind: CalculatorKind }) {
@@ -9,8 +12,7 @@ export default function CalculatorPage({ kind }: { kind: CalculatorKind }) {
   return (
     <div className="calculator-public-content">
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Calculators", href: "/calculators" }, { label: title }]} />
-      <AdSlot id={`${kind}-before-form`} />
-      <CalculatorWorkspace kind={kind} />
+      {Object.hasOwn(metalTools, kind) ? <MetalsCalculatorWorkspace kind={kind} /> : <CalculatorWorkspace kind={kind} />}
       <section className="calculator-related-links">
         <div><span>Continue exploring</span><h2>Related calculators</h2></div>
         <div className="calculator-related-grid">
@@ -20,7 +22,7 @@ export default function CalculatorPage({ kind }: { kind: CalculatorKind }) {
           <Link href="/calculators/weight-converter">Weight converter</Link>
         </div>
       </section>
-      <AdSlot id={`${kind}-after-content`} />
+      <AdSlot id={metalsAdPlacements.calculator(kind)} />
     </div>
   );
 }

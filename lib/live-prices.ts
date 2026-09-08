@@ -249,6 +249,7 @@ function trimIndianHistory(data: LiveHistoryPayload["data"], period?: string) {
 }
 
 export async function getLiveCityPrices(citySlug?: string, countryCode = "IN", date?: string): Promise<LivePricePayload> {
+  if (process.env.METALS_LEGACY_RETAIL_RIGHTS_CONFIRMED !== "true") throw new Error("Retail feed disabled pending source reuse rights verification.");
   const country = getCountry(countryCode);
 
   if (country.code !== "IN") {
@@ -320,6 +321,7 @@ export async function getLiveCityPrices(citySlug?: string, countryCode = "IN", d
 }
 
 export async function getLiveHistory(metal: "gold" | "silver", countryCode = "IN", period = "1d"): Promise<LiveHistoryPayload> {
+  if (process.env.METALS_LEGACY_RETAIL_RIGHTS_CONFIRMED !== "true") throw new Error("Legacy history disabled pending source reuse rights verification.");
   const country = getCountry(countryCode);
 
   if (country.code !== "IN") {
