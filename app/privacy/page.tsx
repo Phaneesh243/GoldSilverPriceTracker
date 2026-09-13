@@ -22,7 +22,7 @@ export default function Page() {
       <p>Calculation takes place in your browser. Saving as a guest stores a versioned estimate on this device only; clearing browser data can remove it. Signed-in saves use account-scoped storage. Guest estimates are not automatically merged into accounts. Delete individual estimates with the calculator&apos;s Delete control. The Copy tool link action excludes your inputs and identity.</p>
       <h2>Advertising</h2>
       <p>Advertising is disabled unless the publisher configures an approved provider and consent integration. When enabled, the consent interface must disclose that provider&apos;s processing and allow withdrawal. Calculator inputs, invoice values and watchlists must not be sent to analytics or advertising providers.</p>
-      <p>Privacy and correction requests: <a href="mailto:phaneesh19@gmail.com">phaneesh19@gmail.com</a>.</p>
+      <p>Privacy and correction requests: <a href="mailto:goldSilverPricesIndia@gmail.com">goldSilverPricesIndia@gmail.com</a>.</p>
     </InfoPage>
   );
 }
