@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     default: "GoldSilverPrices - Gold & Silver Rates in India",
     template: "%s | GoldSilverPrices",
   },
-  description: "Fast, simple gold and silver price tracking for India with city-wise rates, historical charts and calculators.",
+  description: "Explore INR metal references with source and freshness information, purchase calculators and practical buying guides. Local retail and historical availability are disclosed.",
   keywords: [
     "gold price today",
     "silver price today",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   openGraph: {
     title: "GoldSilverPrices - Gold & Silver Rates in India",
-    description: "Track gold and silver prices across Indian cities with calculators and historical trends.",
+    description: "Explore INR metal references, source information, purchase calculators and practical buying guides.",
     url: siteUrl,
     siteName: "GoldSilverPrices",
     type: "website",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "GoldSilverPrices - Gold & Silver Rates in India",
-    description: "Track gold and silver prices across Indian cities with calculators and historical trends.",
+    description: "Explore INR metal references, source information, purchase calculators and practical buying guides.",
   },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
 };

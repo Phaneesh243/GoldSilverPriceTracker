@@ -3,8 +3,8 @@ import FinancePlatform from "./_components/FinancePlatform";
 import LiveDashboardModule from "./_components/LiveDashboardModule";
 
 export const metadata: Metadata = {
-  title: "Indian Finance Dashboard",
-  description: "Track Indian markets, metals, stocks, crypto, mutual funds, bonds, insurance, currencies, news and calculators in one dashboard.",
+  title: "India Metals Dashboard",
+  description: "Follow gold, silver, platinum and copper prices in India, with buying guides, news, calculators and your personal watchlist.",
   alternates: { canonical: "/" },
 };
 

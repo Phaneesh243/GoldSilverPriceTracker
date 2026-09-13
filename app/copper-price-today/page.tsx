@@ -3,7 +3,7 @@ import MetalDetailPage from "../_components/MetalDetailPage";
 
 export const metadata: Metadata = {
   title: "Copper Price Today in India",
-  description: "Metal reference availability, source timestamps, manual calculators and buying information. Not a local retail quotation.",
+  description: "Copper benchmark conversion in INR per kg, disclosed HG unit convention, source timestamps, purchase tools and news. Not a retail or scrap quote.",
   alternates: { canonical: "/copper-price-today" },
 };
 

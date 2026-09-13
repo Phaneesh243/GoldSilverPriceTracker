@@ -73,7 +73,7 @@ export default function NotificationCenter({ expanded = false }: { expanded?: bo
       <div className="notification-center-head"><h2>Market updates</h2>{!expanded ? <button aria-label="Close notifications" onClick={() => { setOpen(false); trigger.current?.focus(); }}><X size={18} /></button> : null}</div>
       {inbox.unauthorized ? <p>Sign in for personal notifications. <Link href="/login">Sign in</Link></p> : <>
         <div className="notification-settings">
-          <p>Two fixed editions: 09:15 and 15:30 IST on regular Indian trading days. Stocks, metals, crypto and INR currency rates, where available. Market-open/close labels refer to Indian equities, not crypto or retail metals.</p>
+          <p>Two fixed editions: 09:15 and 15:30 IST on regular Indian trading days. Gold, silver, platinum and copper INR references, where available. Edition times are a delivery schedule, not metals trading hours.</p>
           {readiness.data?.marketUpdatesConfigured === false ? <p role="status">Scheduled delivery setup is pending on this deployment. You can save preferences, but editions will not be sent until it is activated.</p> : null}
           <p>No custom price thresholds or individual asset notifications. Free feeds can be delayed.</p>
           {preferences ? <>

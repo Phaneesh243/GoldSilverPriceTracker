@@ -24,12 +24,6 @@ const metals: Array<{ value: NewsMetal; label: string }> = [
 
 const categories: Array<{ value: NewsCategory; label: string }> = [
   { value: "metals", label: "Metals" },
-  { value: "stocks", label: "Stocks" },
-  { value: "crypto", label: "Crypto" },
-  { value: "funds", label: "Mutual funds" },
-  { value: "insurance", label: "Insurance" },
-  { value: "bonds", label: "Bonds" },
-  { value: "currencies", label: "Currencies" },
   { value: "markets", label: "Markets" },
   { value: "investing", label: "Investing" },
   { value: "analysis", label: "Analysis" },

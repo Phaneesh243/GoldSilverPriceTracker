@@ -3,7 +3,7 @@ import MetalDetailPage from "../_components/MetalDetailPage";
 
 export const metadata: Metadata = {
   title: "Platinum Price Today in India",
-  description: "Metal reference availability, source timestamps, manual calculators and buying information. Not a local retail quotation.",
+  description: "Platinum reference in INR per gram, source timestamps, Pt950 limitations, purchase tools and platinum news. Not a jewellery quotation.",
   alternates: { canonical: "/platinum-price-today" },
 };
 

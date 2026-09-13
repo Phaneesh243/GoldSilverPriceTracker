@@ -10,7 +10,6 @@ export type CalculatorKind =
   | "sip"
   | "cagr"
   | "emi"
-  | "currency"
   | "tax";
 
 export type CalculatorValue = string | number | boolean | null;
@@ -172,7 +171,6 @@ export function getCalculatorTitle(kind: CalculatorKind) {
     sip: "SIP Calculator",
     cagr: "CAGR Calculator",
     emi: "EMI Calculator",
-    currency: "Currency Converter",
     tax: "Tax Estimator",
   };
   return titles[kind];

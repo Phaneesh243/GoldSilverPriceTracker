@@ -3,7 +3,7 @@ import MetalDetailPage from "../_components/MetalDetailPage";
 
 export const metadata: Metadata = {
   title: "Gold Price Today in India",
-  description: "Metal reference availability, source timestamps, manual calculators and buying information. Not a local retail quotation.",
+  description: "Gold reference in INR per 10g and gram, source timestamps, purity guidance, purchase calculators and gold news. Not a local retail quotation.",
   alternates: { canonical: "/gold-price-today" },
 };
 

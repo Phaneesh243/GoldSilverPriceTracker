@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BarChart3, Calculator, Coins, CreditCard, Percent, RefreshCw, Scale, TrendingUp } from "lucide-react";
+import { BarChart3, Calculator, Coins, CreditCard, Percent, Scale, TrendingUp } from "lucide-react";
 import AdSlot from "./AdSlot";
 import Breadcrumbs from "./Breadcrumbs";
 
@@ -20,7 +20,6 @@ const groups = [
     items: [
       ["Purity Converter", "/calculators/purity-converter", "Convert Gold between 24K, 22K and 18K.", Scale],
       ["Weight Converter", "/calculators/weight-converter", "Convert grams, kilograms, tola, ounces and tonnes.", Scale],
-      ["Currency Converter", "/calculators/currency", "Convert an amount using a visible reference rate.", RefreshCw],
     ],
   },
   {

@@ -1,6 +1,6 @@
 # GoldSilverPrices
 
-GoldSilverPrices is an India-focused financial intelligence application built with Next.js 16, React and TypeScript. It brings together metals, Indian stocks, crypto, mutual funds, bonds, insurance, currencies, news, calculators, watchlists, alerts and portfolio tools.
+GoldSilverPrices is an India-focused metals application built with Next.js 16, React and TypeScript. It brings together gold, silver, platinum and copper references, charts, news, buying guides, calculators, personal watchlists, transaction records and two scheduled metals updates.
 
 ## Local development
 
@@ -35,14 +35,11 @@ Market data is provider-backed and must display source, status and update time. 
 
 Current free integrations include:
 
-- Indian stock quotes: Yahoo Finance chart endpoint, delayed/unofficial and subject to provider terms
-- Crypto market data: CoinGecko public API
-- Reference FX: Frankfurter/ECB-style reference feed
+- Metal references: Gold API (XAU, XAG, XPT and HG)
+- Reference FX: Frankfurter, retained solely for INR metal conversion
 - News: Google News RSS with source attribution
-- Metal city rates: current upstream feed with explicit provider disclosure
-- Mutual-fund NAV: AMFI NAVAll feed
 
-Before commercial production, verify licensing, rate limits, attribution and redistribution rights. Bond fundamentals, insurance quotes and complete stock fundamentals require an approved provider or official source integration.
+Before commercial production, verify licensing, rate limits, attribution and redistribution rights. International references are not retail quotations. Historical and local retail feeds remain unavailable unless an approved source is configured.
 
 ## Verification
 
@@ -61,14 +58,14 @@ Health endpoint:
 2. Rotate old Redis, VAPID and cron credentials.
 3. Run typecheck, lint, release verification and build.
 4. Deploy with npm run build followed by npm run start, or use a compatible Next.js hosting provider.
-5. Configure scheduled cron routes from vercel.json.
+5. Review the two existing schedules with scripts/setup-market-schedules.mjs. Keep the existing scheduler; do not create duplicate delivery jobs.
 6. Monitor /api/health, provider errors, cron failures and notification delivery.
 7. Submit the sitemap to Google Search Console and validate structured data.
 
 ## Release rules
 
 - Do not claim data is live when it is delayed or reference-only.
-- Do not publish unsupported insurance premiums, claim ratios or bond yields.
+- Never invent unavailable metal quotations or historical candles.
 - Keep private pages out of search indexing.
 - Keep user portfolio and alert data scoped to the current account/session.
 - Show a clear financial-information disclaimer on every financial module.

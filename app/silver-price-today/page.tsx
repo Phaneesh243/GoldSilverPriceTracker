@@ -3,7 +3,7 @@ import MetalDetailPage from "../_components/MetalDetailPage";
 
 export const metadata: Metadata = {
   title: "Silver Price Today in India",
-  description: "Metal reference availability, source timestamps, manual calculators and buying information. Not a local retail quotation.",
+  description: "Silver reference in INR per gram and kilogram, source timestamps, fineness guidance, calculators and silver news. Not a dealer quotation.",
   alternates: { canonical: "/silver-price-today" },
 };
 

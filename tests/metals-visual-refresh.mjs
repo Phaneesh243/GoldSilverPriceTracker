@@ -18,7 +18,7 @@ await context.route("**/*", route => {
   if (route.request().method() !== "GET") return route.abort();
   return route.continue();
 });
-await context.addInitScript(() => localStorage.setItem("gsp-market-update-invitation-due", String(Date.now() + 86400000)));
+await context.addInitScript(() => localStorage.setItem("gsp-market-consent-v3:guest:due", String(Date.now() + 86400000)));
 const page = await context.newPage();
 const report = { date: new Date().toISOString(), checks: [], errors: [], live: [] };
 page.on("pageerror", e => report.errors.push(e.message));
@@ -35,7 +35,7 @@ try {
     await page.goto(origin + `/${key}-price-today`, { waitUntil: "networkidle" });
     const card = page.locator(`.metals-quote-card[data-metal="${key}"]`);
     assert.match(await card.locator('.metals-price').innerText(), /^₹/);
-    assert.match(await card.locator('.metals-quote-value .metals-note').innerText(), key === "copper" ? /per kg.*HG benchmark/ : /per gram/);
+    assert.match(await card.locator('.metals-quote-value .metals-note').first().innerText(), key === "copper" ? /Per 1 kg.*HG benchmark/ : /Per 1 g/);
     await page.getByRole('button', { name: 'Refresh prices', exact: true }).click();
     await page.waitForFunction(()=>!document.querySelector('[aria-busy="true"].metals-card-grid'));
     assert.match(await card.locator('.metals-price').innerText(), /^₹/);

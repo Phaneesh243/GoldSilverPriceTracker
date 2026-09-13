@@ -5,7 +5,7 @@ import type { NewsCategory, NewsMetal } from "../../lib/news";
 
 export default function NewsPreferencesClient() {
   const [metals, setMetals] = useState<NewsMetal[]>(["gold", "silver"]);
-  const [categories, setCategories] = useState<NewsCategory[]>(["metals", "markets", "stocks", "crypto", "funds", "insurance"]);
+  const [categories, setCategories] = useState<NewsCategory[]>(["metals", "markets"]);
   const [dailyDigest, setDailyDigest] = useState(false);
   const [breakingNews, setBreakingNews] = useState(true);
   const [status, setStatus] = useState("");
@@ -18,7 +18,7 @@ export default function NewsPreferencesClient() {
         const data = payload.data;
         if (!data) return;
         setMetals(data.metals || []);
-        setCategories(data.categories || []);
+        setCategories((data.categories || []).filter(category => ["metals", "markets", "investing", "analysis"].includes(category)));
         setDailyDigest(Boolean(data.dailyDigest));
         setBreakingNews(data.breakingNews !== false);
       })
@@ -37,5 +37,5 @@ export default function NewsPreferencesClient() {
       setStatus(error instanceof Error ? error.message : "Unable to save preferences.");
     }
   }
-  return <section className="glass-panel news-preferences-panel"><div className="panel-head"><div><span className="finance-eyebrow">Personalization</span><h2>News preferences</h2></div></div><p>Choose the India finance themes used for your news filters and future notifications.</p>{loading ? <p role="status">Loading your preferences...</p> : <><fieldset><legend>Metals</legend><div className="news-choice-grid">{(["gold", "silver", "platinum", "copper"] as NewsMetal[]).map((item) => <label key={item}><input type="checkbox" checked={metals.includes(item)} onChange={() => toggle(item, metals, setMetals)} />{item}</label>)}</div></fieldset><fieldset><legend>Finance topics</legend><div className="news-choice-grid">{(["metals", "stocks", "crypto", "funds", "insurance", "bonds", "currencies", "markets", "investing", "analysis"] as NewsCategory[]).map((item) => <label key={item}><input type="checkbox" checked={categories.includes(item)} onChange={() => toggle(item, categories, setCategories)} />{item}</label>)}</div></fieldset><label className="news-switch"><input type="checkbox" checked={breakingNews} onChange={(event) => setBreakingNews(event.target.checked)} />Breaking-news alerts</label><label className="news-switch"><input type="checkbox" checked={dailyDigest} onChange={(event) => setDailyDigest(event.target.checked)} />Daily market digest</label><div className="news-preferences-actions"><button className="primary-button" type="button" onClick={save}>Save preferences</button><span role="status">{status}</span></div></>}</section>;
+  return <section className="glass-panel news-preferences-panel"><div className="panel-head"><div><span className="finance-eyebrow">Personalization</span><h2>News preferences</h2></div></div><p>Choose the India finance themes used for your news filters and future notifications.</p>{loading ? <p role="status">Loading your preferences...</p> : <><fieldset><legend>Metals</legend><div className="news-choice-grid">{(["gold", "silver", "platinum", "copper"] as NewsMetal[]).map((item) => <label key={item}><input type="checkbox" checked={metals.includes(item)} onChange={() => toggle(item, metals, setMetals)} />{item}</label>)}</div></fieldset><fieldset><legend>Finance topics</legend><div className="news-choice-grid">{(["metals", "markets", "investing", "analysis"] as NewsCategory[]).map((item) => <label key={item}><input type="checkbox" checked={categories.includes(item)} onChange={() => toggle(item, categories, setCategories)} />{item}</label>)}</div></fieldset><label className="news-switch"><input type="checkbox" checked={breakingNews} onChange={(event) => setBreakingNews(event.target.checked)} />Breaking-news alerts</label><label className="news-switch"><input type="checkbox" checked={dailyDigest} onChange={(event) => setDailyDigest(event.target.checked)} />Daily market digest</label><div className="news-preferences-actions"><button className="primary-button" type="button" onClick={save}>Save preferences</button><span role="status">{status}</span></div></>}</section>;
 }

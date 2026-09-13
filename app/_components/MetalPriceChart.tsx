@@ -76,7 +76,7 @@ export default function MetalPriceChart({ metal, countryCode = "IN", color }: { 
         </div>
         <div className="chart-range-tabs" role="group" aria-label="Chart range">
           {ranges.map((item) => (
-            <button className={range === item.value ? "active" : ""} key={item.value} onClick={() => setRange(item.value)} type="button">
+            <button disabled={status === "unavailable"} title={status === "unavailable" ? "Verified historical coverage is unavailable" : undefined} className={range === item.value ? "active" : ""} key={item.value} onClick={() => setRange(item.value)} type="button">
               {item.label}
             </button>
           ))}

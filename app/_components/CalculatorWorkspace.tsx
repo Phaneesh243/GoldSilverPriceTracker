@@ -77,8 +77,6 @@ export default function CalculatorWorkspace({ kind }: { kind: CalculatorKind }) 
   const [principal, setPrincipal] = useState("1000000");
   const [interest, setInterest] = useState("8.5");
   const [months, setMonths] = useState("60");
-  const [currencyAmount, setCurrencyAmount] = useState("100");
-  const [exchangeRate, setExchangeRate] = useState("83");
   const [taxableAmount, setTaxableAmount] = useState("100000");
   const [taxPercent, setTaxPercent] = useState("10");
   const [surchargePercent, setSurchargePercent] = useState("0");
@@ -148,7 +146,6 @@ export default function CalculatorWorkspace({ kind }: { kind: CalculatorKind }) 
   const cagrResult = useMemo(() => kind === "cagr" ? calculateCagr({ initial: asNumber(initialAmount), final: asNumber(finalAmount), years: asNumber(years) }) : null, [finalAmount, initialAmount, kind, years]);
   const emiResult = useMemo(() => kind === "emi" ? calculateEmi({ principal: asNumber(principal), annualInterestPercent: asNumber(interest), months: asNumber(months) }) : null, [interest, kind, months, principal]);
   const taxResult = useMemo(() => kind === "tax" ? calculateTax({ amount: asNumber(taxableAmount), taxPercent: asNumber(taxPercent), surchargePercent: asNumber(surchargePercent) }) : null, [surchargePercent, taxPercent, taxableAmount, kind]);
-  const currencyResult = asNumber(currencyAmount) * asNumber(exchangeRate);
 
   function calculationPayload(): { inputs: CalculatorInputs; result: Record<string, string | number | boolean | null>; metal?: string } | null {
     if (metalResult) return { metal: priceMetal, inputs: { price: currentPrice, priceUnit, weight, weightUnit, purity, making, wastage, tax, discount }, result: metalResult };
@@ -159,7 +156,6 @@ export default function CalculatorWorkspace({ kind }: { kind: CalculatorKind }) 
     if (cagrResult) return { inputs: { initialAmount, finalAmount, years }, result: cagrResult };
     if (emiResult) return { inputs: { principal, interest, months }, result: emiResult };
     if (taxResult) return { inputs: { taxableAmount, taxPercent, surchargePercent }, result: taxResult };
-    if (kind === "currency") return { inputs: { currencyAmount, exchangeRate }, result: { converted: currencyResult } };
     return null;
   }
 
@@ -240,7 +236,6 @@ export default function CalculatorWorkspace({ kind }: { kind: CalculatorKind }) 
           {kind === "sip" ? <><NumberField label="Monthly investment" value={monthlyInvestment} onChange={setMonthlyInvestment} /><NumberField label="Expected annual return %" value={annualReturn} onChange={setAnnualReturn} /><NumberField label="Duration in years" value={years} onChange={setYears} /></> : null}
           {kind === "cagr" ? <><NumberField label="Initial value" value={initialAmount} onChange={setInitialAmount} /><NumberField label="Final value" value={finalAmount} onChange={setFinalAmount} /><NumberField label="Duration in years" value={years} onChange={setYears} /></> : null}
           {kind === "emi" ? <><NumberField label="Loan principal" value={principal} onChange={setPrincipal} /><NumberField label="Annual interest %" value={interest} onChange={setInterest} /><NumberField label="Tenure in months" value={months} onChange={setMonths} /></> : null}
-          {kind === "currency" ? <><NumberField label="Amount" value={currencyAmount} onChange={setCurrencyAmount} /><NumberField label="Reference rate to INR" value={exchangeRate} onChange={setExchangeRate} hint="Replace with the current provider rate" /></> : null}
           {kind === "tax" ? <><NumberField label="Taxable amount" value={taxableAmount} onChange={setTaxableAmount} /><NumberField label="Tax %" value={taxPercent} onChange={setTaxPercent} /><NumberField label="Surcharge %" value={surchargePercent} onChange={setSurchargePercent} /></> : null}
           <div className="calculator-form-actions"><button className="primary-button" disabled={!canSave} onClick={() => void saveCalculation()} type="button">Save calculation</button><button className="outline-button" onClick={() => setMessage("")} type="button">Clear message</button></div>
           <div className="calculator-preset-actions"><input aria-label="Preset name" placeholder="Preset name" value={presetName} onChange={(event) => setPresetName(event.target.value)} /><button className="outline-button" disabled={!canSave} onClick={() => void savePreset()} type="button">Save preset</button></div>
@@ -256,9 +251,8 @@ export default function CalculatorWorkspace({ kind }: { kind: CalculatorKind }) 
           {sipResult ? <><h3>{formatCurrency(sipResult.futureValue, countryCode, 2)}</h3><ResultRow label="Invested" value={formatCurrency(sipResult.invested, countryCode, 2)} /><ResultRow label="Estimated gains" value={formatCurrency(sipResult.gains, countryCode, 2)} emphasis /></> : null}
           {cagrResult ? <><h3>{cagrResult.cagr.toFixed(2)}%</h3><ResultRow label="Absolute gain" value={formatCurrency(cagrResult.gain, countryCode, 2)} /></> : null}
           {emiResult ? <><h3>{formatCurrency(emiResult.payment, countryCode, 2)} / month</h3><ResultRow label="Total payment" value={formatCurrency(emiResult.totalPayment, countryCode, 2)} /><ResultRow label="Total interest" value={formatCurrency(emiResult.totalInterest, countryCode, 2)} /></> : null}
-          {kind === "currency" ? <><h3>{formatCurrency(currencyResult, countryCode, 2)}</h3><ResultRow label="Applied rate" value={`1 × ${exchangeRate} INR`} /></> : null}
           {taxResult ? <><h3>{formatCurrency(taxResult.afterTax, countryCode, 2)}</h3><ResultRow label="Total tax" value={formatCurrency(taxResult.totalTax, countryCode, 2)} /><ResultRow label="Surcharge" value={formatCurrency(taxResult.surcharge, countryCode, 2)} /></> : null}
-          {!metalResult && !investmentResult && !purityResult && kind !== "weight-converter" && !sipResult && !cagrResult && !emiResult && kind !== "currency" && !taxResult ? <h3>Enter values to calculate</h3> : null}
+          {!metalResult && !investmentResult && !purityResult && kind !== "weight-converter" && !sipResult && !cagrResult && !emiResult && !taxResult ? <h3>Enter values to calculate</h3> : null}
           <p>Informational estimate only. Rates, taxes, spreads, fees, and retailer charges may change the final result.</p>
         </aside>
       </div>

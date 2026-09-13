@@ -3,13 +3,8 @@
 import Link from "next/link";
 import { FormEvent, useId, useMemo, useState } from "react";
 import { Bookmark, ChevronDown, Edit3, ExternalLink, Save, Search, Trash2 } from "lucide-react";
-import { bonds } from "../../lib/bonds";
-import { cryptoAssets } from "../../lib/crypto";
-import { currencyPairs } from "../../lib/currencies";
-import { indianStocks } from "../../lib/indian-stocks";
-import { insuranceProviders } from "../../lib/insurance";
 import { metals } from "../../lib/metals";
-import { mutualFunds } from "../../lib/mutual-funds";
+import { isRetiredAsset, activeResearchRoute } from "../../lib/module-scope";
 import type { AssetType, WatchlistItem } from "../../lib/storage";
 
 import { accountRequest, invalidateAccountData, useAccountResource } from "../_hooks/useAccountResource";
@@ -26,12 +21,6 @@ export type AssetActionDescriptor = {
 
 const assetCatalog: AssetActionDescriptor[] = [
   ...metals.map((item) => ({ assetKey: item.key, symbol: item.symbol, name: item.name, assetType: "metal" as const, route: item.route, market: "Fine-metal reference, not retail" })),
-  ...indianStocks.map((item) => ({ assetKey: `stock:${item.slug}`, symbol: item.symbol, name: item.name, assetType: "stock" as const, route: `/stocks/${item.slug}`, market: item.exchange })),
-  ...cryptoAssets.map((item) => ({ assetKey: `crypto:${item.slug}`, symbol: item.symbol, name: item.name, assetType: "crypto" as const, route: `/crypto/${item.slug}`, market: "Crypto" })),
-  ...mutualFunds.map((item) => ({ assetKey: `fund:${item.slug}`, symbol: item.slug, name: item.name, assetType: "fund" as const, route: `/mutual-funds/${item.slug}`, market: item.amc })),
-  ...bonds.map((item) => ({ assetKey: `bond:${item.slug}`, symbol: item.slug, name: item.name, assetType: "bond" as const, route: `/bonds/${item.slug}`, market: item.issuer })),
-  ...insuranceProviders.map((item) => ({ assetKey: `insurance:${item.slug}`, symbol: item.slug, name: item.name, assetType: "other" as const, route: `/insurance/providers/${item.slug}`, market: item.type })),
-  ...currencyPairs.map((item) => ({ assetKey: `currency:${item.slug}`, symbol: item.symbol, name: item.name, assetType: "currency" as const, route: `/currencies/${item.slug}`, market: item.market })),
 ];
 
 function SearchableAssetSelect({ value, current, onSelect }: { value: string; current?: AssetActionDescriptor; onSelect: (asset: AssetActionDescriptor) => void }) {
@@ -94,7 +83,7 @@ function PersonalWatchlist() {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const items = state.data || [];
-  const visible = items.filter((item) => (filter === "all" || item.assetType === filter) && `${item.name} ${item.symbol} ${item.market || ""}`.toLowerCase().includes(query.toLowerCase()));
+  const visible = items.filter((item) => (filter === "all" || (filter === "archived" ? isRetiredAsset(item) : !isRetiredAsset(item))) && `${item.name} ${item.symbol} ${item.market || ""}`.toLowerCase().includes(query.toLowerCase()));
   async function save(event: FormEvent) {
     event.preventDefault();
     if (!editing && !asset) return;
@@ -129,10 +118,10 @@ function PersonalWatchlist() {
     </section>
     <section className="glass-panel watchlist-list-panel">
       <h2>Saved assets ({items.length})</h2>
-      <div className="form-actions"><input type="search" aria-label="Search your watchlist" placeholder="Search saved assets" value={query} onChange={(event) => setQuery(event.target.value)} /><select aria-label="Filter asset type" value={filter} onChange={(event) => setFilter(event.target.value)}>{["all", "metal", "stock", "crypto", "fund", "bond", "currency", "other"].map((type) => <option key={type}>{type}</option>)}</select></div>
+      <div className="form-actions"><input type="search" aria-label="Search your watchlist" placeholder="Search saved assets" value={query} onChange={(event) => setQuery(event.target.value)} /><select aria-label="Filter asset type" value={filter} onChange={(event) => setFilter(event.target.value)}>{["all", "metal", "archived"].map((type) => <option key={type}>{type}</option>)}</select></div>
       {state.loading ? <p role="status">Loading your watchlist...</p> : state.error ? <p role="alert">{state.error} <button onClick={() => void state.refresh()}>Retry</button></p> : !visible.length ? <p>{items.length ? "No saved assets match this filter." : "Your watchlist is empty."}</p> : <div className="saved-asset-list">{visible.map((item) => <article className="saved-asset-row" key={item.id}>
-        <span className="asset-badge">{item.symbol.slice(0, 2)}</span><div><strong>{item.name}</strong><small>{item.symbol} · {item.assetType} · {item.market}</small>{item.notes ? <p>{item.notes}</p> : null}</div>
-        <div className="saved-asset-actions">{item.route ? <Link className="icon-action" href={item.route} aria-label={`Research ${item.name}`}><ExternalLink size={16} /></Link> : null}<button disabled={busy} className="icon-action" aria-label={`Edit note for ${item.name}`} onClick={() => { setEditing(item); setNotes(item.notes || ""); }}><Edit3 size={16} /></button><button disabled={busy} className="icon-action" aria-label={`Remove ${item.name}`} onClick={() => void remove(item)}><Trash2 size={16} /></button></div>
+        <span className="asset-badge">{item.symbol.slice(0, 2)}</span><div><strong>{item.name}</strong><small>{item.symbol} · {isRetiredAsset(item) ? "Archived — module removed" : item.assetType} · {item.market}</small>{item.notes ? <p>{item.notes}</p> : null}</div>
+        <div className="saved-asset-actions">{activeResearchRoute(item) ? <Link className="icon-action" href={activeResearchRoute(item)!} aria-label={`Research ${item.name}`}><ExternalLink size={16} /></Link> : null}<button disabled={busy} className="icon-action" aria-label={`Edit note for ${item.name}`} onClick={() => { setEditing(item); setNotes(item.notes || ""); }}><Edit3 size={16} /></button><button disabled={busy} className="icon-action" aria-label={`Remove ${item.name}`} onClick={() => void remove(item)}><Trash2 size={16} /></button></div>
       </article>)}</div>}
     </section>
   </div>;

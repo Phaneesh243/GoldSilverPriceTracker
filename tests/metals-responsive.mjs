@@ -9,9 +9,10 @@ const output = "test-results/metals";
 await mkdir(output, { recursive: true });
 const metals = ["gold", "silver", "platinum", "copper"];
 const tools = ["gold", "silver", "platinum", "copper", "gold-jewellery", "making-charge-comparison", "budget-to-gold", "weight-converter", "purity-converter", "invoice-checker", "old-gold-exchange", "investment-return", "wedding-budget"];
-const guides = ["hallmarking", "price-basis", "invoice", "coins-bars-jewellery", "exchange", "drivers", "wedding", "methodology"];
+const guides = ["hallmarking", "price-basis", "invoice", "coins-bars-jewellery", "exchange", "drivers", "wedding", "methodology", "22k-vs-24k-gold", "18k-vs-22k-gold", "gold-making-charges", "silver-purity", "platinum-purity", "copper-spot-vs-scrap"];
 const routes = ["/metals", "/metals/calculators", "/metals/learn", "/metal-comparison", ...metals.flatMap(m => [`/${m}-price-today`, `/${m}-price-last-10-days`]), ...tools.map(t => "/calculators/" + t), ...guides.map(g => "/metals/learn/" + g), "/gold-price/mumbai", "/gold-price/delhi", "/historical-prices"];
 const sizes = [[320,568],[375,667],[390,844],[430,932],[768,1024],[1024,768],[1280,720],[1366,768],[1440,900],[1920,1080]];
+routes.push(...["gold-vs-silver", "gold-vs-platinum", "gold-etf-vs-physical-gold"].map(slug => `/metals/compare/${slug}`));
 const report = { origin, date: new Date().toISOString(), mode: "Production build; current provider references enabled, ads disabled. Browser account endpoints isolated; no emails or external writes.", zoom: "Actual browser zoom not automated or claimed; viewport tests are not zoom tests.", checks: [], screenshots: [], failures: [] };
 const browser = await chromium.launch({ headless: true, chromiumSandbox: true, ...(process.env.TEST_BROWSER_CHANNEL ? { channel: process.env.TEST_BROWSER_CHANNEL } : {}) });
 const context = await browser.newContext({ serviceWorkers: "block" });
@@ -23,7 +24,7 @@ await context.route("**/*", async route => {
   if (route.request().method() !== "GET") return route.abort();
   return route.continue();
 });
-await context.addInitScript(() => { try { localStorage.setItem("gsp-market-update-invitation-due", String(Date.now() + 30 * 86400000)); } catch {} });
+await context.addInitScript(() => { try { localStorage.setItem("gsp-market-consent-v3:guest:due", String(Date.now() + 30 * 86400000)); } catch {} });
 const page = await context.newPage();
 page.on("pageerror", error => report.failures.push({ kind: "browser", message: error.message, route: page.url() }));
 try {
@@ -65,7 +66,7 @@ try {
       if (sidebar.top < 0 || sidebar.bottom > height + 1 || sidebar.last > height + 1) report.failures.push({ kind: "sidebar-scroll", width, height, ...sidebar });
     }
   }
-  for (const route of ["/metals/learn/not-a-guide", "/calculators/not-a-tool", "/gold-price/not-a-city"]) {
+  for (const route of ["/metals/learn/not-a-guide", "/calculators/not-a-tool", "/gold-price/not-a-city", "/metals/compare/not-a-comparison"]) {
     assert.equal((await page.goto(origin + route)).status(), 404);
   }
   for (const [oldRoute,newRoute] of [["/calculator","/calculators/gold"],["/investment-return-calculator","/calculators/investment-return"]]) {

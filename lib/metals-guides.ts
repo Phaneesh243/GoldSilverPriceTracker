@@ -1,7 +1,9 @@
+import { extraMetalsGuides } from "./metals-editorial";
 export type MetalsGuide = { title: string; summary: string; sections: { title: string; text: string }[]; sources: { title: string; url: string }[]; reviewedAt: string };
 const methodology = { title: "Provider documentation", url: "https://gold-api.com/docs" };
 const bis = { title: "BIS consumer protection", url: "https://www.bis.gov.in/hallmarking-overview/consumer-protection/?lang=en" };
 export const metalsGuides: Record<string, MetalsGuide> = {
+  ...extraMetalsGuides,
   hallmarking: { title: "Gold purity, hallmarking and HUID", summary: "Read purity declarations and use official verification resources before buying.", reviewedAt: "2026-09-08", sources: [bis], sections: [
     { title: "Karat is a proportion, not a price", text: "The theoretical gold fraction is karat divided by 24: 22K is about 91.67% and 18K is 75%. A purity label does not tell you the making charge, stone value or achievable resale price. Calculators estimate declared fine-metal content; they do not assay an item." },
     { title: "Use official verification", text: "Use BIS consumer guidance and the official BIS Care resources linked by BIS to check hallmarking information and HUID details. Match the physical item, seller and invoice information; a screenshot supplied by a seller is not independent verification. Requirements and exemptions can change, so consult the current official guidance for the product you are buying." },

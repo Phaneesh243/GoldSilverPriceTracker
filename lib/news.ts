@@ -2,7 +2,7 @@ import { getCountry } from "./country-data";
 import { redis } from "./redis";
 
 export type NewsMetal = "gold" | "silver" | "platinum" | "copper";
-export type NewsCategory = "metals" | "markets" | "investing" | "analysis" | "stocks" | "crypto" | "funds" | "insurance" | "bonds" | "currencies";
+export type NewsCategory = "metals" | "markets" | "investing" | "analysis";
 export type NewsImageHint = "gold-bars" | "silver-coins" | "market-chart" | "jewelry" | "city-rates" | "bullion";
 
 export type NewsItem = {
@@ -77,12 +77,6 @@ function metalsFor(text: string) {
 }
 
 function categoryFor(text: string, metals: NewsMetal[]): NewsCategory {
-  if (/bitcoin|ethereum|crypto|blockchain|digital asset|web3/.test(text)) return "crypto";
-  if (/stock|share price|equity|nifty|sensex|nasdaq|dow jones|ipo|earnings/.test(text)) return "stocks";
-  if (/mutual fund|sip|nav|asset management|amc|etf|portfolio/.test(text)) return "funds";
-  if (/insurance|insurer|premium|claim settlement|life cover|health cover/.test(text)) return "insurance";
-  if (/bond|treasury|g-sec|yield|fixed income|debenture/.test(text)) return "bonds";
-  if (/currency|forex|rupee|inr|dollar|euro|yen|pound/.test(text)) return "currencies";
   if (/analysis|outlook|forecast|prediction|strategy|expert/.test(text)) return "analysis";
   if (/investment|investor|etf|fund|portfolio|buy|sell|return/.test(text)) return "investing";
   if (metals.length || /bullion|commodity|jewellery|jewelry/.test(text)) return "metals";
@@ -94,20 +88,14 @@ function queryFor(metal?: NewsMetal, category?: NewsCategory) {
   if (metal === "silver") return "silver price OR silver rate OR silver bullion";
   if (metal === "platinum") return "platinum price OR platinum jewellery OR platinum market";
   if (metal === "copper") return "copper price OR copper market OR industrial metals";
-  if (category === "stocks") return "India stocks OR NSE OR BSE OR Nifty OR Sensex OR company earnings";
-  if (category === "crypto") return "India crypto OR Bitcoin OR Ethereum OR digital assets regulation";
-  if (category === "funds") return "India mutual funds OR SIP OR ETF OR asset management OR NAV";
-  if (category === "insurance") return "India insurance OR IRDAI OR health insurance OR life insurance OR insurance claims";
-  if (category === "bonds") return "India bonds OR government securities OR RBI yield OR treasury OR fixed income";
-  if (category === "currencies") return "India rupee OR INR OR forex OR RBI currency OR dollar rupee";
   if (category === "investing") return "commodities investment OR gold investment OR market investor";
   if (category === "analysis") return "gold outlook OR silver outlook OR commodity market analysis";
   if (category === "markets") return "financial markets OR commodities OR currency market India";
-  return "India finance OR stocks OR crypto OR mutual funds OR insurance OR bonds OR currencies OR commodities OR gold silver price";
+  return "India gold silver platinum copper price OR precious metals bullion";
 }
 
 function cacheKey(countryCode: string, metal?: NewsMetal, category?: NewsCategory) {
-  return `gsp:v2:news:${countryCode.toLowerCase()}:${metal || "all"}:${category || "all"}`;
+  return `gsp:v3:metals-news:${countryCode.toLowerCase()}:${metal || "all"}:${category || "all"}`;
 }
 
 const NEWS_MAX_AGE_MS = 45 * 24 * 60 * 60 * 1000;
@@ -122,8 +110,7 @@ export async function getNewsFeed({ countryCode = "IN", metal, category }: { cou
   const country = getCountry(countryCode);
   const key = cacheKey(country.code, metal, category);
   if (redis) {
-    const cached = await redis.get<NewsFeed>(key);
-    if (cached?.items) return cached;
+    try { const cached = await redis.get<NewsFeed>(key); if (cached?.items && Date.now() - Date.parse(cached.fetchedAt) < 600000) return cached; } catch { /* A cache outage must not prevent reading the public feed. */ }
   }
 
   const query = encodeURIComponent(`${queryFor(metal, category)} ${country.name} when:30d`);
@@ -166,7 +153,7 @@ export async function getNewsFeed({ countryCode = "IN", metal, category }: { cou
     });
 
   const feed = { country: country.name, countryCode: country.code, source: "Google News RSS", fetchedAt, items };
-  if (redis) await redis.set(key, JSON.stringify(feed), { ex: 600 });
+  if (redis) { try { await redis.set(key, JSON.stringify(feed), { ex: 600 }); } catch { /* Return the successful upstream response. */ } }
   return feed;
 }
 
@@ -177,12 +164,6 @@ export async function getNewsArticle(slug: string, countryCode = "IN") {
     getNewsFeed({ countryCode, category: "markets" }),
     getNewsFeed({ countryCode, category: "investing" }),
     getNewsFeed({ countryCode, category: "analysis" }),
-    getNewsFeed({ countryCode, category: "stocks" }),
-    getNewsFeed({ countryCode, category: "crypto" }),
-    getNewsFeed({ countryCode, category: "funds" }),
-    getNewsFeed({ countryCode, category: "insurance" }),
-    getNewsFeed({ countryCode, category: "bonds" }),
-    getNewsFeed({ countryCode, category: "currencies" }),
     getNewsFeed({ countryCode, metal: "gold" }),
     getNewsFeed({ countryCode, metal: "silver" }),
     getNewsFeed({ countryCode, metal: "platinum" }),

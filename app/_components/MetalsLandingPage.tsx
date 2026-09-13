@@ -5,12 +5,19 @@ import { metalTools } from "../../lib/metals-calculators";
 import MetalQuoteCards from "./MetalQuoteCards";
 import MetalCalculator from "./MetalCalculator";
 import AdSlot from "./AdSlot";
+import MetalsExplore from "./MetalsExplore";
+import { metalSearchEntries } from "../../lib/metals-routes";
+import { metalComparisons } from "../../lib/metals-editorial";
+import MetalTradingChart from "./MetalTradingChart";
 export default async function MetalsLandingPage() {
   const payload = await getAllMetalPrices();
   return <div className="metals-module">
+    <MetalsExplore entries={metalSearchEntries} />
     <MetalQuoteCards initial={payload.metals} />
     <AdSlot id={metalsAdPlacements.overview.after} module="metals" placement="after-hero" />
+    <MetalTradingChart />
     <MetalCalculator metal="gold" price={null} />
+    <section><h2>Explore a comparison</h2><div className="metals-card-grid">{Object.entries(metalComparisons).map(([slug,g]) => <Link className="metals-guide-card" href={`/metals/compare/${slug}`} key={slug}><h3>{g.title}</h3><p>{g.summary}</p></Link>)}</div></section>
     <section><div className="metals-section-heading"><h2>Tools for your next purchase</h2><Link href="/metals/calculators">All metal calculators</Link></div><div className="metals-card-grid">{["gold-jewellery","silver","making-charge-comparison","budget-to-gold","invoice-checker","old-gold-exchange"].map(key => <Link className="metals-guide-card" key={key} href={"/calculators/" + key}><h3>{metalTools[key].title}</h3><p>{metalTools[key].description}</p><span>Open calculator →</span></Link>)}</div></section>
     <section className="metals-card-grid"><Link className="metals-guide-card" href="/metal-comparison"><h2>Compare references</h2><p>Compare matching units and view a gold–silver ratio only when the observations are compatible.</p></Link><Link className="metals-guide-card" href="/gold-price-last-10-days"><h2>Historical coverage</h2><p>See available coverage and source limitations. Missing history is never invented.</p></Link></section>
     <section><h2>Buy with more understanding</h2><div className="metals-card-grid">{[["hallmarking","Hallmarking and HUID"],["invoice","Understand your jewellery bill"],["price-basis","Why prices differ"],["wedding","Wedding and festival budgeting"]].map(([slug,title]) => <Link className="metals-guide-card" href={"/metals/learn/" + slug} key={slug}>{title} →</Link>)}</div></section>

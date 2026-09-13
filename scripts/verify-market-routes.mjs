@@ -3,8 +3,8 @@ const base = new URL(process.argv[2] || "http://localhost:3001");
 if (!["localhost", "127.0.0.1"].includes(base.hostname)) throw new Error("This smoke test is restricted to the local application.");
 const checks = [
   ["/notifications", "GET", 200], ["/watchlist", "GET", 200],
-  ["/stocks/reliance", "GET", 200], ["/stocks/tcs", "GET", 200],
-  ["/metals", "GET", 200], ["/crypto", "GET", 200], ["/currencies", "GET", 200],
+  ["/stocks/reliance", "GET", 404], ["/stocks/tcs", "GET", 404],
+  ["/metals", "GET", 200], ["/crypto", "GET", 404], ["/currencies", "GET", 404],
   ["/alerts", "GET", 307],
   ["/api/storage/watchlist", "GET", 401],
   ["/api/storage/notifications", "GET", 401],

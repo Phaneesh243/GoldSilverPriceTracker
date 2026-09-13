@@ -11,13 +11,14 @@ function isMetal(value: string | null): value is NewsMetal {
 }
 
 function isCategory(value: string | null): value is NewsCategory {
-  return value === "metals" || value === "markets" || value === "investing" || value === "analysis" || value === "stocks" || value === "crypto" || value === "funds" || value === "insurance" || value === "bonds" || value === "currencies";
+  return value === "metals" || value === "markets" || value === "investing" || value === "analysis";
 }
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const metalValue = searchParams.get("metal");
   const categoryValue = searchParams.get("category");
+  if (categoryValue && !isCategory(categoryValue)) return NextResponse.json({ error: "Unsupported news category.", items: [] }, { status: 400 });
   try {
     const feed = await getNewsFeed({ countryCode: searchParams.get("country") || "IN", metal: isMetal(metalValue) ? metalValue : undefined, category: isCategory(categoryValue) ? categoryValue : undefined });
     return NextResponse.json(feed, { headers: CACHE_HEADERS });

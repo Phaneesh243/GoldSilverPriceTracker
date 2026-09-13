@@ -1,11 +1,7 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
-import { fetchCryptoMarkets } from "./crypto-market-provider";
-import { currencyPairs } from "./currencies";
-import { getCurrencyRates } from "./currency-prices";
 import { getAllMetalPrices } from "./metal-prices";
 import { redis } from "./redis";
-import { fetchLiveStockQuotes } from "./stock-quotes";
 import { createMarketNotification, getProfile, getUserSettings, listAccountIds, listPushSubscriptions } from "./storage";
 import { sendDeviceUpdate } from "./notification-transport";
 import { emailAlertsConfigured, sendAlertEmail } from "./email";
@@ -15,7 +11,7 @@ import { editionWindow, indiaDate, quoteAvailability, regularTradingDay, type Ma
 
 type Snapshot = { id: string; edition: MarketEdition; date: string; title: string; message: string; generatedAt: number; expiresAt: number; recipients: string[] };
 const TTL = 30 * 86400;
-const key = (id: string) => `gsp:v2:edition:${id}`;
+const key = (id: string) => `gsp:v3:metals-edition:${id}`;
 const money = (value: number) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 2 }).format(value);
 const escape = (text: string) => text.replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]!);
 
@@ -34,26 +30,15 @@ async function snapshot(edition: MarketEdition, date: string): Promise<Snapshot>
   const id = `${date}:${edition}`;
   const stored = await redis!.get<Snapshot>(key(id));
   if (stored) return stored;
-  const [metals, stocks, crypto, fx] = await Promise.allSettled([
-    getAllMetalPrices("mumbai", "IN"), fetchLiveStockQuotes(["reliance", "tcs", "hdfc-bank", "icici-bank", "infosys"]),
-    fetchCryptoMarkets(["bitcoin", "ethereum"]), getCurrencyRates(currencyPairs.filter((pair) => ["USD/INR", "EUR/INR"].includes(pair.symbol))),
-  ]);
+  const [metals] = await Promise.allSettled([getAllMetalPrices("mumbai", "IN")]);
   const lines: string[] = [];
   if (metals.status === "fulfilled") {
     for (const metal of metals.value.metals) {
-      if (!["gold", "silver"].includes(metal.key)) continue;
       lines.push(row(`${metal.name} (${metal.basis || "reference"}; not a city quotation)`, metal.freshness === "fresh" ? metal.price : null, metal.source, metal.observedAt, 20 * 60000, metal.unitLabel) + (metal.provenance ? `; FX date: ${metal.provenance.fxDate}` : ""));
     }
-  } else lines.push("Gold and silver references: unavailable — provider failed or is disabled.");
-  if (stocks.status === "fulfilled" && stocks.value.length) for (const stock of stocks.value) lines.push(row(`${stock.ticker} (${stock.exchange})`, stock.price, stock.source, stock.timestamp, 20 * 60_000));
-  else lines.push("Indian stock quotes: unavailable — Yahoo Finance chart.");
-  if (crypto.status === "fulfilled" && crypto.value.length) for (const coin of crypto.value) lines.push(row(coin.symbol.toUpperCase(), coin.current_price, "CoinGecko", coin.last_updated, 10 * 60_000));
-  else lines.push("BTC / ETH: unavailable — CoinGecko.");
-  if (fx.status === "fulfilled" && fx.value.length) for (const pair of fx.value) lines.push(row(pair.pair.symbol, pair.rate, pair.source, pair.timestamp, 72 * 3600_000, "reference rate"));
-  else lines.push("INR currency reference rates: unavailable — Frankfurter.");
-  lines.push("Mutual fund NAVs, bond yields and insurance quotes are not included: no verified digest feed is configured.");
-  lines.push("These are provider-reported/reference values, not exchange-guaranteed real-time prices. Opening editions may contain previous-session quotes. Metals and crypto do not follow equity trading hours.");
-  const value: Snapshot = { id, edition, date, title: edition === "open" ? "Market opening edition · 09:15 IST" : "Market closing edition · 15:30 IST", message: lines.join("\n\n"), generatedAt: Date.now(), expiresAt: editionWindow(edition, date).expiresAt, recipients: await listAccountIds() };
+  } else lines.push("Metal references: unavailable — provider failed or is disabled.");
+  lines.push("Provider-reported international references converted to INR, not retail quotations. These scheduled editions do not imply a metals market opening or closing time.");
+  const value: Snapshot = { id, edition, date, title: edition === "open" ? "Morning metals edition · 09:15 IST" : "Afternoon metals edition · 15:30 IST", message: lines.join("\n\n"), generatedAt: Date.now(), expiresAt: editionWindow(edition, date).expiresAt, recipients: await listAccountIds() };
   await redis!.set(key(id), value, { nx: true, ex: TTL });
   return (await redis!.get<Snapshot>(key(id)))!;
 }
@@ -104,7 +89,7 @@ export async function deliverMarketEdition(edition: MarketEdition, date: string,
         if (state[channel] === "sent" || state[channel] === "skipped") return;
         try {
           if (!(await getUserSettings(userId)).notifications.marketUpdates) return;
-          const result = await sendDeviceUpdate(userId, device, { title: saved.title, body: "Your stocks, gold, silver, crypto and currency summary is ready. Open to see sources and timestamps.", tag: `gsp-${id}`, expiresAt: saved.expiresAt });
+          const result = await sendDeviceUpdate(userId, device, { title: saved.title, body: "Your gold, silver, platinum and copper summary is ready. Open to see sources and timestamps.", tag: `gsp-${id}`, expiresAt: saved.expiresAt });
           await mark(channel, result);
         } catch { await mark(channel, "failed"); failures.push(channel); }
       }));

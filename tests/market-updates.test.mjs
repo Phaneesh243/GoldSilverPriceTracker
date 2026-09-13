@@ -81,7 +81,7 @@ registerHooks({
   load(url, context, next) {
     if (url.startsWith("gsp-test:")) return { format: "module", source: mocks[url.slice(9)], shortCircuit: true };
     if (url.endsWith("/lib/redis.ts")) return { format: "module", source: "export const redis = globalThis.__gspTest.redis;", shortCircuit: true };
-    const providers = { "/lib/metal-prices.ts": ["getAllMetalPrices", "{ metals: [] }"], "/lib/stock-quotes.ts": ["fetchLiveStockQuotes", "[]"], "/lib/crypto-market-provider.ts": ["fetchCryptoMarkets", "[]"], "/lib/currency-prices.ts": ["getCurrencyRates", "[]"] };
+    const providers = { "/lib/metal-prices.ts": ["getAllMetalPrices", '{ metals: ["gold", "silver", "platinum", "copper"].map(key => ({ key, name: key, price: null, freshness: "unavailable", source: "Isolated test provider", observedAt: null })) }'] };
     for (const [suffix, [name, result]] of Object.entries(providers)) if (url.endsWith(suffix)) return { format: "module", source: `export async function ${name}() { if (globalThis.__gspTest.providerFailure) throw Error("Provider unavailable in test"); return ${result}; }`, shortCircuit: true };
     if (url.endsWith(".ts")) return { format: "module", source: ts.transpileModule(readFileSync(fileURLToPath(url), "utf8"), { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText, shortCircuit: true };
     return next(url, context);
@@ -204,9 +204,9 @@ async function account(id = "usr_account_a", subscribed = true) {
   return session;
 }
 async function seedEdition(userId = "usr_account_a") {
-  await redis.set("gsp:v2:edition:2026-09-07:open", { id: "2026-09-07:open", date: "2026-09-07", edition: "open", title: "Test edition", message: "All providers unavailable. No numeric market data.", generatedAt: fixedTime, expiresAt: fixedTime + 3600_000, recipients: [userId] });
+  await redis.set("gsp:v3:metals-edition:2026-09-07:open", { id: "2026-09-07:open", date: "2026-09-07", edition: "open", title: "Test edition", message: "All providers unavailable. No numeric market data.", generatedAt: fixedTime, expiresAt: fixedTime + 3600_000, recipients: [userId] });
 }
-const asset = { assetKey: "stock:reliance", symbol: "RELIANCE", name: "Reliance Industries", assetType: "stock", market: "NSE", route: "/stocks/reliance" };
+const asset = { assetKey: "gold", symbol: "XAU", name: "Gold", assetType: "metal", market: "Fine-metal reference, not retail", route: "/gold-price-today" };
 test("metal calculator presets validate server-side and remain isolated between accounts", async () => {
   assert.equal((await presetsApi.GET()).status, 401);
   await account("usr_account_a");
@@ -245,12 +245,12 @@ test("anonymous and forged registered-id cookies cannot access watchlists", asyn
   assert.equal((await storage.getOrCreateStorageUser()).anonymous, true);
   await assert.rejects(storage.ensureStorageUser("usr_account_a", true), /Invalid anonymous/);
 });
-test("watchlists remain scoped, notes editable, duplicates prevented, exchanges distinct", async () => {
+test("watchlists remain scoped, notes editable, duplicates prevented, reference markets distinct", async () => {
   await account();
   const saved = await storage.upsertWatchlist("usr_account_a", asset);
   await storage.upsertWatchlist("usr_account_a", asset);
   assert.equal((await storage.listWatchlist("usr_account_a")).length, 1);
-  await storage.upsertWatchlist("usr_account_a", { ...asset, market: "BSE" });
+  await storage.upsertWatchlist("usr_account_a", { ...asset, market: "Manual retail observation" });
   assert.equal((await storage.listWatchlist("usr_account_a")).length, 2);
   await storage.upsertWatchlist("usr_account_a", { ...saved, notes: "Personal test note" });
   await account("usr_account_b");
@@ -326,7 +326,7 @@ test("email daily quota is bounded and idempotent", async () => {
 test("all-provider outage produces explicit unavailable edition, duplicate dispatch is resumable", async () => {
   await account();
   await digest.dispatchMarketEdition("open", "2026-09-07");
-  const snapshot = await redis.get("gsp:v2:edition:2026-09-07:open");
+  const snapshot = await redis.get("gsp:v3:metals-edition:2026-09-07:open");
   assert.match(snapshot.message, /unavailable/);
   assert.doesNotMatch(snapshot.message, /₹/);
   await digest.dispatchMarketEdition("open", "2026-09-07");
@@ -368,8 +368,8 @@ test("concurrent digest calls are locked and expired editions never send", async
   const outcomes = await Promise.allSettled([digest.deliverMarketEdition("open", "2026-09-07", "usr_account_a"), digest.deliverMarketEdition("open", "2026-09-07", "usr_account_a")]);
   assert.equal(outcomes.filter((result) => result.status === "fulfilled").length, 1);
   assert.equal(state.emails.length, 1);
-  const snapshot = await redis.get("gsp:v2:edition:2026-09-07:open");
-  await redis.set("gsp:v2:edition:2026-09-07:open", { ...snapshot, expiresAt: fixedTime - 1 });
+  const snapshot = await redis.get("gsp:v3:metals-edition:2026-09-07:open");
+  await redis.set("gsp:v3:metals-edition:2026-09-07:open", { ...snapshot, expiresAt: fixedTime - 1 });
   assert.deepEqual(await digest.deliverMarketEdition("open", "2026-09-07", "usr_account_a"), { skipped: "expired-or-missing-edition" });
 });
 test("email quota exhaustion preserves in-app delivery", async () => {
@@ -378,5 +378,30 @@ test("email quota exhaustion preserves in-app delivery", async () => {
   await digest.deliverMarketEdition("open", "2026-09-07", "usr_account_a");
   assert.equal(state.emails.length, 0);
   assert.equal((await storage.listNotifications("usr_account_a")).length, 1);
-  assert.equal(await redis.hget("gsp:v2:edition:2026-09-07:open:usr_account_a:delivery", "email"), "quota-skipped");
+  assert.equal(await redis.hget("gsp:v3:metals-edition:2026-09-07:open:usr_account_a:delivery", "email"), "quota-skipped");
+});
+test("removed modules reject new watchlist and portfolio entries without erasing legacy data", async () => {
+  await account();
+  const legacy = { ...asset, id: "watch_legacy", assetKey: "stock:reliance", symbol: "RELIANCE", name: "Legacy holding", assetType: "stock", route: "/stocks/reliance", addedAt: fixedTime, updatedAt: fixedTime };
+  await assert.rejects(storage.upsertWatchlist("usr_account_a", { ...legacy, id: undefined }), /Only supported metals/);
+  await redis.hset("gsp:v1:user:usr_account_a:watchlist", { [legacy.id]: JSON.stringify(legacy) });
+  // Use the same storage collection ordering as the production collection helper.
+  const stored = await storage.listWatchlist("usr_account_a");
+  assert.equal(stored.length, 1);
+  const edited = await storage.upsertWatchlist("usr_account_a", { ...legacy, notes: "Keep for my records", name: "Attempted rename", assetType: "metal" });
+  assert.equal(edited.name, legacy.name);
+  assert.equal(edited.assetType, "stock");
+  assert.equal(edited.route, undefined);
+  assert.equal(edited.notes, "Keep for my records");
+  await assert.rejects(storage.createTransaction("usr_account_a", { symbol: "TCS", assetType: "stock", side: "buy", quantity: 1, price: 1 }), /Only metal transactions/);
+  assert.equal((await storage.listWatchlist("usr_account_a")).length, 1);
+});
+
+test("daily editions cover all four metals and no retired providers", async () => {
+  await account(); state.providerFailure = false;
+  await digest.dispatchMarketEdition("open", "2026-09-07");
+  const saved = await redis.get("gsp:v3:metals-edition:2026-09-07:open");
+  for (const metal of ["gold", "silver", "platinum", "copper"]) assert.ok(saved.message.includes(metal));
+  assert.doesNotMatch(saved.message, /Yahoo|CoinGecko|stock quotes|BTC|ETH|NAVs/);
+  assert.match(saved.title, /Morning metals/);
 });

@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { createHash, randomBytes, randomUUID, scrypt as nodeScrypt, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";
 import { redis } from "./redis";
+import { activeResearchRoute, isRetiredAsset } from "./module-scope";
 import type { MetalKey } from "./metals";
 import { metalTools, validateSavedInputs } from "./metals-calculators";
 
@@ -398,13 +399,16 @@ export async function listWatchlist(userId: string) {
 }
 
 export async function upsertWatchlist(userId: string, input: Partial<WatchlistItem>) {
-  const symbol = clean(input.symbol).toUpperCase();
-  const name = clean(input.name);
+  let symbol = clean(input.symbol).toUpperCase();
+  let name = clean(input.name);
   if (!symbol || !name) throw new StorageValidationError("Watchlist symbol and name are required.");
   const assetKey = cleanLower(input.assetKey, symbol.toLowerCase());
   const current = await listWatchlist(userId);
   const existing = input.id ? current.find((item) => item.id === input.id) : current.find((item) => item.assetKey === assetKey && (item.market || "") === (input.market || ""));
   if (input.id && !existing) throw new StorageValidationError("Watchlist item not found.");
+  if (!existing && isRetiredAsset(input)) throw new StorageValidationError("Only supported metals can be added to the watchlist.");
+  // Retired records are preserved, but only their notes may be changed.
+  if (existing) { input = { ...existing, notes: input.notes }; symbol = existing.symbol; name = existing.name; }
   if (existing && input.id && (existing.assetKey !== assetKey || existing.market !== (input.market || undefined))) throw new StorageValidationError("Remove the saved asset before replacing it.");
   if (!["metal", "stock", "crypto", "fund", "bond", "currency", "other"].includes(input.assetType || "other")) throw new StorageValidationError("Invalid asset type.");
   if (input.route && (!input.route.startsWith("/") || input.route.startsWith("//") || input.route.includes("\\"))) throw new StorageValidationError("Invalid detail route.");
@@ -416,7 +420,7 @@ export async function upsertWatchlist(userId: string, input: Partial<WatchlistIt
     symbol,
     name,
     assetType: (input.assetType || "other") as AssetType,
-    route: clean(input.route) || undefined,
+    route: activeResearchRoute(input) || undefined,
     market: clean(input.market) || undefined,
     notes: input.notes === undefined ? existing?.notes : clean(input.notes).slice(0, 500),
     addedAt: existing?.addedAt || timestamp,
@@ -448,6 +452,11 @@ export async function listTransactions(userId: string) {
 }
 
 export async function createTransaction(userId: string, input: Partial<PortfolioTransaction>) {
+  if (input.assetType !== "metal") throw new StorageValidationError("Only metal transactions can be added.");
+  return persistTransaction(userId, input);
+}
+
+async function persistTransaction(userId: string, input: Partial<PortfolioTransaction>) {
   const symbol = clean(input.symbol).toUpperCase();
   if (!symbol) throw new StorageValidationError("Transaction symbol is required.");
   const side = normalizeSide(input.side);
@@ -495,7 +504,8 @@ export async function updateTransaction(userId: string, id: string, input: Parti
   const r = requireRedis();
   const current = parseJson<PortfolioTransaction>(await r.hget(collectionKey(userId, "transactions"), id));
   if (!current) throw new StorageValidationError("Transaction not found.");
-  const updated = await createTransaction(userId, { ...current, ...input, id: current.id, clientRequestId: null });
+  if (input.assetType && input.assetType !== current.assetType && input.assetType !== "metal") throw new StorageValidationError("Unsupported asset type.");
+  const updated = await persistTransaction(userId, { ...current, ...input, id: current.id, clientRequestId: null });
   await r.hdel(collectionKey(userId, "transactions"), current.id);
   await writeHash(collectionKey(userId, "transactions"), current.id, { ...updated, id: current.id, createdAt: current.createdAt });
   return { ...updated, id: current.id, createdAt: current.createdAt };
@@ -687,7 +697,9 @@ function defaultNewsPreferences(): NewsPreferences {
 
 export async function getNewsPreferences(userId: string) {
   const stored = parseJson<NewsPreferences>(await requireRedis().get(collectionKey(userId, "news-preferences")));
-  return { ...defaultNewsPreferences(), ...(stored || {}) };
+  const result = { ...defaultNewsPreferences(), ...(stored || {}) };
+  result.categories = result.categories.filter(category => ["metals", "markets", "investing", "analysis"].includes(category));
+  return result;
 }
 
 export async function updateNewsPreferences(userId: string, input: Record<string, unknown>) {
@@ -695,7 +707,7 @@ export async function updateNewsPreferences(userId: string, input: Record<string
   const list = (value: unknown, fallback: string[]) => Array.isArray(value) ? value.filter((item): item is string => typeof item === "string").map((item) => item.toLowerCase().slice(0, 40)).slice(0, 20) : fallback;
   const next: NewsPreferences = {
     metals: list(input.metals, current.metals),
-    categories: list(input.categories, current.categories),
+    categories: list(input.categories, current.categories).filter(category => ["metals", "markets", "investing", "analysis"].includes(category)),
     country: clean(input.country, current.country).toUpperCase().slice(0, 4),
     language: clean(input.language, current.language).toLowerCase().slice(0, 12),
     dailyDigest: typeof input.dailyDigest === "boolean" ? input.dailyDigest : current.dailyDigest,

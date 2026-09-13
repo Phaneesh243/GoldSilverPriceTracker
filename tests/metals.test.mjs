@@ -19,6 +19,51 @@ const api=await import('../app/api/metals/current/route.ts');
 const historyApi=await import('../app/api/metals/history/route.ts');
 const input=(kind, values)=>({...engine.initialToolInputs(kind),...values});
 const value=(rows,label)=>rows.find(r=>r.label===label).value;
+const presentation = await import('../lib/metals-presentation.ts');
+const discovery = await import('../lib/metals-search.ts');
+const manifest = await import('../lib/metals-routes.ts');
+const headlines = await import('../lib/metals-headlines.ts');
+const charts = await import('../lib/metals-chart.ts');
+test('hosted charts use allowlisted instruments, native USD units and no private page URL', () => {
+  for (const metal of ['gold','silver','platinum','copper']) {
+    const url=new URL(charts.metalChartUrl(metal,'dark','D','1',false));
+    assert.equal(url.origin,'https://www.tradingview-widget.com');
+    const config=JSON.parse(decodeURIComponent(url.hash.slice(1)));
+    assert.equal(config.symbol,charts.metalChartInstruments[metal].symbol);
+    assert.equal(config.timezone,'Asia/Kolkata'); assert.equal(config.allow_symbol_change,false);
+    assert.equal(config['page-uri'],undefined); assert.equal(config.hide_side_toolbar,false);
+    assert.equal(config.withdateranges,true);
+  }
+  assert.throws(()=>charts.metalChartUrl('__proto__','dark','D','1',false));
+  assert.throws(()=>charts.metalChartUrl('gold','dark','invalid','1',false));
+  assert.throws(()=>charts.metalChartUrl('gold','invalid','D','1',false));
+  assert.equal(charts.metalChartInstruments.copper.unit,'USD / lb');
+});
+test('India weights default gold to 10g and reject unsupported preferences', () => {
+  assert.equal(presentation.defaultWeight('gold'), 10);
+  assert.equal(presentation.defaultWeight('copper'), 1);
+  assert.equal(presentation.validWeight('gold', '10'), false);
+  assert.equal(presentation.validWeight('gold', 8), true);
+  assert.equal(presentation.validWeight('copper', 8), false);
+  assert.equal(presentation.weightedReference(null, 10), null);
+  assert.equal(presentation.weightedReference(100, 10), 1000);
+});
+test('discovery is bounded and canonical manifest does not create calendar/city duplicates', () => {
+  const routes = manifest.metalsRouteManifest;
+  assert.equal(new Set(routes.map(r => r.url)).size, routes.length);
+  assert.ok(routes.every(r => r.url === r.canonical));
+  assert.ok(routes.filter(r => r.type === 'History' || r.type === 'Location tools').every(r => !r.sitemap && !r.indexable));
+  assert.equal(discovery.searchMetalEntries(manifest.metalSearchEntries, 'not-a-real-query').length, 0);
+  assert.ok(discovery.searchMetalEntries(manifest.metalSearchEntries, '').length <= 8);
+  assert.ok(discovery.searchMetalEntries(manifest.metalSearchEntries, 'gold making').some(r => r.url.includes('gold-making-charges')));
+});
+test('news excludes future, irrelevant, duplicate and unsafe links', () => {
+  const now = Date.parse('2026-09-09T12:00:00Z');
+  const item = {title:'Gold purchase guide',source:'Test publisher',link:'https://example.com/gold',publishedAt:'2026-09-09T10:00:00Z'};
+  const result = headlines.metalHeadlines([item,item,{...item,title:'Silver news',link:'https://example.com/silver'},{...item,link:'javascript:alert(1)'},{...item,publishedAt:'2027-01-01'}], 'gold', now);
+  assert.equal(result.length, 1);
+  assert.equal(headlines.safeHeadlineUrl('https://user:password@example.com'), null);
+});
 test('all tools have validated working calculations',()=>{ for(const [kind,t] of Object.entries(engine.metalTools)){ const i=Object.fromEntries(t.fields.map(f=>[f.key, '10'])); Object.assign(i,{stones:'0',discount:'0',fixed:'0',days:'365',karat:'22',rate:'100',budget:'10000'}); assert.ok(engine.calculateMetalTool(kind,i).length,kind); }});
 test('gold bill uses net weight and purity-specific rate once',()=>{const rows=engine.calculateMetalTool('gold-jewellery',input('gold-jewellery',{rate:'100',weight:'12',stones:'2',making:'10',discount:'100',tax:'5'})); assert.equal(value(rows,'Metal value'),1000);assert.equal(value(rows,'Estimated total'),1050);});
 test('making comparison alternatives are not combined',()=>{const rows=engine.calculateMetalTool('making-charge-comparison',{rate:'100',weight:'10',making:'10',perGram:'12',fixed:'80'}); assert.deepEqual(rows.map(r=>r.value),[100,120,80]);});

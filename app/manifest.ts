@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "GoldSilverPrices",
     short_name: "GoldSilverPrices",
-    description: "India-focused market intelligence across metals, stocks, crypto, funds, bonds, insurance and currencies.",
+    description: "India-focused gold, silver, platinum and copper references, buying guides and calculators.",
     start_url: "/",
     display: "standalone",
     background_color: "#eef4f8",

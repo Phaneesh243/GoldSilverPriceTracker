@@ -1,15 +1,12 @@
-.finance-platform[data-screen=metals]{--fp-bg:#101820;--fp-bg-deep:#0c131a;--fp-panel:#19242f;--fp-panel-2:#131e28;--fp-border:#33424f;--fp-text:#edf1f5;--fp-muted:#abb9c5;--fp-accent:#efc86c;background:radial-gradient(ellipse at top right,#b68b2520,transparent 55%),var(--fp-bg)}
-html[data-theme=light] .finance-platform[data-screen=metals]{--fp-bg:#f7f7f4;--fp-bg-deep:#f0f1ed;--fp-panel:#fff;--fp-panel-2:#f5f6f3;--fp-border:#dce0dc;--fp-text:#23303a;--fp-muted:#56636f;--fp-accent:#8a620d;background:radial-gradient(ellipse at top right,#d6ad3e12,transparent 55%),var(--fp-bg)}
-.finance-platform[data-screen=metals],.metals-module,.metals-workspace{font-family:"Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+/* Inherit the shared Dashboard/Stocks palette and typography in both themes. */
+.metals-module,.metals-workspace{font-family:inherit;-webkit-font-smoothing:antialiased}
 .finance-platform[data-screen=metals] .finance-hero h1{font-family:inherit;font-size:clamp(1.75rem,1.3rem + 1.8vw,2.7rem);font-weight:700;letter-spacing:-.035em;line-height:1.15;max-width:25ch}
 .finance-platform[data-screen=metals] .finance-hero p{font-family:inherit;font-size:clamp(.95rem,.9rem + .2vw,1.05rem);line-height:1.6;max-width:65ch}
 .finance-platform[data-screen=metals] .finance-hero{gap:20px;margin-bottom:28px;align-items:center}
 .finance-platform[data-screen=metals] .hero-command{background:transparent;border:0;padding:0;min-width:0;width:auto;flex:0 1 auto}
 .finance-platform[data-screen=metals] .hero-command>span{display:none}
-.finance-platform[data-screen=metals] .hero-command>a{border-radius:9px;padding:12px 16px;min-height:44px;background:#efc86c;color:#292314;font-size:.85rem;white-space:normal}
+.finance-platform[data-screen=metals] .hero-command>a{border-radius:9px;padding:12px 16px;min-height:44px;background:var(--fp-accent);color:#241a00;font-size:.85rem;white-space:normal}
 .finance-platform[data-screen=metals] .finance-side-links a,.finance-platform[data-screen=metals] .finance-side-footer a,.finance-platform[data-screen=metals] .drawer-panel>a{font-weight:650;transition:background-color .2s ease,color .2s ease}
-html[data-theme=light] .finance-platform[data-screen=metals] .finance-side-links a.active,html[data-theme=light] .finance-platform[data-screen=metals] .drawer-panel>a.active{background:#f4e9ca;color:#77530a}
-html[data-theme=light] .finance-platform[data-screen=metals] .finance-side-links a:hover,html[data-theme=light] .finance-platform[data-screen=metals] .finance-side-footer a:hover{background:#ebece7;color:#23303a}
 .metals-module,.metals-workspace,.metals-quotes{min-width:0;display:grid;gap:16px;color:var(--fp-text,var(--ink));font-size:.9375rem;line-height:1.55}
 .metals-module *, .metals-workspace *{box-sizing:border-box;min-width:0}
 .metals-module p,.metals-workspace p{margin:0}
@@ -24,7 +21,7 @@ html[data-theme=light] .finance-platform[data-screen=metals] .finance-side-links
 @container(max-width:599px){.metals-quotes>.metals-card-grid{grid-template-columns:minmax(0,1fr)}}
 @container(min-width:960px){.metals-quotes>.metals-card-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .metals-quote-card,.metals-guide-card,.metals-results,.metals-disclosure,.metals-workspace{border:1px solid var(--fp-border,var(--line));border-radius:12px;background:var(--fp-panel,var(--panel));padding:clamp(14px,1.4vw,20px)}
-.metals-quote-card{--metal-accent:#e7c16b;display:flex;align-items:stretch;flex-direction:column;gap:10px;border-top:2px solid var(--metal-accent);background:linear-gradient(135deg,color-mix(in srgb,var(--metal-accent) 7%,transparent),transparent 70%),var(--fp-panel);transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;animation:metals-enter .35s ease both}
+.metals-quote-card{--metal-accent:var(--fp-accent);display:flex;align-items:stretch;flex-direction:column;gap:10px;border-top:2px solid var(--metal-accent);background:linear-gradient(135deg,var(--fp-panel),var(--fp-panel-2));transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;animation:metals-enter .35s ease both}
 .metals-quote-card[data-metal=silver]{--metal-accent:#a5bacd;animation-delay:40ms}.metals-quote-card[data-metal=copper]{--metal-accent:#d9a080;animation-delay:120ms}.metals-quote-card[data-metal=platinum]{--metal-accent:#b6b1d6;animation-delay:80ms}
 .metals-quote-heading{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.metals-quote-heading h3{flex:1}.metals-symbol{display:grid;place-items:center;flex:0 0 34px;height:34px;border-radius:9px;background:color-mix(in srgb,var(--metal-accent) 18%,var(--fp-panel));color:var(--fp-text);font-size:.85rem;font-weight:700}
 .metals-price{display:block;font-size:clamp(1.45rem,1.1rem + .7vw,1.85rem);font-weight:650;letter-spacing:-.035em;line-height:1.25;font-variant-numeric:tabular-nums}
@@ -45,7 +42,7 @@ html[data-theme=light] .metals-quote-card[data-availability=fresh] .metals-statu
 .metals-module a,.metals-workspace a{color:inherit;text-underline-offset:4px}.metals-module a:hover,.metals-workspace a:hover{text-decoration:underline}
 .metals-module button,.metals-workspace button{min-height:44px;padding:9px 14px;border:1px solid var(--fp-border,var(--line));border-radius:9px;background:var(--fp-panel-2,var(--surface));color:inherit;font:inherit;cursor:pointer;white-space:normal}
 .metals-module .asset-actions>a{min-height:44px;min-width:44px;display:inline-flex;align-items:center}
-.metals-workspace button.primary-button{background:#efc431;color:#152033;font-weight:700}.metals-workspace button:disabled{opacity:.55;cursor:not-allowed}
+.metals-workspace button.primary-button{background:var(--fp-accent);color:#241a00;font-weight:700}.metals-workspace button:disabled{opacity:.55;cursor:not-allowed}
 .metals-calculator-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:24px;align-items:start}.metals-calculator-layout form{display:grid;gap:18px}
 .metals-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.metals-fields label{display:grid;gap:6px;align-content:start;font-size:.95rem}
 .metals-fields input{width:100%;min-height:46px;border:1px solid var(--fp-border,var(--line));border-radius:8px;background:var(--fp-panel-2,var(--surface));color:inherit;font:inherit;font-size:16px;padding:10px}
@@ -64,4 +61,44 @@ html[data-theme=light] .metals-quote-card[data-availability=fresh] .metals-statu
 @media(max-width:639px){.metals-fields{grid-template-columns:minmax(0,1fr)}.metals-actions>*{flex:1 1 140px}.metals-module,.metals-workspace{gap:16px}.metals-module .metals-card-grid{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:389px){.finance-topbar .mobile-brand-name{display:none}.finance-topbar .mobile-brand-short{display:inline}.finance-topbar .mobile-brand{min-width:44px;min-height:44px;align-items:center}}
 @media(prefers-reduced-motion:reduce){.metals-module *,.metals-workspace *{animation:none!important;transition:none!important;scroll-behavior:auto!important}.metals-quote-card:hover,.metals-guide-card:hover{transform:none}}
+.metals-module a:hover,.metals-workspace a:hover{color:var(--fp-accent);text-decoration:none}
+.metals-module a{transition:color .18s ease}
+.metals-quote-card{position:relative}
+.metals-card-link::after{content:"";position:absolute;inset:0;border-radius:inherit}
+.metals-card-link:focus-visible::after{outline:3px solid #579bdd;outline-offset:3px}
+.metals-quote-source,.metals-quote-footer{position:relative;z-index:1}
+.metals-price-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:end;margin-block:16px}
+.metals-price-controls label{display:grid;gap:6px;flex:1 1 160px;min-width:0}
+.metals-price-controls select,.metals-explore input{width:100%;min-width:0;min-height:44px;padding:10px 12px;border:1px solid var(--fp-border);border-radius:10px;background:var(--fp-panel);color:var(--fp-text);font:inherit}
+.metals-section-nav{display:flex;flex-wrap:wrap;gap:8px}
+.metals-section-nav a{display:inline-flex;align-items:center;min-height:44px;padding:8px 14px;border:1px solid var(--fp-border);border-radius:99px;text-transform:capitalize;text-decoration:none}
+.metals-module [id]{scroll-margin-top:90px}
+.metals-explore{position:relative;min-width:0;z-index:4}
+.metals-explore>label{display:block;margin-bottom:8px;font-weight:600}
+.metals-explore-input{display:flex;gap:8px;min-width:0}
+.metals-search-popup{position:absolute;top:100%;left:0;right:0;margin-top:6px;background:var(--fp-panel);border:1px solid var(--fp-border);border-radius:12px;box-shadow:0 12px 32px #0003;max-height:360px;overflow:auto;padding:8px}
+.metals-search-popup ul{list-style:none;padding:0;margin:0}
+.metals-search-popup a{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;padding:12px;border-radius:8px;text-decoration:none;overflow-wrap:anywhere}
+.metals-search-popup a[aria-selected=true]{background:var(--fp-panel-2);outline:1px solid var(--fp-accent);outline-offset:-1px}
+.metals-search-group,.metals-search-popup small{color:var(--fp-muted);font-size:.75rem}
+.metals-news-list{list-style:none;padding:0;display:grid;gap:0}
+.metals-news-list li{display:grid;gap:8px;padding-block:16px;border-bottom:1px solid var(--fp-border);min-width:0}
+.metals-news-list a{font-size:1rem;line-height:1.5;text-decoration:none;overflow-wrap:anywhere}
+.metals-news-list span{font-size:.8rem;color:var(--fp-muted)}
+.metals-trading-panel{display:grid;gap:14px;min-width:0;padding:clamp(12px,1.6vw,22px);border:1px solid var(--fp-border);border-radius:16px;background:linear-gradient(135deg,var(--fp-panel),var(--fp-panel-2));box-shadow:0 12px 32px #00000010}
+.metals-chart-title{display:flex;align-items:center;gap:12px}.metals-chart-icon{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:color-mix(in srgb,var(--fp-accent) 14%,transparent);color:var(--fp-accent)}
+.metals-chart-eyebrow{font-size:.6875rem;letter-spacing:.12em;font-weight:700;color:var(--fp-muted)}
+.metals-chart-actions,.metals-chart-toolbar,.metals-chart-intervals{display:flex;align-items:center;flex-wrap:wrap;gap:8px}.metals-chart-actions button,.metals-chart-help a{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px}
+.metals-chart-toolbar{padding-block:12px;border-block:1px solid var(--fp-border);gap:16px}.metals-chart-toolbar label{display:flex;align-items:center;gap:8px;font-size:.8125rem}.metals-chart-toolbar select{min-height:44px;border-radius:8px;border:1px solid var(--fp-border);background:var(--fp-panel-2);color:var(--fp-text);font:inherit;padding:8px 12px;max-width:100%}
+.metals-chart-intervals button{min-width:44px;font-size:.8125rem}.metals-chart-intervals button[aria-pressed=true]{background:var(--fp-accent);border-color:var(--fp-accent);color:#241a00;font-weight:700}
+.metals-chart-basis{display:flex;gap:8px 16px;flex-wrap:wrap;font-size:.75rem;color:var(--fp-muted)}.metals-chart-basis strong{color:var(--fp-text)}
+.metals-chart-frame{position:relative;height:clamp(480px,65vh,680px);width:100%;min-width:0;border:1px solid var(--fp-border);border-radius:10px;overflow:hidden;background:var(--fp-panel-2)}.metals-chart-frame iframe{display:block;width:100%;height:100%;border:0}
+.metals-chart-placeholder{height:100%;display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;text-align:center;padding:20px;color:var(--fp-muted)}
+.metals-chart-load-state{position:absolute;bottom:12px;left:12px;right:12px;padding:12px;border:1px solid var(--fp-border);border-radius:8px;background:var(--fp-panel);color:var(--fp-muted);font-size:.8125rem;pointer-events:none}
+.metals-trading-panel .tradingview-widget-copyright{text-align:center;font-size:13px;line-height:32px;min-height:32px}.metals-trading-panel .blue-text{color:#2962ff}
+.metals-chart-help{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.8125rem}.metals-chart-help p{flex:1 1 300px}.metals-chart-help a{flex:0 0 auto;text-decoration:none}
+.metals-chart-disclosure{font-size:.8125rem}.metals-chart-disclosure summary{min-height:44px;align-content:center;cursor:pointer}.metals-chart-disclosure p{margin-block:10px}
+.metals-trading-panel:fullscreen{height:100dvh;width:100%;border-radius:0;background:var(--fp-bg);overflow:auto;display:flex;flex-direction:column}.metals-trading-panel:fullscreen .metals-chart-frame{flex:1 0 300px;height:auto}
+@media(max-width:639px){.metals-chart-frame{height:480px}.metals-chart-toolbar{gap:12px}.metals-chart-intervals{gap:4px}.metals-chart-intervals button{padding:8px 10px}.metals-chart-actions{width:100%}.metals-chart-actions button{flex:1}.metals-trading-panel:fullscreen{padding:12px;padding-bottom:max(12px,env(safe-area-inset-bottom))}}
+@media(prefers-reduced-motion:reduce){.metals-module a{transition:none}}
 @media print{.finance-sidebar,.finance-topbar,.finance-bottom-nav,.ad-slot,.consent-panel,.metals-actions,.metals-saved,button{display:none!important}.finance-shell{margin:0!important;width:100%!important}.finance-main{padding:0!important}.metals-module,.metals-workspace,.metals-results{background:white!important;color:black!important;break-inside:avoid}.metals-calculator-layout{display:block}}

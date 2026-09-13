@@ -46,7 +46,8 @@ const nextConfig: NextConfig = {
               "img-src 'self' data: blob: https:",
               "font-src 'self' data:",
               process.env.NEXT_PUBLIC_ADS_ENABLED === "true" ? "connect-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://www.google.com" : "connect-src 'self'",
-              process.env.NEXT_PUBLIC_ADS_ENABLED === "true" ? "frame-src https://*.googlesyndication.com https://*.doubleclick.net https://www.google.com" : "frame-src 'none'",
+              // Hosted chart only: no third-party script executes in the application origin.
+              "frame-src https://www.tradingview-widget.com" + (process.env.NEXT_PUBLIC_ADS_ENABLED === "true" ? " https://*.googlesyndication.com https://*.doubleclick.net https://www.google.com" : ""),
               "worker-src 'self' blob:",
               "manifest-src 'self'",
               "upgrade-insecure-requests",
