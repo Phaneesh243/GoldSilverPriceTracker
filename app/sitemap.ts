@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 import { metalsRouteManifest } from "../lib/metals-routes";
 import { metalsGuides } from "../lib/metals-guides";
 import { metalTools } from "../lib/metals-calculators";
+import { siteUrl } from "../lib/site-url";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = (process.env.NEXT_PUBLIC_SITE_URL || "https://goldsilverprices.in").replace(/\/$/, "");
   const corePages = [
     "/",
     "/metals",
@@ -48,7 +48,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const paths = [...new Set([...corePages, ...cityPages, "/metals/learn", "/metals/calculators", ...Object.keys(metalsGuides).map(slug => `/metals/learn/${slug}`), ...Object.keys(metalTools).map(slug => `/calculators/${slug}`)])].filter(path => !path.endsWith("-price-last-10-days"));
   return [...new Set([...paths, ...metalsRouteManifest.filter(r => r.sitemap).map(r => r.url)])].map((path) => ({
-    url: base + path,
+    url: siteUrl + path,
     lastModified: metalsRouteManifest.find(r => r.url === path)?.updatedAt,
     changeFrequency: path === "/" || path.startsWith("/gold-price/") ? "hourly" as const : "weekly" as const,
     priority: path === "/" ? 1 : path.startsWith("/gold-price/") ? 0.85 : 0.7,

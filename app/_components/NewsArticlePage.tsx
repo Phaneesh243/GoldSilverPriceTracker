@@ -4,6 +4,7 @@ import { ExternalLink } from "lucide-react";
 import AdSlot from "./AdSlot";
 import Breadcrumbs from "./Breadcrumbs";
 import { getNewsArticle, type NewsItem } from "../../lib/news";
+import { siteUrl } from "../../lib/site-url";
 
 const images: Record<NewsItem["imageHint"], string> = {
   "gold-bars": "/news/gold-bars-01.jpg",
@@ -23,7 +24,7 @@ export default async function NewsArticlePage({ slug }: { slug: string }) {
   const article = await getNewsArticle(slug).catch(() => null);
   if (!article) return <div className="news-empty glass-panel"><h2>This story is no longer available</h2><p>Return to the news hub for the latest market updates.</p><Link className="primary-button" href="/news">Browse news</Link></div>;
 
-  const jsonLd = { "@context": "https://schema.org", "@type": "NewsArticle", headline: article.title, description: article.summary, datePublished: article.publishedAt, dateModified: article.publishedAt, image: [`https://goldsilverprices.in${images[article.imageHint]}`], mainEntityOfPage: `https://goldsilverprices.in/news/article/${article.slug}`, publisher: { "@type": "Organization", name: article.source }, isBasedOn: article.link };
+  const jsonLd = { "@context": "https://schema.org", "@type": "NewsArticle", headline: article.title, description: article.summary, datePublished: article.publishedAt, dateModified: article.publishedAt, image: [`${siteUrl}${images[article.imageHint]}`], mainEntityOfPage: `${siteUrl}/news/article/${article.slug}`, publisher: { "@type": "Organization", name: article.source }, isBasedOn: article.link };
   return (
     <div className="news-public-content news-article-layout">
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "News", href: "/news" }, { label: article.title }]} />
