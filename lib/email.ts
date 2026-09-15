@@ -1,6 +1,6 @@
 import "server-only";
 
-const DEFAULT_REPLY_TO = "phaneesh19@gmail.com";
+const DEFAULT_REPLY_TO = "goldSilverPricesIndia@gmail.com";
 
 export function emailAlertsConfigured() {
   return Boolean(process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL);

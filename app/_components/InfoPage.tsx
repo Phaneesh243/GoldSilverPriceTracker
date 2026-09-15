@@ -39,7 +39,7 @@ export default function InfoPage({
             <span>Gold</span>SilverPrices
           </Link>
           <small>Informational use only.</small>
-          <a href="mailto:phaneesh19@gmail.com">Support: phaneesh19@gmail.com</a>
+          <a href="mailto:goldSilverPricesIndia@gmail.com">Support: goldSilverPricesIndia@gmail.com</a>
         </div>
       </footer>
     </main>

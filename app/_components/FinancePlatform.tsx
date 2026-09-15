@@ -232,7 +232,7 @@ function FinancePlatformContent({ screen, children, customHeading }: { screen: F
         </main>
         <footer className="finance-footer">
           <span>Informational use only. Verify provider terms before acting.</span>
-          <a href="mailto:phaneesh19@gmail.com">Support: phaneesh19@gmail.com</a>
+          <a href="mailto:goldSilverPricesIndia@gmail.com">Support: goldSilverPricesIndia@gmail.com</a>
         </footer>
       </div>
 
